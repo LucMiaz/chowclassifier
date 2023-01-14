@@ -1,10 +1,9 @@
 # ChowClassifier
 
-
-![Schema of Chow classification](Categorisation_TT.png)
-
 ## Description
 This code applies a Chow test (or series of Chow tests) on a time-indexed dataset. The 
+
+![Schema of Chow classification](img/Categorisation_TT.png)
 
 ## Chow test[^1][^2]
 We test the significance of the breakpoint under the null hypothesis $Z=\frac{S_c-(S_1+S_2)}{S_1+S_2}\times⋅\frac{N_1+N_2-6}{2}$. This follows a F-distribution with $3$ and $N_1+N_2-6$ degrees of freedom, where $S_C$ is the sum of squared residuals of the regression on the full time series, $S_1$,$S_2$ are the sums of squared residuals of the regression on the first, and respectively, the second half of the time series and $N_1$,$N_2$ are the number of observation for each half.

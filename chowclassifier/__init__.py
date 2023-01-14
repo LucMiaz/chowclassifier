@@ -89,7 +89,7 @@ class Chow(object):
                 name:str = "",
                 breakpoint:float = None,
                 timecol:str = 'year',
-                ycol:str = 'area',
+                ycol:str = 'value',
                 margin:int = 5):
         """
         :params df: data on which to perform the Chow categorisation
@@ -117,53 +117,49 @@ class Chow(object):
         self.margin=margin
         self.successful=None
         self.color = "#000000"
-    def get_breakpoints(self):
+    def get_breakpoint_indices(self):
         """sets the breakpoints"""
-        breakpoints = sorted([*set(self.df['X'])])
+        breakpoint_indices = range(0,len(self.df['X']))
+        self.breakpoints = sorted(set(self.df['X']))
         if self.breakpoint is None:
-            self.breakpoint = np.median(breakpoints)
-        if self.breakpoint not in breakpoints:
-            breakpoints.append(self.breakpoint)
-            breakpoints = sorted(breakpoints)
-        bkindex = breakpoints.index(self.breakpoint)
-        breakpoints = range(breakpoints[max(2, bkindex - self.margin)],\
-                            breakpoints[min(len(breakpoints)-2, bkindex+self.margin)])
-        return breakpoints
-    def run(self, breakpoints=None,**kwargs):
+            self.breakpoint = self.breakpoints[int(len(self.breakpoints)/2)]
+        if self.breakpoint not in self.df['X']:
+            self.breakpoint = self.breakpoint + min([abs(x-self.breakpoint) for x in self.df['X']])
+        breakpoint_index = self.breakpoints.index(self.breakpoint)
+        breakpoint_indices = range(max(4, breakpoint_index - self.margin),min(len(self.breakpoints)-4, breakpoint_index+self.margin))
+        return breakpoint_indices
+    def run(self, breakpoint_indices=None,**kwargs):
         """
            finds best breakpoint and run Chow test and find OLS params for either whole set,
            and the two subset broken at best breakpoint
         """
-        if breakpoints:
-            if not isinstance(breakpoints, list):
-                breakpoints=[breakpoints]
-            midpoint = np.median(breakpoints)
+        if breakpoint_indices:
+            if not isinstance(breakpoint_indices, list):
+                breakpoint_indices=[breakpoint_indices]
+            midpoint_index = int(np.median(breakpoint_indices))
         else:
-            breakpoints = self.get_breakpoints()
-            midpoint = np.median(breakpoints)
+            breakpoint_indices = self.get_breakpoint_indices()
+            midpoint_index = breakpoint_indices[int(len(breakpoint_indices)/2)]
         results = {}
-        for bk in breakpoints:
-            results[bk]=self.run_bk(breakpoint=bk)
+        for bk in breakpoint_indices:
+            results[bk]=self.run_chow(breakpoint=self.breakpoints[bk])
         self.results=pd.DataFrame(results)
         self.results = self.results.transpose()
-        self.results['delay'] = np.abs(midpoint - self.results.index)
-        self.results = self.results.sort_values('delay')
+        self.results['delay'] = np.abs(midpoint_index - self.results.index)
+        self.results = self.results.sort_values('score')
         #find best breakpoint
-        self.breakpoint = self.results.score.idxmin()
-        self.run_bk(breakpoint = self.breakpoint, normalise = kwargs.get('normalise',False))
-    def run_bk(self, breakpoint=None, normalise = False):
+        self.breakpoint = self.breakpoints[self.results.score.idxmin()]
+        self.run_chow(breakpoint = self.breakpoint, normalise = kwargs.get('normalise',False))
+    def run_chow(self, breakpoint, normalise = False):
         """Run chow test at breakpoint"""
-        if not breakpoint:
-            breakpoint = self.breakpoint
-            print("changed breakpoint to %s" % str(self.breakpoint))
         if self.normalise:
             self.df['y']=(self.df['y']-self.df['y'].mean())/self.df['y'].std()
         X=self.df.loc[:,'X']
         y=self.df.loc[:,'y']
-        X1=self.df.loc[self.df['X']<self.breakpoint,'X']
-        X2=self.df.loc[self.df['X']>=self.breakpoint,'X']
-        y1=self.df.loc[self.df['X']<self.breakpoint,'y']
-        y2=self.df.loc[self.df['X']>=self.breakpoint,'y']
+        X1=self.df.loc[self.df['X']<breakpoint,'X']
+        X2=self.df.loc[self.df['X']>=breakpoint,'X']
+        y1=self.df.loc[self.df['X']<breakpoint,'y']
+        y2=self.df.loc[self.df['X']>=breakpoint,'y']
         if np.any(X1) and np.any(X2):
             X1=sm.add_constant(X1)
             X2=sm.add_constant(X2)
@@ -178,7 +174,7 @@ class Chow(object):
             self.score=Fdist.sf(self.F, 3, X.shape[0]-2*3)
             self.successful=True
         else:
-            print("Data missing for at least on period for {}".format(self.df))
+            print("Data missing for at least one period for {}".format(self.df))
             self.score = 1
             self.F=0
             self.ss_res_0=0
@@ -254,7 +250,7 @@ class Chow(object):
         else:
             #N0, N1 or N2
             tt= conf_int_to_trend(self.model0.conf_int(alpha))
-            tc = ['N0','N1','N2'][tt]
+            tc = ['N','I','D'][tt]
             self.breakpoint=None
         self.treeclass = tc
         self.set_color()
@@ -262,7 +258,7 @@ class Chow(object):
     def set_color(self):
         colors = {'Ii':'#8c510a','iI':'#bf812d','IN':'#dfc27d','NI':'#f6e8c3',
         'Dd':'#c7eae5','dD':'#80cdc1','DN':'#35978f','ND':'#01665e',
-        'NN':'#555555','NI':'#006837','ND':'#d73027','N0':'#AAAAAA','N1':'#1a9850','N2':'#a50026',
+        'NN':'#555555','NI':'#006837','ND':'#d73027','N':'#AAAAAA','I':'#1a9850','D':'#a50026',
         'ID':'#9970ab','DI':'#762a83'}
         self.color = colors[self.treeclass]
     def params(self, alpha=0.01):
@@ -375,7 +371,6 @@ class ChewData():
                 filename:str = None,
                 namecol:str = 'name',
                 sep=',',
-                breakpoint:float = 2010,
                 timecol:str = 'year',
                 ycol:str = 'area',
                 margin:int = 5,
@@ -386,7 +381,6 @@ class ChewData():
         :params filename: path to dataframe (used if df not given)
         :params namecol: name of the column with group names (used in groupby)
         :params sep: separator in csv
-        :params breakpoint: initial break point for Chow test (if None, will take midpoint of timecol)
         :params timecol: name of the time column in dataset
         :params ycol: name of the variable column in dataset
         :params margin: range of indexes around breakpoint/midpoint, see Chow.get_breakpoints
@@ -397,7 +391,6 @@ class ChewData():
         
         self.df = df
         self.namecol = namecol
-        self.breakpoint = breakpoint
         self.timecol = timecol
         self.ycol = ycol
         self.margin = margin
@@ -409,6 +402,7 @@ class ChewData():
     def melt(self):
         """pivot the dataframe from wide to long"""
         self.df = self.df.melt(id_vars=[self.timecol], value_name=self.ycol).dropna()
+        self.namecol = 'variable'
     def get_df(self, filename, sep):
         """get dataframe from file"""
         ext = filename.split('.')[-1]
@@ -431,14 +425,18 @@ class ChewData():
         self.df[self.datetype] = series
         self.timecol = self.datetype
         print(f'Indexed the time column {self.timecol} as {self.datetype}s')
-    def run(self):
-        """Run the classification for each group"""
+    def run(self, breakpoint = None):
+        """
+        Run the classification for each group
+        
+        :params breakpoint: initial break point for Chow test (if None, will take midpoint of timecol)
+        """
         results = []
         self.chows = []
         for name, sub_df in self.df.groupby(self.namecol):
             C = Chow(df = sub_df,
                      name = name,
-                     breakpoint = self.breakpoint,
+                     breakpoint = breakpoint,
                      timecol = self.timecol,
                      ycol = self.ycol,
                      margin = self.margin)
@@ -492,3 +490,4 @@ class ChewData():
         """
         for C in self.chows:
             C.plot(filename = f'{"/".join([savingpath,C.name])}.{format}', **params)
+
