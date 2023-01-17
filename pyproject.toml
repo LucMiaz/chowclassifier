@@ -38,7 +38,7 @@ pythonpath = [
 dev = ["pytest"]
 
 [project.urls]
-Homepage = ""
+Homepage = "https://gitlab.com/lucmiaz/chowclassifier"
 
 [project.scripts]
 chowclassifier = "chowclassifier.__main__:main"
