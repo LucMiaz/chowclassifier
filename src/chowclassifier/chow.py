@@ -69,7 +69,7 @@ def infer_date_format(s_date:str):
 
 def guess_timelapse_type(series:Union[list,pd.DataFrame,pd.Series], date_format:str = "%Y-%m-%d"):
     """Guess the time lapse in a series and index it
-    
+
     :params series: data
     :params date_format: format of the datetime
     :return: indexed series and datetype"""
@@ -198,7 +198,8 @@ class Chow(object):
             self.ss_res_0=np.sum((y-self.model0.predict(X))**2)
             self.ss_res_1=np.sum((y1-self.model1.predict(X1))**2)
             self.ss_res_2=np.sum((y2-self.model2.predict(X2))**2)
-            self.F=((self.ss_res_0-(self.ss_res_1+self.ss_res_2))/3) / ((self.ss_res_1+self.ss_res_2)/(X.shape[0]-2*3))
+            k = 3 # Total number of parameters
+            self.F=((self.ss_res_0-(self.ss_res_1+self.ss_res_2))/k) / ((self.ss_res_1+self.ss_res_2)/(X.shape[0]-2*k))
             self.score=Fdist.sf(self.F, 3, X.shape[0]-2*3)
             self.successful=True
         else:

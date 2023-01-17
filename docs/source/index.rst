@@ -57,15 +57,13 @@ where set1 and set2 indicate respectively the data before the breakpoint and aft
 Chow test
 ----------
 
-Chow test was first derived by Gregory Chow [#f1]_ in 1960. The derivation used here is from Franklin Fisher [#f2]_.
-
-We test the significance of the breakpoint under the null hypothesis :math:`Z=\frac{S_c-(S_1+S_2)}{S_1+S_2}\cdot\frac{N_1+N_2-6}{2}`. This follows a F-distribution with :math:`3` and :math:`N_1+N_2-6` degrees of freedom, where :math:`S_C`` is the sum of squared residuals of the regression on the full time series, :math:`S_1`, :math:`S_2` are the sums of squared residuals of the regression on the first, and respectively, the second half of the time series and :math:`N_1`, :math:`N_2` are the number of observation for each half.
+Chow test was first derived by Gregory Chow [#f1]_ in 1960 and later by Franklin Fisher [#f2]_. We test the significance of the breakpoint under the null hypothesis :math:`Z=\frac{S_c-(S_1+S_2)}{S_1+S_2}\cdot\frac{N_1+N_2-2\cdot k}{k}` where :math:`k=3` is the total number of parameters. This follows a F-distribution with :math:`k` and :math:`N_1+N_2-6` degrees of freedom, where :math:`S_C`` is the sum of squared residuals of the regression on the full time series, :math:`S_1`, :math:`S_2` are the sums of squared residuals of the regression on the first, and respectively, the second half of the time series and :math:`N_1`, :math:`N_2` are the number of observation for each half. See also [#f3]_.
 
 .. rubric:: References
 
 .. [#f1] Chow, Gregory C. "Test of Equality Between Sets of Coefficients in Two Linear Regressions". *Econometrica* 28, no. 3 (1960): 591-605. https://www.jstor.org/stable/1910133.
 .. [#f2] Fisher, Franklin M. "Tests of Equality Between Sets of Coefficients in Two Linear Regressions: An Expository Note". *Econometrica2* 38, no. 2 (1970): 361-66. https://www.jstor.org/stable/1913018.
-
+.. [#f3] https://en.wikipedia.org/wiki/Chow_test
 
 Installation
 -------------
@@ -129,5 +127,5 @@ Class and method descriptions
 Licence
 -------
 
-GNU LESSER GENERAL PUBLIC LICENSE
+GNU LESSER GENERAL PUBLIC LICENSE 
 Version 2.1, February 1999

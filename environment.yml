@@ -1,6 +1,4 @@
 name: chow
-channels:
-  - conda-forge
 dependencies:
   - matplotlib
   - numpy

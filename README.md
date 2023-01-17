@@ -29,7 +29,7 @@ where set1 and set2 indicate respectively the data before the breakpoint and aft
 
 
 ## Chow test
-Chow test was first derived by Gregory Chow[^1] in 1960. The derivation used here is from Franklin Fisher[^2]. We test the significance of the breakpoint under the null hypothesis $Z=\frac{S_c-(S_1+S_2)}{S_1+S_2}\times⋅\frac{N_1+N_2-6}{2}$. This follows a F-distribution with $3$ and $N_1+N_2-6$ degrees of freedom, where $S_C$ is the sum of squared residuals of the regression on the full time series, $S_1$,$S_2$ are the sums of squared residuals of the regression on the first, and respectively, the second half of the time series and $N_1$,$N_2$ are the number of observation for each half.
+Chow test was first derived by Gregory Chow[^1] in 1960 and later by Franklin Fisher[^2]. We test the significance of the breakpoint under the null hypothesis $Z=\frac{S_c-(S_1+S_2)}{S_1+S_2}\cdot\frac{N_1+N_2-2\cdot k}{k}$  where $k=3$ is the total number of parameters. This follows a F-distribution with $3$ and $N_1+N_2-6$ degrees of freedom, where $S_C$ is the sum of squared residuals of the regression on the full time series, $S_1$, $S_2$ are the sums of squared residuals of the regression on the first, and respectively, the second half of the time series and $N_1$, $N_2$ are the number of observation for each half. See also [^3].
 
 ## Installation
 ```
@@ -48,3 +48,5 @@ The script can be ran on any file with `python -m chowclassifier -f path/to/file
 [^1]: Chow, Gregory C. ‘Test of Equality Between Sets of Coefficients in Two Linear Regressions’. Econometrica 28, no. 3 (1960): 591–605. [jstor.org/stable/1910133](https://www.jstor.org/stable/1910133).
 
 [^2]: Fisher, Franklin M. ‘Tests of Equality Between Sets of Coefficients in Two Linear Regressions: An Expository Note’. Econometrica2 38, no. 2 (1970): 361–66. [jstor.org/stable/1913018](https://www.jstor.org/stable/1913018).
+
+[^3]: https://en.wikipedia.org/wiki/Chow_test
