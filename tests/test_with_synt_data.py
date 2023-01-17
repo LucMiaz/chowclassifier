@@ -104,7 +104,7 @@ def synt_data(n=1000,m=50,seed = None):
     return df,exp
 
 def test_synt_data():
-    sdf,exp = synt_data(n=40,m=40)
+    sdf,exp = synt_data(n=40,m=25)
     C = ChewData(sdf,wide = True, margin = 60)
     C.run(breakpoint = None)
     res = pd.DataFrame(columns = ['tt','bk','ett','ebk','acc'])

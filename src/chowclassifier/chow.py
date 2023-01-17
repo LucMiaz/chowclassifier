@@ -1,5 +1,5 @@
 """Implementation of a Chow Classifier"""
-from decimal import Decimal
+
 import numpy as np
 import pandas as pd
 from scipy.stats import f as Fdist
@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import statsmodels.api as sm
 from typing import Union
+from datetime import datetime
+import os
 
 ### Set plot style
 from matplotlib import rc
@@ -25,11 +27,14 @@ FITPARAMS = {"label":"OLS"}
 
 def conf_int_to_trend(ci:Union[pd.DataFrame,list], param:str='X'):
     """return trend  0, 1, 2 from the confidence interval:
-    if ci crosses 0, then returns 0
-    if ci is completely below 0, then returns 2
-    else returns 1
-    either ci is a tuple of length 2
-    else ci is a conf_int from statsmodels"""
+
+    - if ci crosses 0, then returns 0
+    - if ci is completely below 0, then returns 2
+    - else returns 1
+    
+    :params ci: confidence interval to process, either a tuple (length 2), a dataframe or result from conf_int given by statsmodles
+    :params param: name column to use if a dataframe was given as ci
+    """
     if isinstance(ci, list) and len(ci)==2:
         l,u = ci
     else:
@@ -41,9 +46,30 @@ def conf_int_to_trend(ci:Union[pd.DataFrame,list], param:str='X'):
     else:
         return 0 # non significant (at tested level)
 
+def infer_date_format(s_date:str):
+    """
+    Infer date format from a sample
+
+    :params s_date: sample date to infer date format from.
+    """
+    date_patterns = ["%d-%m-%Y","%d-%m-%Y %H:%M:%S",
+                     "%Y-%m-%d","%Y-%m-%d %H:%M:%S",
+                     "%y-%m-%d","%y-%m-%d %H:%M:%S",
+                     "%d %b %y","%d %b %y %H:%M:%S",
+                     "%d %b %Y","%d %b %Y %H:%M:%S",
+                     ]
+
+    for pattern in date_patterns:
+        try:
+            datetime.strptime(s_date, pattern).date()
+        except:
+            pass
+        else:
+            return pattern
 
 def guess_timelapse_type(series:Union[list,pd.DataFrame,pd.Series], date_format:str = "%Y-%m-%d"):
     """Guess the time lapse in a series and index it
+    
     :params series: data
     :params date_format: format of the datetime
     :return: indexed series and datetype"""
@@ -80,10 +106,20 @@ def guess_timelapse_type(series:Union[list,pd.DataFrame,pd.Series], date_format:
 class Chow(object):
     """
     Class handling the chow analysis
-    Call `analyse()` to run the analysis (find breakpoint and classify)
+    Call `run()` to run the analysis (find breakpoint and classify)
     Call afterwards `params()` to get the regressions (y=k * x + b) parameters as
     [[model1_k, model1_b, model1_Rsquared],[model2_k, model2_b, model2_Rsquared]]
     (if the breakpoint is not significant, model1 = model2)
+
+    :params df: data on which to perform the Chow categorisation
+    :params name: name of the dataset (optional)
+    :params breakpoint: breakpoint (if None, midpoint of X series will be used)
+    :params timecol: name of time column (X)
+    :params ycol: name of the variable column (Y)
+    :params margin: range of indexes around breakpoint (or midpoint) where the best breakpoint
+                    will be searched. E.g. if X = [0,1,1.5,2,3,4,5], breakpoint = 2 and margin = 1,
+                    the set of breakpoints [1.5,2,3] will be tested.
+                    (set = 0 if you want to look only at the given breakpoint or the midpoint)
     """
     def __init__(self, df,
                 name:str = "",
@@ -92,15 +128,7 @@ class Chow(object):
                 ycol:str = 'value',
                 margin:int = 5):
         """
-        :params df: data on which to perform the Chow categorisation
-        :params name: name of the dataset (optional)
-        :params breakpoint: breakpoint (if None, midpoint of X series will be used)
-        :params timecol: name of time column (X)
-        :params ycol: name of the variable column (Y)
-        :params margin: range of indexes around breakpoint (or midpoint) where the best breakpoint
-                        will be searched. E.g. if X = [0,1,1.5,2,3,4,5], breakpoint = 2 and margin = 1,
-                        the set of breakpoints [1.5,2,3] will be tested.
-                        (set = 0 if you want to look only at the given breakpoint or the midpoint)
+        
         """
         self.df = df.loc[:,[timecol,ycol]]
         self.name = name
@@ -128,7 +156,7 @@ class Chow(object):
         breakpoint_index = self.breakpoints.index(self.breakpoint)
         breakpoint_indices = range(max(4, breakpoint_index - self.margin),min(len(self.breakpoints)-4, breakpoint_index+self.margin))
         return breakpoint_indices
-    def run(self, breakpoint_indices=None,**kwargs):
+    def find_best_bkp(self, breakpoint_indices=None,**kwargs):
         """
            finds best breakpoint and run Chow test and find OLS params for either whole set,
            and the two subset broken at best breakpoint
@@ -174,13 +202,7 @@ class Chow(object):
             self.score=Fdist.sf(self.F, 3, X.shape[0]-2*3)
             self.successful=True
         else:
-            print("Data missing for at least one period for {}".format(self.df))
-            self.score = 1
-            self.F=0
-            self.ss_res_0=0
-            self.ss_res_1=0
-            self.ss_res_2=0
-            self.successful=False
+            raise ValueError("Data missing for at least one period for {}, with breakpoint {}".format(self.name,self.breakpoint))
         return {"score" : self.score,
                 "F" : self.F,
                 "ss_res_0" : self.ss_res_0,
@@ -191,23 +213,24 @@ class Chow(object):
         classify in the dataset based on results of Chow test at significance level alpha
         Possible values are:
         No significant breakpoint and:
-            N0: non-significant overall trend
-            N1: significant increasing overall trend
-            N2: significant decreasing overall trend
+
+        1. N: non-significant overall trend
+        2. I: significant increasing overall trend
+        3. D: significant decreasing overall trend
+
         Significant breakpoint (set1 and set2 indicate points before, respectively after, breakpoint) and:
-            NN: non-significant trend on set1 and non-significant trend on set2
-            NI: non-significant trend on set1 and significant increasing trend on set2
-            ND: non-significant trend on set1 ans significant decreasing trend on set2
 
-            IN: significant increasing trend on set1 and non-significant trend on set2
-            ID: significant increasing trend on set1 and significant decreasing trend on set2
-            iI: significant increasing trend on both set1 and set2 with greater increase in set2
-            Ii: significant increasing trend on both set1 and set2 with greater increase in set1
-
-            DN: significant decreasing trend on set1 and non-significant trend on set2
-            DI: significant decreasing trend on set1 and significant increasing trend on set2
-            dD: significant decreasing trend on both set1 and set2 with greater decrease in set2
-            Dd: significant decreasing trend on both set1 and set2 with greater decrease in set1 
+        4. NN: non-significant trend on set1 and non-significant trend on set2
+        5. NI: non-significant trend on set1 and significant increasing trend on set2
+        6. ND: non-significant trend on set1 ans significant decreasing trend on set2
+        7. IN: significant increasing trend on set1 and non-significant trend on set2
+        8. ID: significant increasing trend on set1 and significant decreasing trend on set2
+        9. iI: significant increasing trend on both set1 and set2 with greater increase in set2
+        10. Ii: significant increasing trend on both set1 and set2 with greater increase in set1
+        11. DN: significant decreasing trend on set1 and non-significant trend on set2
+        12. DI: significant decreasing trend on set1 and significant increasing trend on set2
+        13. dD: significant decreasing trend on both set1 and set2 with greater decrease in set2
+        14. Dd: significant decreasing trend on both set1 and set2 with greater decrease in set1 
         """
         self.alpha = alpha
         if self.score < alpha:
@@ -261,9 +284,10 @@ class Chow(object):
         'NN':'#555555','NI':'#006837','ND':'#d73027','N':'#AAAAAA','I':'#1a9850','D':'#a50026',
         'ID':'#9970ab','DI':'#762a83'}
         self.color = colors[self.treeclass]
-    def params(self, alpha=0.01):
+    def params(self, alpha=None):
         """Returns parameters of model"""
-        self.alpha = alpha
+        if alpha is None:
+            alpha = self.alpha
         def get_params(model):
             d = [*[i for i in model.params],\
                 model.rsquared,\
@@ -271,15 +295,18 @@ class Chow(object):
                 *[i for i in model.conf_int(alpha).loc['const',:]]]
             return {k:v for v,k in zip(d,['b','a','R','a_ci_lower','a_ci_upper','b_ci_lower','b_ci_upper'])}
         if self.score < alpha:
-            return {f'ax+b,x<{self.breakpoint}':get_params(self.model1),
-                    f'ax+b,x>={self.breakpoint}':get_params(self.model2)}
+            return {f'model0':{},
+                    f'model1':get_params(self.model1),
+                    f'model2':get_params(self.model2)}
         else:
-            return {'ax+b, all x':get_params(self.model0)}    
-    def analyse(self, **kwargs):
+            return {'model0':get_params(self.model0),
+                    'model1':{},
+                    'model2':{}}    
+    def run(self, **kwargs):
         """Run the chow classification. parameters will be forwarded to run and classify,
         e.g. breakpoint can be passed to run, and alpha to classify"""
         if np.any(self.df):
-            self.run(**kwargs)
+            self.find_best_bkp(**kwargs)
             self.classify(**kwargs)
             return self.treeclass
         else:
@@ -365,27 +392,31 @@ class Chow(object):
             plt.show()
 
 class ChewData():
-    """Handle full data frame"""
+    """
+    Handle a full data frame with grouping of time series
+    
+    :params df: dataset (as a pandas DataFrame) or
+    :params filename: path to dataframe (used if df not given)
+    :params namecol: name of the column with group names (used in groupby)
+    :params initial_breakpoint: initial breakpoint
+    :params sep: separator in csv
+    :params timecol: name of the time column in dataset
+    :params ycol: name of the variable column in dataset
+    :params margin: range of indexes around breakpoint/midpoint, see Chow.get_breakpoints
+    :params alpha: significance level at which to test the trends
+    """
     def __init__(self, 
                 df:pd.DataFrame = None, 
                 filename:str = None,
                 namecol:str = 'name',
+                initial_breakpoint:float = None,
                 sep=',',
                 timecol:str = 'year',
                 ycol:str = 'area',
                 margin:int = 5,
-                alpha:float = 0.01,
-                wide:bool = False):
+                alpha:float = 0.01):
         """
-        :params df: dataset (as a pandas DataFrame) or
-        :params filename: path to dataframe (used if df not given)
-        :params namecol: name of the column with group names (used in groupby)
-        :params sep: separator in csv
-        :params timecol: name of the time column in dataset
-        :params ycol: name of the variable column in dataset
-        :params margin: range of indexes around breakpoint/midpoint, see Chow.get_breakpoints
-        :params alpha: significance level at which to test the trends
-        :params wide: whether the dataframe is in wide format
+        
         """
         # get dataframe
         
@@ -395,10 +426,20 @@ class ChewData():
         self.ycol = ycol
         self.margin = margin
         self.alpha = alpha
+        self.initial_breakpoint = initial_breakpoint
         if self.df is None:
             self.get_df(filename, sep)
-        if wide is True:
-            self.melt()
+        if self.namecol not in self.df.columns and\
+            len([k for k in self.df.columns if k not in ['id',ycol,timecol,'',np.nan]])>0:
+            #inferred that df is in wide format
+            try:
+                self.melt()
+            except ValueError as e:
+                raise ValueError("Could not melt the dataframe. Is it really in wide format? Check given namecol")
+        if pd.api.types.is_numeric_dtype(self.df[self.timecol]) is False:
+            date_format = infer_date_format(self.df[self.timecol][0])
+            print(f'Inferred format {date_format} for column {self.timecol}')
+            self.parse_timecol(date_format)
     def melt(self):
         """pivot the dataframe from wide to long"""
         self.df = self.df.melt(id_vars=[self.timecol], value_name=self.ycol).dropna()
@@ -433,6 +474,8 @@ class ChewData():
         """
         results = []
         self.chows = []
+        if breakpoint is None:
+            breakpoint = self.initial_breakpoint
         for name, sub_df in self.df.groupby(self.namecol):
             C = Chow(df = sub_df,
                      name = name,
@@ -440,7 +483,7 @@ class ChewData():
                      timecol = self.timecol,
                      ycol = self.ycol,
                      margin = self.margin)
-            C.analyse(alpha = self.alpha) # do the classification at significance level alpha
+            C.run(alpha = self.alpha) # do the classification at significance level alpha
             params = C.params(alpha = self.alpha) # get the regressions parameters
             params['name'] =  name
             results.append(params)
@@ -460,7 +503,7 @@ class ChewData():
         def get_n(m):
             n = len(self.chows)/m
             if n-int(n) == 0.:
-                return n
+                return int(n)
             return int(n)+1
         if nrows is None and ncols is None:
             ncols = 4
@@ -480,7 +523,7 @@ class ChewData():
                    ylabel=params.get('ylabel','y'),
                    title=C.name)
         plt.savefig(f'{filename}')
-    def plot_individually(self, savingpath:str, format:str = 'pdf', **params):
+    def plot_individually(self, savingpath:str = 'figs', format:str = 'pdf', **params):
         """
         Plot all trends in individual files
         
@@ -488,6 +531,70 @@ class ChewData():
         :params format: format of the image
         :params params: named parameters passed to matplotlib, eg. xlabel, ylabel, sharey, figsize
         """
+        # check if saving path exists:
+        if not os.path.isdir(savingpath):
+            os.makedirs(savingpath)
         for C in self.chows:
             C.plot(filename = f'{"/".join([savingpath,C.name])}.{format}', **params)
+    def results_df(self):
+        """Create dataframe with results"""
+        d = {'name': [],
+             'breakpoint': [],
+             'model0': {},
+             'model1': {},
+             'model2': {}
+             }
+        for c in self.chows:
+            params = c.params()
+            d['name'].append(c.name)
+            d['breakpoint'].append(c.breakpoint)
+            for k,v in params.items():
+                for k1,v1 in v.items():
+                    d[k].setdefault(k1,[]).append(v1)
+        data, cols = [],[]
+        for k, v in d.items():
+            if not isinstance(v, dict):
+                cols.append((k, ''))
+                data.append(v)
+            else:
+                for k2, v2 in v.items():
+                    cols.append((k, k2))
+                    data.append(v2)
+        df = pd.DataFrame(list(zip(*data)), columns=pd.MultiIndex.from_tuples(cols))
+        return df
+    def to_excel(self, filename:str, **kwargs):
+        """
+        Export results to excel
+
+        :params filename: filename
+        """
+        df = self.results_df()
+        with pd.ExcelWriter(filename) as writer:
+            df.to_excel(writer, sheet_name = 'results')
+            self.df.to_excel(writer, sheet_name = 'data')
+    def to_csv(self, filename:str, **kwargs):
+        """
+        Export results to csv
+
+        :params filename: filename
+        """
+
+        df = self.results_df()
+        df.to_csv(filename, **kwargs)
+    def save_to_file(self, filename:str, **kwargs):
+        """
+        Export results to excel or csv
+
+        :params filename: filename
+        :params kwargs: other parameters passed to pd.DataFrame.to_csv
+        """
+
+        ext = filename.split('.')[-1]
+        if ext in ['xlsx','xls']:
+            self.to_excel(filename)
+        elif ext == 'csv':
+            self.to_csv(filename,**kwargs)
+        else:
+            raise ValueError(f'filename {filename} does not have a supported extension. Should be .csv, .xlsx or .xls.')
+
 

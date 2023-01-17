@@ -1,0 +1,5 @@
+ChowClassifier
+==============
+
+.. automodule:: chowclassifier
+    :members:

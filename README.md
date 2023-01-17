@@ -1,20 +1,47 @@
 # ChowClassifier
 
 ## Description
-This code applies a Chow test (or series of Chow tests) on a time-indexed dataset. The 
+There are many application where it is useful to analyse rapidly a large number of time-series for overall trends and possible breakpoint at which the trend changes. For example, spotting increasing trends in potential contaminants concentration from the outputs of non-target screening from high resolution mass spectrometry.
+
+ChowClassifier aims to solve this. It is a script that performs a series of Chow tests on a time-indexed dataset to determine if a breakpoint in the time trends is probable. Two classes `Chow` and `ChewData` enable to perform the tests, generate plots and export the results in `csv` and `excel`. Dataset with groups can be ran simultaneously with `ChewData` indicating with `namecol` the name of the grouping column. Calling `run` on a `ChewData` instance will create an instance of `Chow` for each group and classify them into the following categories.
+
+| Breakpoint ? | Category | Description |
+|--------------|----------|-------------|
+| No           |N         | non-significant overall trend |
+| No           |   I      | significant increasing overall trend |
+| No           | D        | significant decreasing overall trend |
+| Yes         | NN        | non-significant trend on set1 and non-significant trend on set2 |
+| Yes         | NI        | non-significant trend on set1 and significant increasing trend on set2 |
+| Yes         | ND        | non-significant trend on set1 ans significant decreasing trend on set2 |
+| Yes         | IN        | significant increasing trend on set1 and non-significant trend on set2 |
+| Yes         | ID        | significant increasing trend on set1 and significant decreasing trend on set2 |
+| Yes         | iI        | significant increasing trend on both set1 and set2 with greater increase in set2 |
+| Yes         | Ii        | significant increasing trend on both set1 and set2 with greater increase in set1 |
+| Yes         | DN        | significant decreasing trend on set1 and non-significant trend on set2 |
+| Yes         | DI        | significant decreasing trend on set1 and significant increasing trend on set2 |
+| Yes         | dD        | significant decreasing trend on both set1 and set2 with greater decrease in set2 |
+| Yes         | Dd        | significant decreasing trend on both set1 and set2 with greater decrease in set1 |
+
+where set1 and set2 indicate respectively the data before the breakpoint and after. The decision process for this classification is shown in the following schema:
+
 
 ![Schema of Chow classification](img/Categorisation_TT.png)
 
-## Chow test[^1][^2]
-We test the significance of the breakpoint under the null hypothesis $Z=\frac{S_c-(S_1+S_2)}{S_1+S_2}\times⋅\frac{N_1+N_2-6}{2}$. This follows a F-distribution with $3$ and $N_1+N_2-6$ degrees of freedom, where $S_C$ is the sum of squared residuals of the regression on the full time series, $S_1$,$S_2$ are the sums of squared residuals of the regression on the first, and respectively, the second half of the time series and $N_1$,$N_2$ are the number of observation for each half.
 
-Tree for classification of the time trends. The classification computes a Chow Test score for each time interval within the dataset to select a possible breakpoint (in case of equal score, the time closer to the middle of the period is favoured). Then using the selected breakpoint, a Chow Test is performed to divide the series whose trend changes around a breakpoint, and those whose trend is steady across the complete time trend. The null hypothesis is that the regressor for the two periods (before and after 2010) are equal . Each trend (either on the full period or on halves) are tested for null slope in the linear regression (α=0.05). The trends are subdivided according to the null hypothesis rejection to either side (significant positive or negative slope) or non-significance. This leads to 3 classes for trends with no significant break point at 2010. And 11 classes for series with significant break point at 2010.
-
-Under the null hypothesis $Z=\frac{S_c-(S_1+S_2)}{S_1+S_2}\times⋅\frac{N_1+N_2-6}{2}$ follows a F-distribution with $3$ and $N_1+N_2-6$ degrees of freedom, where $S_C$ is the sum of squared residuals of the regression on the full time series, $S_1$,$S_2$ are the sums of squared residuals of the regression on the first, and respectively, the second half of the time series and $N_1$,$N_2$ are the number of observation for each half
+## Chow test
+Chow test was first derived by Gregory Chow[^1] in 1960. The derivation used here is from Franklin Fisher[^2]. We test the significance of the breakpoint under the null hypothesis $Z=\frac{S_c-(S_1+S_2)}{S_1+S_2}\times⋅\frac{N_1+N_2-6}{2}$. This follows a F-distribution with $3$ and $N_1+N_2-6$ degrees of freedom, where $S_C$ is the sum of squared residuals of the regression on the full time series, $S_1$,$S_2$ are the sums of squared residuals of the regression on the first, and respectively, the second half of the time series and $N_1$,$N_2$ are the number of observation for each half.
 
 ## Installation
+```
+pip install chowclassifier
+```
 
 ## Use
+The script can be ran on any file with `python -m chowclassifier -f path/to/file/filename.csv -X xcol -y ycol -n grouping_name` or it can be imported:
+
+```python:example/example.py
+
+```
 
 ## References
 
