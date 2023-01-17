@@ -10,7 +10,11 @@ build:conda:
     - docker
   script:
     - python --version
-    - pip install -r requirements.txt
+    - conda env create -f environment.yml
+    - conda init bash
+    - source ~/.bashrc
+    - conda activate chow
+
 
 test:pytest:
   stage: Test
