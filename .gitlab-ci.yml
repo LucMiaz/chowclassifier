@@ -21,4 +21,4 @@ test:pytest:
   image: python:3.9
   script:
     - echo "pytest code"
-    - pytest
+    - python -m pytest
