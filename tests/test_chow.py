@@ -1,10 +1,12 @@
 import numpy as np
 import pandas as pd
 from chowclassifier import Chow
-
+import sys
+import os
+sys.path.append(os.path.abspath('../src'))
 
 class small_noise_gen():
-    def __init__(self, mu=0.,sigma=0.001, n = 10000):
+    def __init__(self, mu=0.,sigma=1e-4, n = 10000):
         self.mu = mu
         self.sigma = sigma
         self.size = n
@@ -39,14 +41,14 @@ def test_chow():
     sng = small_noise_gen()
     for k,v in cl.items():
         if v['bkp'] is None:
-            df = pd.DataFrame(zip(X,[v['A']*x+0 + next(sng) for x in X]), columns = ['year','value'])
+            df = pd.DataFrame(zip(X,[v['A']*x*2+0 + next(sng) for x in X]), columns = ['year','value'])
         else:
             if k == 'NN':
                 b = 1
             else:
                 b = v['bkp'] * v['A'][0]
-            y = [v['A'][0]*x + 0 + next(sng) for x in X if x < v['bkp']] +\
-                      [v['A'][1]*x + b + next(sng) for x in X if x >= v['bkp']]
+            y = [v['A'][0]*x*2 + 0 + next(sng) for x in X if x < v['bkp']] +\
+                      [v['A'][1]*x*2 + b + next(sng) for x in X if x >= v['bkp']]
             df = pd.DataFrame(zip(X,y), columns = ['year','value'])
         C = Chow(df = df,margin = 50)
         C.run()

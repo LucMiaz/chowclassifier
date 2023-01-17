@@ -2,7 +2,10 @@
 import string
 import numpy as np
 import pandas as pd
-from chowclassifier import ChewData, conf_int_to_trend
+from chowclassifier import ChewData
+import sys
+import os
+sys.path.append(os.path.abspath('../src'))
 
 def labels(alphabet=string.ascii_uppercase):
     assert len(alphabet) == len(set(alphabet))  # make sure every letter is unique
@@ -105,7 +108,7 @@ def synt_data(n=1000,m=50,seed = None):
 
 def test_synt_data():
     sdf,exp = synt_data(n=40,m=25)
-    C = ChewData(sdf,wide = True, margin = 60)
+    C = ChewData(sdf, margin = 60)
     C.run(breakpoint = None)
     res = pd.DataFrame(columns = ['tt','bk','ett','ebk','acc'])
     for c in C.chows:

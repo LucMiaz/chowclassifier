@@ -1,0 +1,20 @@
+stages:
+  - Build
+  - Static Analysis
+  - Test
+
+build:conda:
+  image: continuumio/miniconda
+  stage: Build
+  tags:
+    - docker
+  script:
+    - python --version
+    - pip install -r requirements.txt
+
+test:pytest:
+  stage: Test
+  image: python:3.9
+  script:
+    - echo "pytest code"
+    - pytest
