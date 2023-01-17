@@ -10,7 +10,7 @@ build:conda:
     - docker
   script:
     - python --version
-    - conda env create -f environment.yml
+    - conda env create chow
     - conda init bash
     - source ~/.bashrc
     - conda activate chow
