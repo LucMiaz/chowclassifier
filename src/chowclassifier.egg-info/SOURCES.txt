@@ -1,0 +1,12 @@
+LICENSE
+README.md
+pyproject.toml
+src/chowclassifier/__init__.py
+src/chowclassifier/__main__.py
+src/chowclassifier/chow.py
+src/chowclassifier.egg-info/PKG-INFO
+src/chowclassifier.egg-info/SOURCES.txt
+src/chowclassifier.egg-info/dependency_links.txt
+src/chowclassifier.egg-info/entry_points.txt
+src/chowclassifier.egg-info/requires.txt
+src/chowclassifier.egg-info/top_level.txt

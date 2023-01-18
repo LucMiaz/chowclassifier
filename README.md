@@ -25,7 +25,7 @@ ChowClassifier aims to solve this. It is a script that performs a series of Chow
 where set1 and set2 indicate respectively the data before the breakpoint and after. The decision process for this classification is shown in the following schema:
 
 
-![Schema of Chow classification](img/Categorisation_TT.png)
+![Image unavailable, see schema on readthedocs.](img/Categorisation_TT.png)
 
 
 ## Chow test
@@ -77,4 +77,4 @@ C.plot_individually(savingpath = savingpath_figures, format = 'png',
 
 [^2]: Fisher, Franklin M. ‘Tests of Equality Between Sets of Coefficients in Two Linear Regressions: An Expository Note’. Econometrica2 38, no. 2 (1970): 361–66. [jstor.org/stable/1913018](https://www.jstor.org/stable/1913018).
 
-[^3]: https://en.wikipedia.org/wiki/Chow_test
+[^3]: *Chow test* entry on Wikipedia: https://en.wikipedia.org/wiki/Chow_test

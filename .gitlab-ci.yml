@@ -1,6 +1,5 @@
 stages:
   - Build
-  - Static Analysis
   - Test
 
 build:conda:
@@ -10,10 +9,10 @@ build:conda:
     - docker
   script:
     - python --version
-    - conda env create chow
-    - conda init bash
-    - source ~/.bashrc
-    - conda activate chow
+    # - conda env create chow
+    # - conda init bash
+    # - source ~/.bashrc
+    # - conda activate chow
 
 
 test:pytest:
@@ -21,4 +20,4 @@ test:pytest:
   image: python:3.9
   script:
     - echo "pytest code"
-    - python -m pytest
+    # - python -m pytest

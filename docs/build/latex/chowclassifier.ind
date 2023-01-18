@@ -1,0 +1,62 @@
+\begin{sphinxtheindex}
+\let\bigletter\sphinxstyleindexlettergroup
+\let\spxpagem \sphinxstyleindexpagemain
+\let\spxentry \sphinxstyleindexentry
+\let\spxextra \sphinxstyleindexextra
+
+  \bigletter C
+  \item \spxentry{ChewData}\spxextra{class in chowclassifier.chow}, \hyperpage{11}
+  \item \spxentry{Chow}\spxextra{class in chowclassifier.chow}, \hyperpage{12}
+  \item \spxentry{chowclassifier.chow}
+    \subitem \spxentry{module}, \hyperpage{11}
+  \item \spxentry{classify()}\spxextra{chowclassifier.chow.Chow method}, \hyperpage{12}
+  \item \spxentry{conf\_int\_to\_trend()}\spxextra{in module chowclassifier.chow}, \hyperpage{14}
+
+  \indexspace
+  \bigletter F
+  \item \spxentry{find\_best\_bkp()}\spxextra{chowclassifier.chow.Chow method}, \hyperpage{13}
+
+  \indexspace
+  \bigletter G
+  \item \spxentry{get\_breakpoint\_indices()}\spxextra{chowclassifier.chow.Chow method}, 
+		\hyperpage{13}
+  \item \spxentry{get\_df()}\spxextra{chowclassifier.chow.ChewData method}, \hyperpage{11}
+  \item \spxentry{guess\_timelapse\_type()}\spxextra{in module chowclassifier.chow}, \hyperpage{14}
+
+  \indexspace
+  \bigletter I
+  \item \spxentry{infer\_date\_format()}\spxextra{in module chowclassifier.chow}, \hyperpage{14}
+
+  \indexspace
+  \bigletter M
+  \item \spxentry{melt()}\spxextra{chowclassifier.chow.ChewData method}, \hyperpage{11}
+  \item \spxentry{module}
+    \subitem \spxentry{chowclassifier.chow}, \hyperpage{11}
+
+  \indexspace
+  \bigletter P
+  \item \spxentry{params()}\spxextra{chowclassifier.chow.Chow method}, \hyperpage{13}
+  \item \spxentry{parse\_timecol()}\spxextra{chowclassifier.chow.ChewData method}, \hyperpage{11}
+  \item \spxentry{plot()}\spxextra{chowclassifier.chow.ChewData method}, \hyperpage{11}
+  \item \spxentry{plot()}\spxextra{chowclassifier.chow.Chow method}, \hyperpage{13}
+  \item \spxentry{plot\_individually()}\spxextra{chowclassifier.chow.ChewData method}, 
+		\hyperpage{12}
+
+  \indexspace
+  \bigletter R
+  \item \spxentry{results\_df()}\spxextra{chowclassifier.chow.ChewData method}, \hyperpage{12}
+  \item \spxentry{run()}\spxextra{chowclassifier.chow.ChewData method}, \hyperpage{12}
+  \item \spxentry{run()}\spxextra{chowclassifier.chow.Chow method}, \hyperpage{13}
+  \item \spxentry{run\_chow()}\spxextra{chowclassifier.chow.Chow method}, \hyperpage{13}
+
+  \indexspace
+  \bigletter S
+  \item \spxentry{save\_to\_file()}\spxextra{chowclassifier.chow.ChewData method}, \hyperpage{12}
+  \item \spxentry{summary()}\spxextra{chowclassifier.chow.Chow method}, \hyperpage{13}
+
+  \indexspace
+  \bigletter T
+  \item \spxentry{to\_csv()}\spxextra{chowclassifier.chow.ChewData method}, \hyperpage{12}
+  \item \spxentry{to\_excel()}\spxextra{chowclassifier.chow.ChewData method}, \hyperpage{12}
+
+\end{sphinxtheindex}
