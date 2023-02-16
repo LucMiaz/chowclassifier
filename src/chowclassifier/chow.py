@@ -9,20 +9,21 @@ import statsmodels.api as sm
 from typing import Union
 from datetime import datetime
 import os
+from alive_progress import alive_bar
 
 ### Set plot style
 from matplotlib import rc
 sns.set_style('white')
 plt.rcParams.update({'font.family':'serif',
-                     'font.serif':'EB Garamond',
                      'font.size':14,
                      "xtick.bottom" : True,
                      "ytick.left" : True})
+plt.rcParams['font.serif'] = ['EB Garamond', 'Garamond','Times New Roman','Times']
 
 TREND_COLORS = ['#7570b3','#d95f02','#1b9e77']# constant, increasing,decreasing 
 CI_COLORS = ['#aeabd3','#fd7d1c','#25daa4']
-SCATTERPARAMS = {"marker": 'x', "linewidths":0.5, "alpha":1,"s":1}
-FILLPARAMS = {"linestyle":'dashed', "alpha":0.1}
+SCATTERPARAMS = {"marker": 'x', "linewidths":0.5, "alpha":1,"s":10}
+FILLPARAMS = {"linestyle":'dashed', "alpha":0.3}
 FITPARAMS = {"label":"OLS"}
 
 def conf_int_to_trend(ci:Union[pd.DataFrame,list], param:str='X'):
@@ -110,12 +111,17 @@ class Chow(object):
     Call afterwards `params()` to get the regressions (y=k * x + b) parameters as
     [[model1_k, model1_b, model1_Rsquared],[model2_k, model2_b, model2_Rsquared]]
     (if the breakpoint is not significant, model1 = model2)
+    The significance level of the breakpoint is adjusted with Bonferroni correction,
+    i.e. dividing alpha by the number of tests. The confidence interval of the slope
+    and intercept are at significance level alpha (not corrected).
 
     :params df: data on which to perform the Chow categorisation
     :params name: name of the dataset (optional)
     :params breakpoint: breakpoint (if None, midpoint of X series will be used)
+    :params breakpoints: candidates for the breakpoints
     :params timecol: name of time column (X)
     :params ycol: name of the variable column (Y)
+    :param alpha: significance level (without Bonferroni correction), can be changed with ``Chow.set_alpha(0.01)``
     :params margin: range of indexes around breakpoint (or midpoint) where the best breakpoint
                     will be searched. E.g. if X = [0,1,1.5,2,3,4,5], breakpoint = 2 and margin = 1,
                     the set of breakpoints [1.5,2,3] will be tested.
@@ -123,10 +129,12 @@ class Chow(object):
     """
     def __init__(self, df,
                 name:str = "",
-                breakpoint:float = None,
+                initial_breakpoint:float = None,
+                breakpoints:list = None,
                 timecol:str = 'year',
                 ycol:str = 'value',
-                margin:int = 5):
+                alpha = 0.01,
+                margin:int = 2):
         """
         
         """
@@ -135,10 +143,13 @@ class Chow(object):
         self.df.columns = ('X','y')
         self.df['X'] = pd.to_numeric(self.df['X'])
         self.df['y'] = pd.to_numeric(self.df['y'])
-        self.breakpoint = breakpoint
+        self.initial_breakpoint = initial_breakpoint
+        self.breakpoints = breakpoints
         self.normalise=False
+        self.m = margin*2+1 # number of hypotheses tested, will be used for Bonferroni correction
         self.F=None
-        self.alpha=None
+        self.alpha0 = alpha # original significance level
+        self.alpha = None # significance level with Bonferroni correction
         self.model0=None
         self.model1=None
         self.model2=None
@@ -147,14 +158,28 @@ class Chow(object):
         self.color = "#000000"
     def get_breakpoint_indices(self):
         """sets the breakpoints"""
-        breakpoint_indices = range(0,len(self.df['X']))
-        self.breakpoints = sorted(set(self.df['X']))
-        if self.breakpoint is None:
-            self.breakpoint = self.breakpoints[int(len(self.breakpoints)/2)]
-        if self.breakpoint not in self.df['X']:
-            self.breakpoint = self.breakpoint + min([abs(x-self.breakpoint) for x in self.df['X']])
-        breakpoint_index = self.breakpoints.index(self.breakpoint)
-        breakpoint_indices = range(max(4, breakpoint_index - self.margin),min(len(self.breakpoints)-4, breakpoint_index+self.margin))
+        X = sorted(set(self.df['X']))
+        if self.breakpoints is not None:
+            self.breakpoints = sorted(set(self.breakpoints).intersection(set(X)))
+            breakpoint_indices = range(0,len(self.breakpoints))
+        else:
+            breakpoint_indices = range(0,len(X))
+            self.breakpoints = X
+        if self.initial_breakpoint is None:
+            self.initial_breakpoint = self.breakpoints[int(len(self.breakpoints)/2)]
+        if self.initial_breakpoint not in self.breakpoints:
+            s = min(range(len(X)), key=lambda i: abs(X[i]-self.initial_breakpoint))
+            self.initial_breakpoint = X[s]
+        breakpoint_index = self.breakpoints.index(self.initial_breakpoint)
+        if breakpoint_index < 3:
+            breakpoint_index = 3
+            self.initial_breakpoint = self.breakpoints[breakpoint_index]
+            print(f"breakpoint index for {self.name} is below 3, will be replace by 3.\n The new breakpoint is {self.initial_breakpoint}")
+        elif breakpoint_index > len(X)-4:
+            breakpoint_index = len(X)-4
+            self.initial_breakpoint = self.breakpoints[breakpoint_index]
+            print(f"breakpoint index for {self.name} is above {len(X)-4}, will be replace by {len(X)-4}.\n The new breakpoint is {self.initial_breakpoint}")
+        breakpoint_indices = list(range(breakpoint_index - self.margin, breakpoint_index+self.margin))
         return breakpoint_indices
     def find_best_bkp(self, breakpoint_indices=None,**kwargs):
         """
@@ -170,24 +195,25 @@ class Chow(object):
             midpoint_index = breakpoint_indices[int(len(breakpoint_indices)/2)]
         results = {}
         for bk in breakpoint_indices:
-            results[bk]=self.run_chow(breakpoint=self.breakpoints[bk])
+            results[bk]=self.run_chow(bkp=self.breakpoints[bk])
         self.results=pd.DataFrame(results)
         self.results = self.results.transpose()
         self.results['delay'] = np.abs(midpoint_index - self.results.index)
         self.results = self.results.sort_values('score')
         #find best breakpoint
-        self.breakpoint = self.breakpoints[self.results.score.idxmin()]
-        self.run_chow(breakpoint = self.breakpoint, normalise = kwargs.get('normalise',False))
-    def run_chow(self, breakpoint, normalise = False):
+        self.initial_breakpoint = self.breakpoints[self.results.score.idxmin()]
+        self.m = len(breakpoint_indices)
+        self.set_alpha(self.alpha0)
+    def run_chow(self, bkp, normalise = False):
         """Run chow test at breakpoint"""
         if self.normalise:
             self.df['y']=(self.df['y']-self.df['y'].mean())/self.df['y'].std()
         X=self.df.loc[:,'X']
         y=self.df.loc[:,'y']
-        X1=self.df.loc[self.df['X']<breakpoint,'X']
-        X2=self.df.loc[self.df['X']>=breakpoint,'X']
-        y1=self.df.loc[self.df['X']<breakpoint,'y']
-        y2=self.df.loc[self.df['X']>=breakpoint,'y']
+        X1=self.df.loc[self.df['X']<bkp,'X']
+        X2=self.df.loc[self.df['X']>=bkp,'X']
+        y1=self.df.loc[self.df['X']<bkp,'y']
+        y2=self.df.loc[self.df['X']>=bkp,'y']
         if np.any(X1) and np.any(X2):
             X1=sm.add_constant(X1)
             X2=sm.add_constant(X2)
@@ -202,14 +228,25 @@ class Chow(object):
             self.F=((self.ss_res_0-(self.ss_res_1+self.ss_res_2))/k) / ((self.ss_res_1+self.ss_res_2)/(X.shape[0]-2*k))
             self.score=Fdist.sf(self.F, 3, X.shape[0]-2*3)
             self.successful=True
+        elif np.any(X) and X.shape[0]>1:
+            X=sm.add_constant(X)
+            self.model0=sm.OLS(y,X).fit()
+            self.model1 = self.model0
+            self.model2 = self.model0
+            self.ss_res_0=np.sum((y-self.model0.predict(X))**2)
+            self.ss_res_1 = None
+            self.ss_res_2 = None
+            self.F = None
+            self.score = 1
+            self.successful = False
         else:
-            raise ValueError("Data missing for at least one period for {}, with breakpoint {}".format(self.name,self.breakpoint))
+            raise ValueError("Data missing for at least one period for {}, with breakpoint {}".format(self.name,self.initial_breakpoint))
         return {"score" : self.score,
                 "F" : self.F,
                 "ss_res_0" : self.ss_res_0,
                 "ss_res_1" : self.ss_res_1,
                 "ss_res_2" : self.ss_res_2,}
-    def classify(self,alpha=0.01,**kwargs):
+    def classify(self,**kwargs):
         """
         classify in the dataset based on results of Chow test at significance level alpha
         Possible values are:
@@ -233,28 +270,29 @@ class Chow(object):
         13. dD: significant decreasing trend on both set1 and set2 with greater decrease in set2
         14. Dd: significant decreasing trend on both set1 and set2 with greater decrease in set1 
         """
-        self.alpha = alpha
-        if self.score < alpha:
-            tt1= conf_int_to_trend(self.model1.conf_int(alpha))
-            tt2= conf_int_to_trend(self.model2.conf_int(alpha))
+        if self.alpha is None:
+            self.set_alpha(self.alpha0)
+        if self.score < self.alpha:#
+            tt1= conf_int_to_trend(self.model1.conf_int(alpha = self.alpha0))
+            tt2= conf_int_to_trend(self.model2.conf_int(alpha = self.alpha0))
             # correction for insignificant trend on one period when actually
             # the trend is significantly higher or lower than the next/previous period
-            # at the breakpoint year (i.e. confidence intervals are disjoints at that point)
-            if (tt1==0 or tt2==0) and self.breakpoint:
-                lci1, uci1 = self.model1.conf_int().loc['X',:]
-                lci2, uci2 = self.model2.conf_int().loc['X',:]
+            # at the initial_breakpoint year (i.e. confidence intervals are disjoints at that point)
+            if (tt1==0 or tt2==0) and self.initial_breakpoint:
+                lci1, uci1 = self.model1.conf_int(alpha = self.alpha0).loc['X',:]
+                lci2, uci2 = self.model2.conf_int(alpha = self.alpha0).loc['X',:]
                 b1, a1 = self.model1.params
                 b2, a2 = self.model2.params
-                right_limit = b1 + self.breakpoint * a1  #right limit of first period
-                left_limit = b2 + self.breakpoint * a2#left limit of second period
+                right_limit = b1 + self.initial_breakpoint * a1  #right limit of first period
+                left_limit = b2 + self.initial_breakpoint * a2#left limit of second period
                 if right_limit >= left_limit:
-                    if b2 + lci2 * self.breakpoint > b1 + uci1 * self.breakpoint:
+                    if b2 + lci2 * self.initial_breakpoint > b1 + uci1 * self.initial_breakpoint:
                         if tt1==0:
                             tt1==1 # the trend is in fact increasing
                         if tt2==0:
                             tt2==2 # the trend is in fact decreasing
                 else:
-                    if b2 + uci2 * self.breakpoint < b1 + lci1 * self.breakpoint:
+                    if b2 + uci2 * self.initial_breakpoint < b1 + lci1 * self.initial_breakpoint:
                         if tt1==0:
                             tt1==2 # the trend is in fact decreasing
                         if tt2==0:
@@ -273,61 +311,84 @@ class Chow(object):
                     tc=['DN','DI'][tt2]
         else:
             #N0, N1 or N2
-            tt= conf_int_to_trend(self.model0.conf_int(alpha))
+            tt= conf_int_to_trend(self.model0.conf_int(alpha = self.alpha0))
             tc = ['N','I','D'][tt]
-            self.breakpoint=None
+            self.initial_breakpoint=None
         self.treeclass = tc
         self.set_color()
-        return self.params(alpha)
+        return self.params()
     def set_color(self):
         colors = {'Ii':'#8c510a','iI':'#bf812d','IN':'#dfc27d','NI':'#f6e8c3',
         'Dd':'#c7eae5','dD':'#80cdc1','DN':'#35978f','ND':'#01665e',
         'NN':'#555555','NI':'#006837','ND':'#d73027','N':'#AAAAAA','I':'#1a9850','D':'#a50026',
         'ID':'#9970ab','DI':'#762a83'}
         self.color = colors[self.treeclass]
-    def params(self, alpha=None):
+    def params_names(self):
+        return ['intercept','slope',
+                'R2','se_intercept','se_slope','n',
+                'intercept_pvalue', 'slope_pvalue',
+                'intercept_ci_lower','intercept_ci_upper',
+                'slope_ci_lower','slope_ci_upper',
+                'alpha','alpha_Bonferroni_corrected']
+    def params(self):
         """Returns parameters of model"""
-        if alpha is None:
-            alpha = self.alpha
         def get_params(model):
             d = [*[i for i in model.params],\
                 model.rsquared,\
-                *[i for i in model.conf_int(alpha).loc['X',:]],\
-                *[i for i in model.conf_int(alpha).loc['const',:]]]
-            return {k:v for v,k in zip(d,['b','a','R','a_ci_lower','a_ci_upper','b_ci_lower','b_ci_upper'])}
-        if self.score < alpha:
-            return {f'model0':{},
-                    f'model1':get_params(self.model1),
-                    f'model2':get_params(self.model2)}
+                *[i for i in model.bse],\
+                self.df.shape[0],\
+                *[i for i in model.pvalues],\
+                *[i for i in model.conf_int(alpha = self.alpha0).loc['const',:]],\
+                *[i for i in model.conf_int(alpha = self.alpha0).loc['X',:]],\
+                self.alpha0,\
+                self.alpha]
+            return {k:v for v,k in zip(d,self.params_names())}
+        if self.score < self.alpha:
+            return {'model0':{},
+                    'model1':get_params(self.model1),
+                    'model2':get_params(self.model2)}
         else:
             return {'model0':get_params(self.model0),
                     'model1':{},
                     'model2':{}}    
     def run(self, **kwargs):
         """Run the chow classification. parameters will be forwarded to run and classify,
-        e.g. breakpoint can be passed to run, and alpha to classify"""
+        e.g. initial_breakpoint can be passed to run, and alpha to classify"""
         if np.any(self.df):
-            self.find_best_bkp(**kwargs)
+            try:
+                self.find_best_bkp(**kwargs)
+            except IndexError:
+                print(f"No suitable breakpoint found for {self.name}.")
+            self.run_chow(bkp = self.initial_breakpoint, normalise = kwargs.get('normalise',False))
             self.classify(**kwargs)
             return self.treeclass
         else:
             self.successful=False
             return None
-    def summary(self, alpha = 0.01):
+    def set_alpha(self, alpha:float):
+        """Changes the current statistical significance level
+        The bonferroni correction will be applied
+
+        :params alpha: positive float in ]0,1[
+        """
+        self.alpha0 = alpha
+        self.alpha = self.alpha0 / max(self.m,1) # applying bonferroni correction
+
+    def summary(self):
         """Print the summary of the model(s)"""
-        if self.score < alpha:
-            print(f"Summary model 1: start-{self.breakpoint}")
+        if self.score < self.alpha:
+            print(f"Summary model 1: start-{self.initial_breakpoint}")
             self.model1.summary()
-            print(f"Summary model 2: {self.breakpoint}-end")
+            print(f"Summary model 2: {self.initial_breakpoint}-end")
             self.model2.summary()
         else:
             print(f"Summary model 0: whole dataset")
             self.model0.summary()
     def plot(self, color = None, filename:str = None, ax = None, figsize = (16,8),
             ylabel:str = '', xlabel:str = '', title:str = '', ylog:bool=False,
-            scatterparams = None,
-            fillparams = None,
-            fitparams = None):
+            scatterparams:dict = {},
+            fillparams:dict = {},
+            fitparams:dict = {}):
         """
         Plot the regression model(s)
 
@@ -344,12 +405,6 @@ class Chow(object):
         :params fitparams: parameter for the fitted line
         """
         ### update plot parameters
-        if scatterparams is None:
-            scatterparams = {}
-        if fitparams is None:
-            fitparams = {}
-        if fillparams is None:
-            fillparams = {}
         SCATTERPARAMS.update(scatterparams)
         FILLPARAMS.update(fillparams)
         FITPARAMS.update(fitparams)
@@ -358,17 +413,23 @@ class Chow(object):
         # create the plot:
         self.set_color()
         def add_reg_plot(sub_df, model):
-            ci_l,ci_u = zip(*model.get_prediction().conf_int())
-            tt = conf_int_to_trend(model.conf_int(self.alpha))
+            # X values
+            X = sorted(set(sub_df['X']))
+            Xc = sm.add_constant(X)
+            # get confidence interval
+            ci_l,ci_u = zip(*model.get_prediction(Xc).conf_int(alpha = self.alpha))
+            # set color depending on time trend
+            tt = conf_int_to_trend(model.conf_int(alpha = self.alpha))
             FILLPARAMS['color'] = fillparams.get('color',CI_COLORS[tt])
             FITPARAMS['color'] = fitparams.get('color',TREND_COLORS[tt])
-            ax.fill_between(sub_df['X'], y1=ci_l, y2 = ci_u, **FILLPARAMS)
+            ax.fill_between(x = X, y1=ci_l, y2 = ci_u, **FILLPARAMS)
             ax.plot(sub_df['X'], model.fittedvalues, marker = None,**FITPARAMS)
         if ax is None:
+            plt.clf()
             f, (ax) = plt.subplots(nrows=1, ncols=1, figsize=figsize)
         if self.score < self.alpha:
-            df1 = self.df.loc[self.df['X']<self.breakpoint,]
-            df2 = self.df.loc[self.df['X']>=self.breakpoint,]
+            df1 = self.df.loc[self.df['X'] <  self.initial_breakpoint,]
+            df2 = self.df.loc[self.df['X'] >= self.initial_breakpoint,]
             add_reg_plot(df1,self.model1)
             add_reg_plot(df2,self.model2)
         else:
@@ -400,21 +461,23 @@ class ChewData():
     :params filename: path to dataframe (used if df not given)
     :params namecol: name of the column with group names (used in groupby)
     :params initial_breakpoint: initial breakpoint
+    :params breakpoints: candidates for breakpoints
     :params sep: separator in csv
     :params timecol: name of the time column in dataset
     :params ycol: name of the variable column in dataset
     :params margin: range of indexes around breakpoint/midpoint, see Chow.get_breakpoints
-    :params alpha: significance level at which to test the trends
+    :params alpha: significance level at which to test the trends (Bonferroni correction will be applied later)
     """
     def __init__(self, 
                 df:pd.DataFrame = None, 
                 filename:str = None,
                 namecol:str = 'name',
                 initial_breakpoint:float = None,
+                breakpoints:list = None,
                 sep=',',
                 timecol:str = 'year',
-                ycol:str = 'area',
-                margin:int = 5,
+                ycol:str = 'value',
+                margin:int = 2,
                 alpha:float = 0.01):
         """
         
@@ -428,6 +491,7 @@ class ChewData():
         self.margin = margin
         self.alpha = alpha
         self.initial_breakpoint = initial_breakpoint
+        self.breakpoints = breakpoints
         if self.df is None:
             self.get_df(filename, sep)
         if self.namecol not in self.df.columns and\
@@ -438,9 +502,10 @@ class ChewData():
             except ValueError as e:
                 raise ValueError("Could not melt the dataframe. Is it really in wide format? Check given namecol")
         if pd.api.types.is_numeric_dtype(self.df[self.timecol]) is False:
-            date_format = infer_date_format(self.df[self.timecol][0])
+            date_format = infer_date_format(self.df.loc[self.df[self.timecol]!=np.nan,self.timecol][0])
             print(f'Inferred format {date_format} for column {self.timecol}')
-            self.parse_timecol(date_format)
+            if date_format is not None:
+                self.parse_timecol(date_format)
     def melt(self):
         """pivot the dataframe from wide to long"""
         self.df = self.df.melt(id_vars=[self.timecol], value_name=self.ycol).dropna()
@@ -449,7 +514,7 @@ class ChewData():
         """get dataframe from file"""
         ext = filename.split('.')[-1]
         if ext == 'xlsx' or ext == 'xls':
-            self.df = pd.read_excel(filename)
+            self.df = pd.read_excel(filename, engine='openpyxl')
         elif ext == 'csv':
             self.df = pd.read_csv(filename,sep = sep)
         elif ext == 'tsv':
@@ -467,7 +532,7 @@ class ChewData():
         self.df[self.datetype] = series
         self.timecol = self.datetype
         print(f'Indexed the time column {self.timecol} as {self.datetype}s')
-    def run(self, breakpoint = None):
+    def run(self, initial_breakpoint = None):
         """
         Run the classification for each group
         
@@ -475,55 +540,87 @@ class ChewData():
         """
         results = []
         self.chows = []
-        if breakpoint is None:
-            breakpoint = self.initial_breakpoint
-        for name, sub_df in self.df.groupby(self.namecol):
-            C = Chow(df = sub_df,
-                     name = name,
-                     breakpoint = breakpoint,
-                     timecol = self.timecol,
-                     ycol = self.ycol,
-                     margin = self.margin)
-            C.run(alpha = self.alpha) # do the classification at significance level alpha
-            params = C.params(alpha = self.alpha) # get the regressions parameters
-            params['name'] =  name
-            results.append(params)
-            self.chows.append(C)
+        self.failed = []
+        if initial_breakpoint is None:
+            initial_breakpoint = self.initial_breakpoint
+        print("Running analysis")
+        with alive_bar(len(self.df.groupby(self.namecol))) as bar:
+            for name, sub_df in self.df.groupby(self.namecol):
+                if sub_df.shape[0] > 1:
+                    C = Chow(df = sub_df,
+                            name = name,
+                            initial_breakpoint = initial_breakpoint,
+                            breakpoints = self.breakpoints,
+                            timecol = self.timecol,
+                            ycol = self.ycol,
+                            alpha = self.alpha,
+                            margin = self.margin)
+                    try:
+                        C.run()
+                    except ValueError:
+                        self.failed.append(name)
+                    else:
+                        params = C.params() # get the regressions parameters
+                        params['name'] =  name
+                        results.append(params)
+                        self.chows.append(C)
+                else:
+                    self.failed.append(name)
+                bar()
         self.results = pd.DataFrame(results) # put the results in a dataframe
-    def plot(self,filename:str, title:str = '',
-             nrows:Union[None,int] = None, ncols:Union[None,int] = None, **params):
+    def plot(self,filename:str, title:str = '', divide:int = 1,
+             nrows:Union[None,int] = None, ncols:Union[None,int] = None,
+             scatterparams:dict = {},
+             fillparams:dict = {},
+             fitparams:dict = {},
+             **params):
         """
         Plot all trends in one image
         
         :params filename: name of the output with extension (e.g name.pdf)
         :params title: title printed on the output
+        :params divide: divide the plots into n files
         :params ncols: number of columns
         :params nrows: number of rows
-        :params params: named parameters passed to matplotlib, eg xlabel, ylabel, sharey, figsize
+        :params scatterparams: dictionnary of parameters for the scatter part of the plot, passed to chew plot
+        :params fillparams: dictionnary of parameters for the error fill area of the plot, passed to chew plot
+        :params fitparams: dictionnary of parameters for the fitted line, passed to chew plot
+        :params params: named parameters passed to matplotlib, eg xlabel, ylabel, sharey, figsize, pad
         """
-        def get_n(m):
-            n = len(self.chows)/m
-            if n-int(n) == 0.:
-                return int(n)
-            return int(n)+1
-        if nrows is None and ncols is None:
-            ncols = 4
-            nrows = get_n(ncols)
-        elif nrows is not None:
-            ncols = get_n(nrows)
-        else:
-            nrows = get_n(ncols)
-        f, axes = plt.subplots(nrows=nrows,
-                               ncols=ncols,
-                               sharey=params.get("sharey",True),
-                               figsize=params.get('figsize',(16,8)))
-        f.tight_layout(pad=2.0) # increase padding between sub figures
-        for C,ax in zip(self.chows,axes.reshape(-1)):
-            C.plot(ax=ax,
-                   xlabel=params.get('xlabel','X'),
-                   ylabel=params.get('ylabel','y'),
-                   title=C.name)
-        plt.savefig(f'{filename}')
+        def get_n(m,_nplots = len(self.chows)):
+                n = _nplots/m
+                if n-int(n) == 0.:
+                    return int(n)
+                return int(n)+1
+        f = filename.split(".")
+        filename = ".".join(f[0:-1])
+        ext = f[-1]
+        nplots = get_n(divide)
+        print("Plotting trends")
+        with alive_bar(divide) as bar:
+            for i in range(0,divide):
+                if nrows is None and ncols is None:
+                    ncols = 4
+                    nrows = get_n(ncols,nplots)
+                elif nrows is not None:
+                    ncols = get_n(nrows,nplots)
+                else:
+                    nrows = get_n(ncols,nplots)
+                f, axes = plt.subplots(nrows=nrows,
+                                    ncols=ncols,
+                                    sharey=params.get("sharey",True),
+                                    figsize=params.get('figsize',(16,8)))
+                f.tight_layout(pad=params.get('pad',3.0)) # increase padding between sub figures
+                for C,ax in zip(self.chows[i*nplots:(i+1)*nplots],axes.reshape(-1)):
+                    C.plot(ax=ax,
+                        xlabel=params.get('xlabel','X'),
+                        ylabel=params.get('ylabel','y'),
+                        title=C.name,
+                        scatterparams = scatterparams,
+                        fillparams = fillparams,
+                        fitparams = fitparams)
+                plt.savefig(f'{filename}_{i:02d}.{ext}')
+                bar()
     def plot_individually(self, savingpath:str = 'figs', format:str = 'pdf', **params):
         """
         Plot all trends in individual files
@@ -535,32 +632,46 @@ class ChewData():
         # check if saving path exists:
         if not os.path.isdir(savingpath):
             os.makedirs(savingpath)
-        for C in self.chows:
-            C.plot(filename = f'{"/".join([savingpath,C.name])}.{format}', **params)
+        print("Plotting trends individually")
+        with alive_bar(len(self.chows)) as bar:
+            for C in self.chows:
+                plt.clf()
+                params['title'] = params.get('title',C.name)
+                params['xlabel'] = params.get('xlabel',self.timecol)
+                params['ylabel'] = params.get('ylabel',self.ycol)
+                C.plot(filename = f'{"/".join([savingpath,C.name])}.{format}',
+                       **params)
+                bar()
     def results_df(self):
         """Create dataframe with results"""
         d = {'name': [],
              'breakpoint': [],
-             'model0': {},
-             'model1': {},
-             'model2': {}
+             'score': [],
+             'model0': [],
+             'model1': [],
+             'model2': []
              }
+        model_params = self.chows[0].params_names()
         for c in self.chows:
             params = c.params()
             d['name'].append(c.name)
-            d['breakpoint'].append(c.breakpoint)
+            d['breakpoint'].append(c.initial_breakpoint)
+            d['score'].append(c.score)
             for k,v in params.items():
-                for k1,v1 in v.items():
-                    d[k].setdefault(k1,[]).append(v1)
+                d[k].append(v)
         data, cols = [],[]
         for k, v in d.items():
-            if not isinstance(v, dict):
+            if not isinstance(v[0], dict):
                 cols.append((k, ''))
                 data.append(v)
             else:
-                for k2, v2 in v.items():
-                    cols.append((k, k2))
-                    data.append(v2)
+                subdata = {}
+                for v1 in v:
+                    for p in model_params:
+                        subdata.setdefault(p,[]).append(v1.get(p,np.nan))
+                for k1,v1 in subdata.items():
+                    cols.append((k, k1))
+                    data.append(v1)
         df = pd.DataFrame(list(zip(*data)), columns=pd.MultiIndex.from_tuples(cols))
         return df
     def to_excel(self, filename:str, **kwargs):
@@ -570,9 +681,10 @@ class ChewData():
         :params filename: filename
         """
         df = self.results_df()
-        with pd.ExcelWriter(filename) as writer:
+        with pd.ExcelWriter(filename, **kwargs) as writer:
             df.to_excel(writer, sheet_name = 'results')
             self.df.to_excel(writer, sheet_name = 'data')
+            pd.DataFrame([[x] for x in self.failed],columns=['Name']).to_excel(writer, sheet_name='failed')
     def to_csv(self, filename:str, **kwargs):
         """
         Export results to csv
@@ -592,7 +704,7 @@ class ChewData():
 
         ext = filename.split('.')[-1]
         if ext in ['xlsx','xls']:
-            self.to_excel(filename)
+            self.to_excel(filename, engine='openpyxl')
         elif ext == 'csv':
             self.to_csv(filename,**kwargs)
         else:

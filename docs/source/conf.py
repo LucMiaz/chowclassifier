@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.abspath(os.path.join('..', '..', 'src')))
 project = 'chowclassifier'
 copyright = '2023, Luc T Miaz'
 author = 'Luc T Miaz'
-release = '1.0'
+release = '1.1'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -42,7 +42,7 @@ exclude_patterns = ['build', 'Thumbs.db', '.DS_Store']
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+html_theme =  "sphinx_documatt_theme"
 
 html_sidebars = {
     '**': ['globaltoc.html', 'sourcelink.html', 'searchbox.html'],

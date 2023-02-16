@@ -1,0 +1,12 @@
+\babel@toc {english}{}\relax 
+\contentsline {chapter}{\numberline {1}Module description}{3}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Introduction}{3}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Chow test}{4}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Installation}{5}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Use}{5}{section.1.4}%
+\contentsline {chapter}{\numberline {2}Class and method descriptions}{7}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Chowclassifier}{7}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Script call}{12}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Licence}{13}{section.2.3}%
+\contentsline {chapter}{Python Module Index}{15}{section*.38}%
+\contentsline {chapter}{Index}{17}{section*.39}%

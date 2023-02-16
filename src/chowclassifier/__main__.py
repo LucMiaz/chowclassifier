@@ -13,6 +13,7 @@ def main():
     :params -y, --ycol: ycol
     :params -n, --namecol: name of column for groupby
     :params -b, --breakpoint: initial breakpoint (if None, midpoint will be taken)
+    :params -k, --breakpoints: candidates for breakpoints (list)
     :params -m, --margin: margin around initial breakpoint
     :params -o, --output: filename for the excel or csv file output
     :params -p, --path: path where the figures will be saved
@@ -33,6 +34,7 @@ def main():
     parser.add_argument('-y','--ycol', type=str, default = 'value')
     parser.add_argument('-n','--namecol', type=str, default = 'name')
     parser.add_argument('-b','--breakpoint', type=float, default = None)
+    parser.add_argument('-k','--breakpoints', type=list, default = None)
     parser.add_argument('-m','--margin', type=int, default = 5)
     parser.add_argument('-o','--output', type=str, default = 'output.xlsx')
     parser.add_argument('-p','--path', type=str, default = 'figs')
@@ -59,7 +61,8 @@ def main():
                 sep = args.sep,
                 margin = args.margin,
                 alpha = args.alpha,
-                initial_breakpoint = args.breakpoint)                                                                  
+                initial_breakpoint = args.breakpoint,
+                breakpoints = args.breakpoints)                                                                  
     C.run()
     if args.no_table is False:
         C.save_to_file(filename = args.output, sep = args.sep)

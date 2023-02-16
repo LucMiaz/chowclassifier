@@ -39,6 +39,8 @@ def test_chow():
             'D':{'bkp':None,'A':-1},
             'I':{'bkp':None,'A':1}}
     sng = small_noise_gen()
+    p = 0
+    i = 0
     for k,v in cl.items():
         if v['bkp'] is None:
             df = pd.DataFrame(zip(X,[v['A']*x*2+0 + next(sng) for x in X]), columns = ['year','value'])
@@ -52,6 +54,10 @@ def test_chow():
             df = pd.DataFrame(zip(X,y), columns = ['year','value'])
         C = Chow(df = df,margin = 50)
         C.run()
-        assert C.treeclass == k, f"Error for class {k}, found {C.treeclass}"
+        p+=int(C.treeclass == k)
+        i+=1
+    assert p/float(i) > 0.99, f"Divergence in test_chow, found true class with rate {p}."
+    
+    
 
             

@@ -61,8 +61,8 @@
 
 
 \title{chowclassifier}
-\date{Jan 18, 2023}
-\release{1.0}
+\date{Feb 15, 2023}
+\release{1.1}
 \author{Luc T Miaz}
 \newcommand{\sphinxlogo}{\vbox{}}
 \renewcommand{\releasename}{Release}
@@ -83,30 +83,50 @@
 \item {} 
 \sphinxAtStartPar
 \phantomsection\label{\detokenize{index:id4}}{\hyperref[\detokenize{index:welcome-to-chowclassifier-s-documentation}]{\sphinxcrossref{Welcome to chowclassifier’s documentation!}}}
+
+\item {} 
+\sphinxAtStartPar
+\phantomsection\label{\detokenize{index:id5}}{\hyperref[\detokenize{index:module-description}]{\sphinxcrossref{Module Description}}}
 \begin{itemize}
 \item {} 
 \sphinxAtStartPar
-\phantomsection\label{\detokenize{index:id5}}{\hyperref[\detokenize{index:description}]{\sphinxcrossref{Description}}}
+\phantomsection\label{\detokenize{index:id6}}{\hyperref[\detokenize{index:introduction}]{\sphinxcrossref{Introduction}}}
 
 \item {} 
 \sphinxAtStartPar
-\phantomsection\label{\detokenize{index:id6}}{\hyperref[\detokenize{index:chow-test}]{\sphinxcrossref{Chow test}}}
+\phantomsection\label{\detokenize{index:id7}}{\hyperref[\detokenize{index:chow-test}]{\sphinxcrossref{Chow test}}}
 
 \item {} 
 \sphinxAtStartPar
-\phantomsection\label{\detokenize{index:id7}}{\hyperref[\detokenize{index:installation}]{\sphinxcrossref{Installation}}}
+\phantomsection\label{\detokenize{index:id8}}{\hyperref[\detokenize{index:installation}]{\sphinxcrossref{Installation}}}
 
 \item {} 
 \sphinxAtStartPar
-\phantomsection\label{\detokenize{index:id8}}{\hyperref[\detokenize{index:use}]{\sphinxcrossref{Use}}}
+\phantomsection\label{\detokenize{index:id9}}{\hyperref[\detokenize{index:use}]{\sphinxcrossref{Use}}}
+
+\end{itemize}
 
 \item {} 
 \sphinxAtStartPar
-\phantomsection\label{\detokenize{index:id9}}{\hyperref[\detokenize{index:class-and-method-descriptions}]{\sphinxcrossref{Class and method descriptions}}}
+\phantomsection\label{\detokenize{index:id10}}{\hyperref[\detokenize{index:class-and-method-descriptions}]{\sphinxcrossref{Class and method descriptions}}}
+\begin{itemize}
+\item {} 
+\sphinxAtStartPar
+\phantomsection\label{\detokenize{index:id11}}{\hyperref[\detokenize{index:licence}]{\sphinxcrossref{Licence}}}
+
+\end{itemize}
 
 \item {} 
 \sphinxAtStartPar
-\phantomsection\label{\detokenize{index:id10}}{\hyperref[\detokenize{index:licence}]{\sphinxcrossref{Licence}}}
+\phantomsection\label{\detokenize{index:id12}}{\hyperref[\detokenize{index:outputs}]{\sphinxcrossref{Outputs}}}
+\begin{itemize}
+\item {} 
+\sphinxAtStartPar
+\phantomsection\label{\detokenize{index:id13}}{\hyperref[\detokenize{index:plot-and-plot-individually}]{\sphinxcrossref{\sphinxcode{\sphinxupquote{plot}} and \sphinxcode{\sphinxupquote{plot\_individually}}}}}
+
+\item {} 
+\sphinxAtStartPar
+\phantomsection\label{\detokenize{index:id14}}{\hyperref[\detokenize{index:save-to-file}]{\sphinxcrossref{\sphinxcode{\sphinxupquote{save\_to\_file}}}}}
 
 \end{itemize}
 
@@ -114,8 +134,11 @@
 \end{sphinxShadowBox}
 
 
-\chapter{Description}
-\label{\detokenize{index:description}}
+\chapter{Module Description}
+\label{\detokenize{index:module-description}}
+
+\section{Introduction}
+\label{\detokenize{index:introduction}}
 \sphinxAtStartPar
 There are many application where it is useful to analyse rapidly a large number of time\sphinxhyphen{}series for overall trends and possible breakpoint at which the trend changes. For example, spotting increasing trends in potential contaminants concentration from the outputs of non\sphinxhyphen{}target screening from high resolution mass spectrometry.
 
@@ -288,7 +311,7 @@ where set1 and set2 indicate respectively the data before the breakpoint and aft
 \noindent{\hspace*{\fill}\sphinxincludegraphics{{schema}.png}}
 
 
-\chapter{Chow test}
+\section{Chow test}
 \label{\detokenize{index:chow-test}}
 \sphinxAtStartPar
 Chow test was first derived by Gregory Chow %
@@ -299,7 +322,7 @@ Chow, Gregory C. “Test of Equality Between Sets of Coefficients in Two Linear 
 \begin{footnote}[2]\sphinxAtStartFootnote
 Fisher, Franklin M. “Tests of Equality Between Sets of Coefficients in Two Linear Regressions: An Expository Note”. \sphinxstyleemphasis{Econometrica2} 38, no. 2 (1970): 361\sphinxhyphen{}66. \sphinxurl{https://www.jstor.org/stable/1913018}.
 %
-\end{footnote}. We test the significance of the breakpoint under the null hypothesis \(Z=\frac{S_c-(S_1+S_2)}{S_1+S_2}\cdot\frac{N_1+N_2-2\cdot k}{k}\) where \(k=3\) is the total number of parameters. This follows a F\sphinxhyphen{}distribution with \(k\) and \(N_1+N_2-6\) degrees of freedom, where \(S_C\) is the sum of squared residuals of the regression on the full time series, \(S_1\), \(S_2\) are the sums of squared residuals of the regression on the first, and respectively, the second half of the time series and \(N_1\), \(N_2\) are the number of observation for each half. See also %
+\end{footnote}. We test the significance of the breakpoint at level \(\alpha^\star = \frac{\alpha}{m}\) (where \(m\) is the number of breakpoints tests, thus \(\alpha^\star\) is the Bonferroni corrected significance level)  under the null hypothesis \(Z=\frac{S_c-(S_1+S_2)}{S_1+S_2}\cdot\frac{N_1+N_2-2\cdot k}{k}\) where \(k=3\) is the total number of parameters. This follows a F\sphinxhyphen{}distribution with \(k\) and \(N_1+N_2-6\) degrees of freedom, where \(S_C\) is the sum of squared residuals of the regression on the full time series, \(S_1\), \(S_2\) are the sums of squared residuals of the regression on the first, and respectively, the second half of the time series and \(N_1\), \(N_2\) are the number of observation for each half. See also %
 \begin{footnote}[3]\sphinxAtStartFootnote
 \sphinxurl{https://en.wikipedia.org/wiki/Chow\_test}
 %
@@ -307,7 +330,7 @@ Fisher, Franklin M. “Tests of Equality Between Sets of Coefficients in Two Lin
 \subsubsection*{References}
 
 
-\chapter{Installation}
+\section{Installation}
 \label{\detokenize{index:installation}}
 \sphinxAtStartPar
 Use the following command to install chowlcassifier:
@@ -317,7 +340,7 @@ Use the following command to install chowlcassifier:
 \end{sphinxVerbatim}
 
 
-\chapter{Use}
+\section{Use}
 \label{\detokenize{index:use}}
 \sphinxAtStartPar
 The script can be ran on any file with \sphinxcode{\sphinxupquote{python \sphinxhyphen{}m chowclassifier \sphinxhyphen{}f path/to/file/filename.csv \sphinxhyphen{}X xcol \sphinxhyphen{}y ycol \sphinxhyphen{}n grouping\_name}} or it can be imported:
@@ -334,11 +357,14 @@ The script can be ran on any file with \sphinxcode{\sphinxupquote{python \sphinx
 \PYG{n}{timecol} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{Date}\PYG{l+s+s1}{\PYGZsq{}}
 \PYG{c+c1}{\PYGZsh{} what name has the y/value column?}
 \PYG{n}{ycol} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{Close}\PYG{l+s+s1}{\PYGZsq{}}
+\PYG{c+c1}{\PYGZsh{} what level of confidence? Note, when}
+\PYG{c+c1}{\PYGZsh{} testing multiple breakpoint, a Bonferroni correction will be applied}
+\PYG{n}{alpha} \PYG{o}{=} \PYG{l+m+mf}{0.01}
 \PYG{c+c1}{\PYGZsh{} initial breakpoint ?}
 \PYG{n}{initial\PYGZus{}breakpoint} \PYG{o}{=} \PYG{k+kc}{None}
 
 \PYG{n}{C} \PYG{o}{=} \PYG{n}{ChewData}\PYG{p}{(}\PYG{n}{filename} \PYG{o}{=} \PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+si}{\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{/}\PYG{l+s+s1}{\PYGZsq{}}\PYG{o}{.}\PYG{n}{join}\PYG{p}{(}\PYG{p}{[}\PYG{n}{x} \PYG{k}{for} \PYG{n}{x} \PYG{o+ow}{in} \PYG{p}{[}\PYG{n}{filepath}\PYG{p}{,}\PYG{n}{filename}\PYG{p}{]} \PYG{k}{if} \PYG{n}{x} \PYG{o+ow}{not} \PYG{o+ow}{in} \PYG{p}{[}\PYG{k+kc}{None}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{]}\PYG{p}{)}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}
-            \PYG{n}{timecol} \PYG{o}{=} \PYG{n}{timecol}\PYG{p}{,} \PYG{n}{ycol} \PYG{o}{=} \PYG{n}{ycol}\PYG{p}{)}
+            \PYG{n}{timecol} \PYG{o}{=} \PYG{n}{timecol}\PYG{p}{,} \PYG{n}{ycol} \PYG{o}{=} \PYG{n}{ycol}\PYG{p}{,} \PYG{n}{alpha} \PYG{o}{=} \PYG{n}{alpha}\PYG{p}{)}
 
 \PYG{c+c1}{\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} use the code line below if your X/time column is not a number, e.g. a date}
 \PYG{c+c1}{\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} comment it otherwise}
@@ -365,7 +391,7 @@ Implementation of a Chow Classifier
 \index{ChewData (class in chowclassifier.chow)@\spxentry{ChewData}\spxextra{class in chowclassifier.chow}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{modules:chowclassifier.chow.ChewData}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class\DUrole{w}{  }}}\sphinxcode{\sphinxupquote{chowclassifier.chow.}}\sphinxbfcode{\sphinxupquote{ChewData}}}{\emph{\DUrole{n}{df}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{Optional\DUrole{p}{{[}}pandas.core.frame.DataFrame\DUrole{p}{{]}}}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{None}}, \emph{\DUrole{n}{filename}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{Optional\DUrole{p}{{[}}str\DUrole{p}{{]}}}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{None}}, \emph{\DUrole{n}{namecol}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{str}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{\textquotesingle{}name\textquotesingle{}}}, \emph{\DUrole{n}{initial\_breakpoint}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{Optional\DUrole{p}{{[}}float\DUrole{p}{{]}}}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{None}}, \emph{\DUrole{n}{sep}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{},\textquotesingle{}}}, \emph{\DUrole{n}{timecol}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{str}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{\textquotesingle{}year\textquotesingle{}}}, \emph{\DUrole{n}{ycol}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{str}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{\textquotesingle{}area\textquotesingle{}}}, \emph{\DUrole{n}{margin}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{int}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{5}}, \emph{\DUrole{n}{alpha}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{float}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{0.01}}}{}
+\phantomsection\label{\detokenize{modules:chowclassifier.chow.ChewData}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class\DUrole{w}{  }}}\sphinxcode{\sphinxupquote{chowclassifier.chow.}}\sphinxbfcode{\sphinxupquote{ChewData}}}{\emph{\DUrole{n}{df}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{Optional\DUrole{p}{{[}}pandas.core.frame.DataFrame\DUrole{p}{{]}}}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{None}}, \emph{\DUrole{n}{filename}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{Optional\DUrole{p}{{[}}str\DUrole{p}{{]}}}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{None}}, \emph{\DUrole{n}{namecol}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{str}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{\textquotesingle{}name\textquotesingle{}}}, \emph{\DUrole{n}{initial\_breakpoint}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{Optional\DUrole{p}{{[}}float\DUrole{p}{{]}}}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{None}}, \emph{\DUrole{n}{breakpoints}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{Optional\DUrole{p}{{[}}list\DUrole{p}{{]}}}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{None}}, \emph{\DUrole{n}{sep}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{},\textquotesingle{}}}, \emph{\DUrole{n}{timecol}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{str}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{\textquotesingle{}year\textquotesingle{}}}, \emph{\DUrole{n}{ycol}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{str}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{\textquotesingle{}value\textquotesingle{}}}, \emph{\DUrole{n}{margin}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{int}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{2}}, \emph{\DUrole{n}{alpha}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{float}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{0.01}}}{}
 \sphinxAtStartPar
 Handle a full data frame with grouping of time series
 \begin{quote}\begin{description}
@@ -385,6 +411,10 @@ name of the column with group names (used in groupby)
 \sphinxAtStartPar
 initial breakpoint
 
+\item[{Params breakpoints}] \leavevmode
+\sphinxAtStartPar
+candidates for breakpoints
+
 \item[{Params sep}] \leavevmode
 \sphinxAtStartPar
 separator in csv
@@ -403,7 +433,7 @@ range of indexes around breakpoint/midpoint, see Chow.get\_breakpoints
 
 \item[{Params alpha}] \leavevmode
 \sphinxAtStartPar
-significance level at which to test the trends
+significance level at which to test the trends (Bonferroni correction will be applied later)
 
 \end{description}\end{quote}
 \index{get\_df() (chowclassifier.chow.ChewData method)@\spxentry{get\_df()}\spxextra{chowclassifier.chow.ChewData method}}
@@ -443,7 +473,7 @@ give the date format (default yyyy\sphinxhyphen{}mm\sphinxhyphen{}dd)
 \index{plot() (chowclassifier.chow.ChewData method)@\spxentry{plot()}\spxextra{chowclassifier.chow.ChewData method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{modules:chowclassifier.chow.ChewData.plot}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{plot}}}{\emph{\DUrole{n}{filename}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{str}}, \emph{\DUrole{n}{title}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{str}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{\textquotesingle{}\textquotesingle{}}}, \emph{\DUrole{n}{nrows}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{Union\DUrole{p}{{[}}None\DUrole{p}{,}\DUrole{w}{  }int\DUrole{p}{{]}}}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{None}}, \emph{\DUrole{n}{ncols}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{Union\DUrole{p}{{[}}None\DUrole{p}{,}\DUrole{w}{  }int\DUrole{p}{{]}}}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{None}}, \emph{\DUrole{o}{**}\DUrole{n}{params}}}{}
+\phantomsection\label{\detokenize{modules:chowclassifier.chow.ChewData.plot}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{plot}}}{\emph{\DUrole{n}{filename}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{str}}, \emph{\DUrole{n}{title}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{str}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{\textquotesingle{}\textquotesingle{}}}, \emph{\DUrole{n}{divide}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{int}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{1}}, \emph{\DUrole{n}{nrows}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{Union\DUrole{p}{{[}}None\DUrole{p}{,}\DUrole{w}{  }int\DUrole{p}{{]}}}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{None}}, \emph{\DUrole{n}{ncols}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{Union\DUrole{p}{{[}}None\DUrole{p}{,}\DUrole{w}{  }int\DUrole{p}{{]}}}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{None}}, \emph{\DUrole{n}{scatterparams}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{dict}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{\{\}}}, \emph{\DUrole{n}{fillparams}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{dict}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{\{\}}}, \emph{\DUrole{n}{fitparams}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{dict}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{\{\}}}, \emph{\DUrole{o}{**}\DUrole{n}{params}}}{}
 \sphinxAtStartPar
 Plot all trends in one image
 \begin{quote}\begin{description}
@@ -455,6 +485,10 @@ name of the output with extension (e.g name.pdf)
 \sphinxAtStartPar
 title printed on the output
 
+\item[{Params divide}] \leavevmode
+\sphinxAtStartPar
+divide the plots into n files
+
 \item[{Params ncols}] \leavevmode
 \sphinxAtStartPar
 number of columns
@@ -463,9 +497,21 @@ number of columns
 \sphinxAtStartPar
 number of rows
 
+\item[{Params scatterparams}] \leavevmode
+\sphinxAtStartPar
+dictionnary of parameters for the scatter part of the plot, passed to chew plot
+
+\item[{Params fillparams}] \leavevmode
+\sphinxAtStartPar
+dictionnary of parameters for the error fill area of the plot, passed to chew plot
+
+\item[{Params fitparams}] \leavevmode
+\sphinxAtStartPar
+dictionnary of parameters for the fitted line, passed to chew plot
+
 \item[{Params params}] \leavevmode
 \sphinxAtStartPar
-named parameters passed to matplotlib, eg xlabel, ylabel, sharey, figsize
+named parameters passed to matplotlib, eg xlabel, ylabel, sharey, figsize, pad
 
 \end{description}\end{quote}
 
@@ -506,7 +552,7 @@ Create dataframe with results
 \index{run() (chowclassifier.chow.ChewData method)@\spxentry{run()}\spxextra{chowclassifier.chow.ChewData method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{modules:chowclassifier.chow.ChewData.run}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{run}}}{\emph{\DUrole{n}{breakpoint}\DUrole{o}{=}\DUrole{default_value}{None}}}{}
+\phantomsection\label{\detokenize{modules:chowclassifier.chow.ChewData.run}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{run}}}{\emph{\DUrole{n}{initial\_breakpoint}\DUrole{o}{=}\DUrole{default_value}{None}}}{}
 \sphinxAtStartPar
 Run the classification for each group
 \begin{quote}\begin{description}
@@ -573,13 +619,16 @@ filename
 \index{Chow (class in chowclassifier.chow)@\spxentry{Chow}\spxextra{class in chowclassifier.chow}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{modules:chowclassifier.chow.Chow}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class\DUrole{w}{  }}}\sphinxcode{\sphinxupquote{chowclassifier.chow.}}\sphinxbfcode{\sphinxupquote{Chow}}}{\emph{\DUrole{n}{df}}, \emph{\DUrole{n}{name}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{str}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{\textquotesingle{}\textquotesingle{}}}, \emph{\DUrole{n}{breakpoint}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{Optional\DUrole{p}{{[}}float\DUrole{p}{{]}}}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{None}}, \emph{\DUrole{n}{timecol}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{str}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{\textquotesingle{}year\textquotesingle{}}}, \emph{\DUrole{n}{ycol}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{str}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{\textquotesingle{}value\textquotesingle{}}}, \emph{\DUrole{n}{margin}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{int}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{5}}}{}
+\phantomsection\label{\detokenize{modules:chowclassifier.chow.Chow}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class\DUrole{w}{  }}}\sphinxcode{\sphinxupquote{chowclassifier.chow.}}\sphinxbfcode{\sphinxupquote{Chow}}}{\emph{\DUrole{n}{df}}, \emph{\DUrole{n}{name}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{str}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{\textquotesingle{}\textquotesingle{}}}, \emph{\DUrole{n}{initial\_breakpoint}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{Optional\DUrole{p}{{[}}float\DUrole{p}{{]}}}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{None}}, \emph{\DUrole{n}{breakpoints}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{Optional\DUrole{p}{{[}}list\DUrole{p}{{]}}}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{None}}, \emph{\DUrole{n}{timecol}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{str}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{\textquotesingle{}year\textquotesingle{}}}, \emph{\DUrole{n}{ycol}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{str}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{\textquotesingle{}value\textquotesingle{}}}, \emph{\DUrole{n}{alpha}\DUrole{o}{=}\DUrole{default_value}{0.01}}, \emph{\DUrole{n}{margin}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{int}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{2}}}{}
 \sphinxAtStartPar
 Class handling the chow analysis
 Call \sphinxtitleref{run()} to run the analysis (find breakpoint and classify)
 Call afterwards \sphinxtitleref{params()} to get the regressions (y=k * x + b) parameters as
 {[}{[}model1\_k, model1\_b, model1\_Rsquared{]},{[}model2\_k, model2\_b, model2\_Rsquared{]}{]}
 (if the breakpoint is not significant, model1 = model2)
+The significance level of the breakpoint is adjusted with Bonferroni correction,
+i.e. dividing alpha by the number of tests. The confidence interval of the slope
+and intercept are at significance level alpha (not corrected).
 \begin{quote}\begin{description}
 \item[{Params df}] \leavevmode
 \sphinxAtStartPar
@@ -593,6 +642,10 @@ name of the dataset (optional)
 \sphinxAtStartPar
 breakpoint (if None, midpoint of X series will be used)
 
+\item[{Params breakpoints}] \leavevmode
+\sphinxAtStartPar
+candidates for the breakpoints
+
 \item[{Params timecol}] \leavevmode
 \sphinxAtStartPar
 name of time column (X)
@@ -600,6 +653,10 @@ name of time column (X)
 \item[{Params ycol}] \leavevmode
 \sphinxAtStartPar
 name of the variable column (Y)
+
+\item[{Parameters}] \leavevmode
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{alpha}} \textendash{} significance level (without Bonferroni correction), can be changed with \sphinxcode{\sphinxupquote{Chow.set\_alpha(0.01)}}
 
 \item[{Params margin}] \leavevmode
 \sphinxAtStartPar
@@ -612,7 +669,7 @@ the set of breakpoints {[}1.5,2,3{]} will be tested.
 \index{classify() (chowclassifier.chow.Chow method)@\spxentry{classify()}\spxextra{chowclassifier.chow.Chow method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{modules:chowclassifier.chow.Chow.classify}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{classify}}}{\emph{\DUrole{n}{alpha}\DUrole{o}{=}\DUrole{default_value}{0.01}}, \emph{\DUrole{o}{**}\DUrole{n}{kwargs}}}{}
+\phantomsection\label{\detokenize{modules:chowclassifier.chow.Chow.classify}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{classify}}}{\emph{\DUrole{o}{**}\DUrole{n}{kwargs}}}{}
 \sphinxAtStartPar
 classify in the dataset based on results of Chow test at significance level alpha
 Possible values are:
@@ -708,7 +765,7 @@ sets the breakpoints
 \index{params() (chowclassifier.chow.Chow method)@\spxentry{params()}\spxextra{chowclassifier.chow.Chow method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{modules:chowclassifier.chow.Chow.params}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{params}}}{\emph{\DUrole{n}{alpha}\DUrole{o}{=}\DUrole{default_value}{None}}}{}
+\phantomsection\label{\detokenize{modules:chowclassifier.chow.Chow.params}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{params}}}{}{}
 \sphinxAtStartPar
 Returns parameters of model
 
@@ -717,7 +774,7 @@ Returns parameters of model
 \index{plot() (chowclassifier.chow.Chow method)@\spxentry{plot()}\spxextra{chowclassifier.chow.Chow method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{modules:chowclassifier.chow.Chow.plot}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{plot}}}{\emph{\DUrole{n}{color}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{filename}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{Optional\DUrole{p}{{[}}str\DUrole{p}{{]}}}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{None}}, \emph{\DUrole{n}{ax}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{figsize}\DUrole{o}{=}\DUrole{default_value}{(16, 8)}}, \emph{\DUrole{n}{ylabel}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{str}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{\textquotesingle{}\textquotesingle{}}}, \emph{\DUrole{n}{xlabel}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{str}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{\textquotesingle{}\textquotesingle{}}}, \emph{\DUrole{n}{title}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{str}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{\textquotesingle{}\textquotesingle{}}}, \emph{\DUrole{n}{ylog}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{bool}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{False}}, \emph{\DUrole{n}{scatterparams}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{fillparams}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{fitparams}\DUrole{o}{=}\DUrole{default_value}{None}}}{}
+\phantomsection\label{\detokenize{modules:chowclassifier.chow.Chow.plot}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{plot}}}{\emph{\DUrole{n}{color}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{filename}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{Optional\DUrole{p}{{[}}str\DUrole{p}{{]}}}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{None}}, \emph{\DUrole{n}{ax}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{figsize}\DUrole{o}{=}\DUrole{default_value}{(16, 8)}}, \emph{\DUrole{n}{ylabel}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{str}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{\textquotesingle{}\textquotesingle{}}}, \emph{\DUrole{n}{xlabel}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{str}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{\textquotesingle{}\textquotesingle{}}}, \emph{\DUrole{n}{title}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{str}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{\textquotesingle{}\textquotesingle{}}}, \emph{\DUrole{n}{ylog}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{bool}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{False}}, \emph{\DUrole{n}{scatterparams}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{dict}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{\{\}}}, \emph{\DUrole{n}{fillparams}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{dict}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{\{\}}}, \emph{\DUrole{n}{fitparams}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{dict}\DUrole{w}{  }\DUrole{o}{=}\DUrole{w}{  }\DUrole{default_value}{\{\}}}}{}
 \sphinxAtStartPar
 Plot the regression model(s)
 \begin{quote}\begin{description}
@@ -775,23 +832,39 @@ parameter for the fitted line
 \phantomsection\label{\detokenize{modules:chowclassifier.chow.Chow.run}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{run}}}{\emph{\DUrole{o}{**}\DUrole{n}{kwargs}}}{}
 \sphinxAtStartPar
 Run the chow classification. parameters will be forwarded to run and classify,
-e.g. breakpoint can be passed to run, and alpha to classify
+e.g. initial\_breakpoint can be passed to run, and alpha to classify
 
 \end{fulllineitems}
 
 \index{run\_chow() (chowclassifier.chow.Chow method)@\spxentry{run\_chow()}\spxextra{chowclassifier.chow.Chow method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{modules:chowclassifier.chow.Chow.run_chow}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{run\_chow}}}{\emph{\DUrole{n}{breakpoint}}, \emph{\DUrole{n}{normalise}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
+\phantomsection\label{\detokenize{modules:chowclassifier.chow.Chow.run_chow}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{run\_chow}}}{\emph{\DUrole{n}{bkp}}, \emph{\DUrole{n}{normalise}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
 \sphinxAtStartPar
 Run chow test at breakpoint
+
+\end{fulllineitems}
+
+\index{set\_alpha() (chowclassifier.chow.Chow method)@\spxentry{set\_alpha()}\spxextra{chowclassifier.chow.Chow method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{modules:chowclassifier.chow.Chow.set_alpha}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{set\_alpha}}}{\emph{\DUrole{n}{alpha}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{float}}}{}
+\sphinxAtStartPar
+Changes the current statistical significance level
+The bonferroni correction will be applied
+\begin{quote}\begin{description}
+\item[{Params alpha}] \leavevmode
+\sphinxAtStartPar
+positive float in {]}0,1{[}
+
+\end{description}\end{quote}
 
 \end{fulllineitems}
 
 \index{summary() (chowclassifier.chow.Chow method)@\spxentry{summary()}\spxextra{chowclassifier.chow.Chow method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{modules:chowclassifier.chow.Chow.summary}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{summary}}}{\emph{\DUrole{n}{alpha}\DUrole{o}{=}\DUrole{default_value}{0.01}}}{}
+\phantomsection\label{\detokenize{modules:chowclassifier.chow.Chow.summary}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{summary}}}{}{}
 \sphinxAtStartPar
 Print the summary of the model(s)
 
@@ -873,17 +946,600 @@ sample date to infer date format from.
 
 
 
-\chapter{Licence}
+\section{Script call}
+\label{\detokenize{modules:module-chowclassifier.__main__}}\label{\detokenize{modules:script-call}}\index{module@\spxentry{module}!chowclassifier.\_\_main\_\_@\spxentry{chowclassifier.\_\_main\_\_}}\index{chowclassifier.\_\_main\_\_@\spxentry{chowclassifier.\_\_main\_\_}!module@\spxentry{module}}\index{main() (in module chowclassifier.\_\_main\_\_)@\spxentry{main()}\spxextra{in module chowclassifier.\_\_main\_\_}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{modules:chowclassifier.__main__.main}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{chowclassifier.\_\_main\_\_.}}\sphinxbfcode{\sphinxupquote{main}}}{}{}
+\sphinxAtStartPar
+run analysis on given data
+\begin{quote}\begin{description}
+\item[{Params \sphinxhyphen{}f, \textendash{}filename}] \leavevmode
+\sphinxAtStartPar
+filename
+
+\item[{Params \sphinxhyphen{}s, \textendash{}sep}] \leavevmode
+\sphinxAtStartPar
+separator for parsing the filename (if type csv)
+
+\item[{Params \sphinxhyphen{}X, \textendash{}timecol}] \leavevmode
+\sphinxAtStartPar
+timecol
+
+\item[{Params \sphinxhyphen{}y, \textendash{}ycol}] \leavevmode
+\sphinxAtStartPar
+ycol
+
+\item[{Params \sphinxhyphen{}n, \textendash{}namecol}] \leavevmode
+\sphinxAtStartPar
+name of column for groupby
+
+\item[{Params \sphinxhyphen{}b, \textendash{}breakpoint}] \leavevmode
+\sphinxAtStartPar
+initial breakpoint (if None, midpoint will be taken)
+
+\item[{Params \sphinxhyphen{}k, \textendash{}breakpoints}] \leavevmode
+\sphinxAtStartPar
+candidates for breakpoints (list)
+
+\item[{Params \sphinxhyphen{}m, \textendash{}margin}] \leavevmode
+\sphinxAtStartPar
+margin around initial breakpoint
+
+\item[{Params \sphinxhyphen{}o, \textendash{}output}] \leavevmode
+\sphinxAtStartPar
+filename for the excel or csv file output
+
+\item[{Params \sphinxhyphen{}p, \textendash{}path}] \leavevmode
+\sphinxAtStartPar
+path where the figures will be saved
+
+\item[{Params \sphinxhyphen{}a, \textendash{}alpha}] \leavevmode
+\sphinxAtStartPar
+significance level in (0,1)
+
+\item[{Params \textendash{}no\sphinxhyphen{}figures}] \leavevmode
+\sphinxAtStartPar
+Do not export figures
+
+\item[{Params \textendash{}no\sphinxhyphen{}table}] \leavevmode
+\sphinxAtStartPar
+Do not export results table
+
+\item[{Params \textendash{}nrows}] \leavevmode
+\sphinxAtStartPar
+Numbers of rows in the grouped figure (leave ncols blank)
+
+\item[{Params \textendash{}ncols}] \leavevmode
+\sphinxAtStartPar
+Number of columns in the groupe figure (leave nrows blank)
+
+\item[{Params \textendash{}fig\sphinxhyphen{}title}] \leavevmode
+\sphinxAtStartPar
+title of the figure
+
+\item[{Params \textendash{}xlabel}] \leavevmode
+\sphinxAtStartPar
+label of the x axis
+
+\item[{Params \textendash{}ylabel}] \leavevmode
+\sphinxAtStartPar
+label of the y axis
+
+\item[{Params \textendash{}sharey}] \leavevmode
+\sphinxAtStartPar
+share y axis across subplots
+
+\item[{Params \textendash{}figsize}] \leavevmode
+\sphinxAtStartPar
+size of figures
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+
+
+\section{Licence}
 \label{\detokenize{index:licence}}
 \sphinxAtStartPar
 GNU LESSER GENERAL PUBLIC LICENSE
 Version 2.1, February 1999
 
 
+\chapter{Outputs}
+\label{\detokenize{index:outputs}}
+
+\section{\sphinxstyleliteralintitle{\sphinxupquote{plot}} and \sphinxstyleliteralintitle{\sphinxupquote{plot\_individually}}}
+\label{\detokenize{index:plot-and-plot-individually}}
+\sphinxAtStartPar
+Both methods, plot the best models (either the regression on the whole dataset or, two separate regressions on the left and right parts of the dataset split at breakpoint) for all subdatasets (either each in individual files or together).
+The filled area represents the confidence interval for the predicted values in the regression model/models. The scatter points show the observed data. The lines are the regression lines.
+
+
+\section{\sphinxstyleliteralintitle{\sphinxupquote{save\_to\_file}}}
+\label{\detokenize{index:save-to-file}}
+\sphinxAtStartPar
+The output’s columns are described in the following table. \sphinxcode{\sphinxupquote{model0}} correspond to the regression on the whole dataset. \sphinxcode{\sphinxupquote{model1}} and \sphinxcode{\sphinxupquote{model2}} correspond to regressions on respectively the left and right parts of the dataset split at the breakpoint.
+
+
+\begin{savenotes}\sphinxatlongtablestart\begin{longtable}[c]{|l|l|l|}
+\hline
+\sphinxstyletheadfamily 
+\sphinxAtStartPar
+Model
+&\sphinxstyletheadfamily 
+\sphinxAtStartPar
+property
+&\sphinxstyletheadfamily 
+\sphinxAtStartPar
+Description of the property
+\\
+\hline
+\endfirsthead
+
+\multicolumn{3}{c}%
+{\makebox[0pt]{\sphinxtablecontinued{\tablename\ \thetable{} \textendash{} continued from previous page}}}\\
+\hline
+\sphinxstyletheadfamily 
+\sphinxAtStartPar
+Model
+&\sphinxstyletheadfamily 
+\sphinxAtStartPar
+property
+&\sphinxstyletheadfamily 
+\sphinxAtStartPar
+Description of the property
+\\
+\hline
+\endhead
+
+\hline
+\multicolumn{3}{r}{\makebox[0pt][r]{\sphinxtablecontinued{continues on next page}}}\\
+\endfoot
+
+\endlastfoot
+
+\sphinxAtStartPar
+Global
+&
+\sphinxAtStartPar
+name
+&
+\sphinxAtStartPar
+Name of the group
+\\
+\hline
+\sphinxAtStartPar
+Global
+&
+\sphinxAtStartPar
+breakpoint
+&
+\sphinxAtStartPar
+Significant breakpoint (if found)
+\\
+\hline
+\sphinxAtStartPar
+Global
+&
+\sphinxAtStartPar
+score
+&
+\sphinxAtStartPar
+lowest p\sphinxhyphen{}value over the tested breakpoints
+\\
+\hline
+\sphinxAtStartPar
+model0
+&
+\sphinxAtStartPar
+intercept
+&
+\sphinxAtStartPar
+intercept
+\\
+\hline
+\sphinxAtStartPar
+model0
+&
+\sphinxAtStartPar
+slope
+&
+\sphinxAtStartPar
+slope
+\\
+\hline
+\sphinxAtStartPar
+model0
+&
+\sphinxAtStartPar
+R2
+&
+\sphinxAtStartPar
+coefficient of determination
+\\
+\hline
+\sphinxAtStartPar
+model0
+&
+\sphinxAtStartPar
+se\_intercept
+&
+\sphinxAtStartPar
+standard error for the intercept
+\\
+\hline
+\sphinxAtStartPar
+model0
+&
+\sphinxAtStartPar
+se\_slope
+&
+\sphinxAtStartPar
+standard error for the slope
+\\
+\hline
+\sphinxAtStartPar
+model0
+&
+\sphinxAtStartPar
+n
+&
+\sphinxAtStartPar
+number of data points used in the fit
+\\
+\hline
+\sphinxAtStartPar
+model0
+&
+\sphinxAtStartPar
+intercept\_pvalue
+&
+\sphinxAtStartPar
+p\sphinxhyphen{}value of the intercept
+\\
+\hline
+\sphinxAtStartPar
+model0
+&
+\sphinxAtStartPar
+slope\_pvalue
+&
+\sphinxAtStartPar
+p\sphinxhyphen{}value of the slope
+\\
+\hline
+\sphinxAtStartPar
+model0
+&
+\sphinxAtStartPar
+intercept\_ci\_lower
+&
+\sphinxAtStartPar
+lower bound of the confidence interval of the intercept
+\\
+\hline
+\sphinxAtStartPar
+model0
+&
+\sphinxAtStartPar
+intercept\_ci\_upper
+&
+\sphinxAtStartPar
+upper bound of the confidence interval of the intercept
+\\
+\hline
+\sphinxAtStartPar
+model0
+&
+\sphinxAtStartPar
+slope\_ci\_lower
+&
+\sphinxAtStartPar
+lower bound of the confidence slope of the intercept
+\\
+\hline
+\sphinxAtStartPar
+model0
+&
+\sphinxAtStartPar
+slope\_ci\_upper
+&
+\sphinxAtStartPar
+upper bound of the confidence interval of the slope
+\\
+\hline&
+\sphinxAtStartPar
+alpha
+&
+\sphinxAtStartPar
+significance level at which the regressions were tested
+\\
+\hline&
+\sphinxAtStartPar
+alpha\_Bonferroni\_corrected
+&
+\sphinxAtStartPar
+Bonferroni corrected significance level at which the breakpoints were tested
+\\
+\hline
+\sphinxAtStartPar
+model1
+&
+\sphinxAtStartPar
+intercept
+&
+\sphinxAtStartPar
+intercept
+\\
+\hline
+\sphinxAtStartPar
+model1
+&
+\sphinxAtStartPar
+slope
+&
+\sphinxAtStartPar
+slope
+\\
+\hline
+\sphinxAtStartPar
+model1
+&
+\sphinxAtStartPar
+R2
+&
+\sphinxAtStartPar
+coefficient of determination
+\\
+\hline
+\sphinxAtStartPar
+model1
+&
+\sphinxAtStartPar
+se\_intercept
+&
+\sphinxAtStartPar
+standard error for the intercept
+\\
+\hline
+\sphinxAtStartPar
+model1
+&
+\sphinxAtStartPar
+se\_slope
+&
+\sphinxAtStartPar
+standard error for the slope
+\\
+\hline
+\sphinxAtStartPar
+model1
+&
+\sphinxAtStartPar
+n
+&
+\sphinxAtStartPar
+number of data points used in the fit
+\\
+\hline
+\sphinxAtStartPar
+model1
+&
+\sphinxAtStartPar
+intercept\_pvalue
+&
+\sphinxAtStartPar
+p\sphinxhyphen{}value of the intercept
+\\
+\hline
+\sphinxAtStartPar
+model1
+&
+\sphinxAtStartPar
+slope\_pvalue
+&
+\sphinxAtStartPar
+p\sphinxhyphen{}value of the slope
+\\
+\hline
+\sphinxAtStartPar
+model1
+&
+\sphinxAtStartPar
+intercept\_ci\_lower
+&
+\sphinxAtStartPar
+lower bound of the confidence interval of the intercept
+\\
+\hline
+\sphinxAtStartPar
+model1
+&
+\sphinxAtStartPar
+intercept\_ci\_upper
+&
+\sphinxAtStartPar
+upper bound of the confidence interval of the intercept
+\\
+\hline
+\sphinxAtStartPar
+model1
+&
+\sphinxAtStartPar
+slope\_ci\_lower
+&
+\sphinxAtStartPar
+lower bound of the confidence slope of the intercept
+\\
+\hline
+\sphinxAtStartPar
+model1
+&
+\sphinxAtStartPar
+slope\_ci\_upper
+&
+\sphinxAtStartPar
+upper bound of the confidence interval of the slope
+\\
+\hline&
+\sphinxAtStartPar
+alpha
+&
+\sphinxAtStartPar
+significance level at which the regressions were tested
+\\
+\hline&
+\sphinxAtStartPar
+alpha\_Bonferroni\_corrected
+&
+\sphinxAtStartPar
+Bonferroni corrected significance level at which the breakpoints were tested
+\\
+\hline
+\sphinxAtStartPar
+model2
+&
+\sphinxAtStartPar
+intercept
+&
+\sphinxAtStartPar
+intercept
+\\
+\hline
+\sphinxAtStartPar
+model2
+&
+\sphinxAtStartPar
+slope
+&
+\sphinxAtStartPar
+slope
+\\
+\hline
+\sphinxAtStartPar
+model2
+&
+\sphinxAtStartPar
+R2
+&
+\sphinxAtStartPar
+coefficient of determination
+\\
+\hline
+\sphinxAtStartPar
+model2
+&
+\sphinxAtStartPar
+se\_intercept
+&
+\sphinxAtStartPar
+standard error for the intercept
+\\
+\hline
+\sphinxAtStartPar
+model2
+&
+\sphinxAtStartPar
+se\_slope
+&
+\sphinxAtStartPar
+standard error for the slope
+\\
+\hline
+\sphinxAtStartPar
+model2
+&
+\sphinxAtStartPar
+n
+&
+\sphinxAtStartPar
+number of data points used in the fit
+\\
+\hline
+\sphinxAtStartPar
+model2
+&
+\sphinxAtStartPar
+intercept\_pvalue
+&
+\sphinxAtStartPar
+p\sphinxhyphen{}value of the intercept
+\\
+\hline
+\sphinxAtStartPar
+model2
+&
+\sphinxAtStartPar
+slope\_pvalue
+&
+\sphinxAtStartPar
+p\sphinxhyphen{}value of the slope
+\\
+\hline
+\sphinxAtStartPar
+model2
+&
+\sphinxAtStartPar
+intercept\_ci\_lower
+&
+\sphinxAtStartPar
+lower bound of the confidence interval of the intercept
+\\
+\hline
+\sphinxAtStartPar
+model2
+&
+\sphinxAtStartPar
+intercept\_ci\_upper
+&
+\sphinxAtStartPar
+upper bound of the confidence interval of the intercept
+\\
+\hline
+\sphinxAtStartPar
+model2
+&
+\sphinxAtStartPar
+slope\_ci\_lower
+&
+\sphinxAtStartPar
+lower bound of the confidence slope of the intercept
+\\
+\hline
+\sphinxAtStartPar
+model2
+&
+\sphinxAtStartPar
+slope\_ci\_upper
+&
+\sphinxAtStartPar
+upper bound of the confidence interval of the slope
+\\
+\hline&
+\sphinxAtStartPar
+alpha
+&
+\sphinxAtStartPar
+significance level at which the regressions were tested
+\\
+\hline&
+\sphinxAtStartPar
+alpha\_Bonferroni\_corrected
+&
+\sphinxAtStartPar
+Bonferroni corrected significance level at which the breakpoints were tested
+\\
+\hline
+\end{longtable}\sphinxatlongtableend\end{savenotes}
+
+
 \renewcommand{\indexname}{Python Module Index}
 \begin{sphinxtheindex}
 \let\bigletter\sphinxstyleindexlettergroup
 \bigletter{c}
+\item\relax\sphinxstyleindexentry{chowclassifier.\_\_main\_\_}\sphinxstyleindexpageref{modules:\detokenize{module-chowclassifier.__main__}}
 \item\relax\sphinxstyleindexentry{chowclassifier.chow}\sphinxstyleindexpageref{modules:\detokenize{module-chowclassifier.chow}}
 \end{sphinxtheindex}
 

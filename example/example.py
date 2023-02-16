@@ -9,11 +9,14 @@ savingpath_figures = 'example/fig'
 timecol = 'Date'
 # what name has the y/value column?
 ycol = 'Close'
+# what level of confidence? Note, when
+# testing multiple breakpoint, a Bonferroni correction will be applied
+alpha = 0.01
 # initial breakpoint ?
 initial_breakpoint = None
 
 C = ChewData(filename = f"{'/'.join([x for x in [filepath,filename] if x not in [None,'']])}",
-            timecol = timecol, ycol = ycol)
+            timecol = timecol, ycol = ycol, alpha = alpha)
 
 ########## use the code line below if your X/time column is not a number, e.g. a date
 ########## comment it otherwise

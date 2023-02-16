@@ -1,5 +1,6 @@
 name: chow
 dependencies:
+  - alive-progress
   - matplotlib
   - numpy
   - pandas

@@ -76,7 +76,7 @@ def synt_data(n=1000,m=50,seed = None):
     r = 3
     data = {'year':[x for x in X for i in range(0,r)]}
     exp = {}
-    with_breakpoints = np.random.binomial(1,0.2,m)# flip coin to see if broken at bkp (favour breaking)
+    with_breakpoints = np.random.binomial(1,0.8,m)# flip coin to see if broken at bkp (favour breaking)
     bks = [x if y == 1 else None for x,y in zip(np.random.choice(range(5,len(X)-5),m),with_breakpoints)]# select random breakpoints
     nparams = m + sum(with_breakpoints) # total number of pairs of parameters needed
     A = yield_param(np.random.normal,loc=0,scale=1,size=nparams) # slope gen
@@ -107,7 +107,7 @@ def synt_data(n=1000,m=50,seed = None):
     return df,exp
 
 def test_synt_data():
-    sdf,exp = synt_data(n=40,m=25)
+    sdf,exp = synt_data(n=40,m=50)
     C = ChewData(sdf, margin = 60)
     C.run(breakpoint = None)
     res = pd.DataFrame(columns = ['tt','bk','ett','ebk','acc'])
@@ -149,8 +149,9 @@ def test_synt_data():
         res.loc[len(res)] = [c.treeclass,c.breakpoint,
                                 exp[c.name]['tt'],#expected class
                                 exp[c.name]['bkp'],#expected breakpoint
-                                acc]
+                                acc] # acc = 0 means correct assignment.
+    res['acc_bk'] = [v['bk'] == v['ebk'] if v['bk'] is not None and v['ebk'] is not None else True for i,v in res.iterrows()]
+    assert sum(res['acc_bk'])/len(res) > 0.85, f"Got wrong breakpoint accurary, {sum(res['acc_bk'])/len(res)}"
     assert sum(res['acc'])/len(res) < 0.6, f"Got many missmatch {res.loc[res['tt']!=res['ett'],:]}"
-
 
 
