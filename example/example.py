@@ -20,9 +20,9 @@ C = ChewData(filename = f"{'/'.join([x for x in [filepath,filename] if x not in 
 
 ########## use the code line below if your X/time column is not a number, e.g. a date
 ########## comment it otherwise
-C.parse_timecol(date_format = '%Y-%m-%d') # 
+# C.parse_timecol(date_format = '%Y-%m-%d') # 
 
-C.run(breakpoint = initial_breakpoint)
+C.run(initial_breakpoint = initial_breakpoint)
 C.plot(xlabel = 'time', ylabel='value',# labels given to the axes
         title = "Chow Classification",# title of the main plot
         filename = f"{'/'.join([x for x in [savingpath_figures,filename] if x not in [None,'']])}.png",
@@ -30,3 +30,6 @@ C.plot(xlabel = 'time', ylabel='value',# labels given to the axes
 C.plot_individually(savingpath = savingpath_figures, format = 'png',
                     xlabel = 'time', ylabel='value',# labels given to the axes
                     )
+
+C.plot_by_group('g',savingpath = savingpath_figures, format = 'png',
+                    xlabel = 'time', ylabel='value')

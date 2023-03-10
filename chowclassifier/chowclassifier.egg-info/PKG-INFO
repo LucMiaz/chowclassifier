@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: chowclassifier
-Version: 1.0.2
+Version: 1.0.4
 Summary: Classification of time trends using Chow test
 Author-email: Luc Miaz <luc@miaz.ch>
 License:                   GNU LESSER GENERAL PUBLIC LICENSE

@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 from scipy.stats import f as Fdist
 import matplotlib.pyplot as plt
+from matplotlib import colormaps
 import seaborn as sns
 import statsmodels.api as sm
 from typing import Union
@@ -22,9 +23,9 @@ plt.rcParams['font.serif'] = ['EB Garamond', 'Garamond','Times New Roman','Times
 
 TREND_COLORS = ['#7570b3','#d95f02','#1b9e77']# constant, increasing,decreasing 
 CI_COLORS = ['#aeabd3','#fd7d1c','#25daa4']
-SCATTERPARAMS = {"marker": 'x', "linewidths":0.5, "alpha":1,"s":10}
-FILLPARAMS = {"linestyle":'dashed', "alpha":0.3}
-FITPARAMS = {"label":"OLS"}
+SCATTERPARAMS = {"marker": 'x', "linewidths":0.5, "alpha":1,"s":10,"label":'_nolegend_'}
+FILLPARAMS = {"linestyle":'dashed', "alpha":0.3,"label":'_nolegend_'}
+FITPARAMS = {"label":'_nolegend_'}
 
 def conf_int_to_trend(ci:Union[pd.DataFrame,list], param:str='X'):
     """return trend  0, 1, 2 from the confidence interval:
@@ -386,6 +387,7 @@ class Chow(object):
             self.model0.summary()
     def plot(self, color = None, filename:str = None, ax = None, figsize = (16,8),
             ylabel:str = '', xlabel:str = '', title:str = '', ylog:bool=False,
+            fill:bool = True,
             scatterparams:dict = {},
             fillparams:dict = {},
             fitparams:dict = {}):
@@ -400,6 +402,7 @@ class Chow(object):
         :params xlabel: label for x-axis
         :params title: title of the plot/subplot
         :params ylog: make the y-axis log-scale
+        :params fill: print the confidence interval
         :params scatterparams: parameters for the scatter plot
         :params fillparams: parameter for the confidence intervals
         :params fitparams: parameter for the fitted line
@@ -413,16 +416,17 @@ class Chow(object):
         # create the plot:
         self.set_color()
         def add_reg_plot(sub_df, model):
-            # X values
-            X = sorted(set(sub_df['X']))
-            Xc = sm.add_constant(X)
-            # get confidence interval
-            ci_l,ci_u = zip(*model.get_prediction(Xc).conf_int(alpha = self.alpha))
-            # set color depending on time trend
-            tt = conf_int_to_trend(model.conf_int(alpha = self.alpha))
-            FILLPARAMS['color'] = fillparams.get('color',CI_COLORS[tt])
-            FITPARAMS['color'] = fitparams.get('color',TREND_COLORS[tt])
-            ax.fill_between(x = X, y1=ci_l, y2 = ci_u, **FILLPARAMS)
+            if fill:
+                # X values
+                X = sorted(set(sub_df['X']))
+                Xc = sm.add_constant(X)
+                # get confidence interval
+                ci_l,ci_u = zip(*model.get_prediction(Xc).conf_int(alpha = self.alpha))
+                # set color depending on time trend
+                tt = conf_int_to_trend(model.conf_int(alpha = self.alpha))
+                FILLPARAMS['color'] = fillparams.get('color',CI_COLORS[tt])
+                FITPARAMS['color'] = fitparams.get('color',TREND_COLORS[tt])
+                ax.fill_between(x = X, y1=ci_l, y2 = ci_u, **FILLPARAMS)
             ax.plot(sub_df['X'], model.fittedvalues, marker = None,**FITPARAMS)
         if ax is None:
             plt.clf()
@@ -532,36 +536,54 @@ class ChewData():
         self.df[self.datetype] = series
         self.timecol = self.datetype
         print(f'Indexed the time column {self.timecol} as {self.datetype}s')
+    def run_C(self, sub_df:pd.DataFrame, name:str, initial_breakpoint:Union[float,int])->(dict,Chow):
+        """
+        Run the classification on a dataframe
+        
+        :params sub_df: dataframe
+        :params name: name of the series
+        :params initial_breakpoint: initial break point for Chow test (if None, will take midpoint of timecol)
+        :returns: dictionary of parameters from the analysis, Chow object from the analysis
+        """
+        C = Chow(df = sub_df,
+                name = name,
+                initial_breakpoint = initial_breakpoint,
+                breakpoints = self.breakpoints,
+                timecol = self.timecol,
+                ycol = self.ycol,
+                alpha = self.alpha,
+                margin = self.margin)
+        try:
+            C.run()
+        except ValueError:
+            return None,None
+        else:
+            params = C.params() # get the regressions parameters
+            params['name'] =  name
+            return params, C
     def run(self, initial_breakpoint = None):
         """
         Run the classification for each group
         
-        :params breakpoint: initial break point for Chow test (if None, will take midpoint of timecol)
+        :params initial_breakpoint: initial break point for Chow test (if None, will take midpoint of timecol)
         """
         results = []
         self.chows = []
         self.failed = []
-        if initial_breakpoint is None:
+        if initial_breakpoint is None and self.initial_breakpoint is None:
+            x = list(set(self.df[self.timecol]))
+            self.initial_breakpoint = x[int(len(x)/2)]
+            initial_breakpoint = self.initial_breakpoint
+        elif initial_breakpoint is None:
             initial_breakpoint = self.initial_breakpoint
         print("Running analysis")
         with alive_bar(len(self.df.groupby(self.namecol))) as bar:
             for name, sub_df in self.df.groupby(self.namecol):
                 if sub_df.shape[0] > 1:
-                    C = Chow(df = sub_df,
-                            name = name,
-                            initial_breakpoint = initial_breakpoint,
-                            breakpoints = self.breakpoints,
-                            timecol = self.timecol,
-                            ycol = self.ycol,
-                            alpha = self.alpha,
-                            margin = self.margin)
-                    try:
-                        C.run()
-                    except ValueError:
+                    params,C = self.run_C(sub_df, name, initial_breakpoint)
+                    if C is None:
                         self.failed.append(name)
                     else:
-                        params = C.params() # get the regressions parameters
-                        params['name'] =  name
                         results.append(params)
                         self.chows.append(C)
                 else:
@@ -611,11 +633,11 @@ class ChewData():
                                     sharey=params.get("sharey",True),
                                     figsize=params.get('figsize',(16,8)))
                 f.tight_layout(pad=params.get('pad',3.0)) # increase padding between sub figures
-                for C,ax in zip(self.chows[i*nplots:(i+1)*nplots],axes.reshape(-1)):
-                    C.plot(ax=ax,
+                for chowObj, ax in zip(self.chows[i*nplots:(i+1)*nplots], axes.reshape(-1)):
+                    chowObj.plot(ax=ax,
                         xlabel=params.get('xlabel','X'),
                         ylabel=params.get('ylabel','y'),
-                        title=C.name,
+                        title=chowObj.name,
                         scatterparams = scatterparams,
                         fillparams = fillparams,
                         fitparams = fitparams)
@@ -634,14 +656,85 @@ class ChewData():
             os.makedirs(savingpath)
         print("Plotting trends individually")
         with alive_bar(len(self.chows)) as bar:
-            for C in self.chows:
+            for chowObj in self.chows:
                 plt.clf()
-                params['title'] = params.get('title',C.name)
-                params['xlabel'] = params.get('xlabel',self.timecol)
-                params['ylabel'] = params.get('ylabel',self.ycol)
-                C.plot(filename = f'{"/".join([savingpath,C.name])}.{format}',
-                       **params)
+                params['title'] = params.get('title', chowObj.name)
+                params['xlabel'] = params.get('xlabel', self.timecol)
+                params['ylabel'] = params.get('ylabel', self.ycol)
+                chowObj.plot(filename = f'{"/".join([savingpath, chowObj.name])}.{format}',
+                             xlabel=params.get('xlabel','X'),
+                             ylabel=params.get('ylabel','y'),
+                             title=chowObj.name,
+                             scatterparams = params.get('scatterparams',{}),
+                             fillparams = params.get('fillparams',{}),
+                             fitparams = params.get('fitparams',{}))
                 bar()
+    def plot_by_group(self, groupcol, savingpath:str = 'figs', format:str = 'pdf', cmap:str = 'Set1', show_legend:bool=True, **params):
+        """
+        Plot all trends in individual files
+        
+        :params groupcol: separate series by group, the analysis will be ran on each group seperately and toghether
+        :params savingpath: path where the plots will be saved
+        :params format: format of the image
+        :params cmap: Name of one of matplotlib cmaps
+        :params show_legend: include the legend
+        :params params: named parameters passed to matplotlib, eg. xlabel, ylabel, sharey, figsize, overall_label
+        """
+        if not os.path.isdir(savingpath):
+            os.makedirs(savingpath)
+        print("Plotting trends by group")
+        if isinstance(cmap,str):
+            cmap = colormaps[cmap].colors
+        elif isinstance(cmap,list):
+            pass
+        else:
+            cmap = colormaps['Set1'].colors
+        scatterparams = params.get('scatterparams',{})
+        fillparams = params.get('fillparams',{})
+        fitparams = params.get('fitparams',{})
+        with alive_bar(len(self.chows)) as bar:
+            for chowObj in self.chows:
+                plt.clf()
+                params['title'] = params.get('title', chowObj.name)
+                params['xlabel'] = params.get('xlabel', self.timecol)
+                params['ylabel'] = params.get('ylabel', self.ycol)
+                f, (ax) = plt.subplots(nrows=1,
+                                ncols=1,
+                                sharey=params.get("sharey",True),
+                                figsize=params.get('figsize',(16,8)))
+                ax.set(title = chowObj.name)
+                for i,(n,dfg) in enumerate(self.df.loc[self.df['name']==chowObj.name,
+                                                       [self.timecol,self.ycol,groupcol]].groupby(groupcol)):
+                    _, temp_C = self.run_C(dfg, n, self.initial_breakpoint)
+                    if temp_C is None:
+                        print(f"Analysis failed for {chowObj.name} {n}")
+                    else:
+                        scatterparams['color'] = cmap[i]
+                        fitparams['color'] = cmap[i]
+                        fillparams['color'] = cmap[i]
+                        scatterparams['label'] = n
+                        temp_C.plot(ax = ax,
+                            fill = False,
+                            xlabel=params.get('xlabel','X'),
+                            ylabel=params.get('ylabel','y'),
+                            scatterparams = scatterparams,
+                            fillparams = fillparams,
+                            fitparams = fitparams)
+                scatterparams['color'] = (0,0,0)
+                fitparams['color'] = (0,0,0)
+                fillparams['color'] = (0,0,0)
+                scatterparams['label'] = label = params.get('overall_label','Overall')
+                chowObj.plot(ax = ax,
+                            xlabel=params.get('xlabel','X'),
+                            ylabel=params.get('ylabel','y'),
+                            scatterparams = scatterparams,
+                            fillparams = fillparams,
+                            fitparams = fitparams)
+                if show_legend is True:
+                    ax.legend()
+                plt.savefig(f'{savingpath}/{chowObj.name}_bygroups.{format}')
+                bar()
+
     def results_df(self):
         """Create dataframe with results"""
         d = {'name': [],

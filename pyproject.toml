@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "chowclassifier"
-version = "1.0.2"
+version = "1.0.4"
 description = "Classification of time trends using Chow test"
 readme = "README.md"
 authors = [{ name = "Luc Miaz", email = "luc@miaz.ch" }]
@@ -27,13 +27,14 @@ dependencies = [
     "openpyxl",
     "scipy >= 1.1.5",
     "seaborn >= 0.11.2",
-    "statsmodels >= 0.12.1"
+    "statsmodels >= 0.12.1",
+    "alive-progress >= 3.0.1"
 ]
 requires-python = ">=3.6"
 
 [tool.pytest.ini_options]
 pythonpath = [
-  "src"
+  "chowclassifier"
 ]
 
 [project.optional-dependencies]
