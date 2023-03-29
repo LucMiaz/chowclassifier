@@ -1,4 +1,3 @@
-alive-progress
 matplotlib
 numpy
 pandas
@@ -6,3 +5,4 @@ openpyxl
 scipy
 seaborn
 statsmodels
+tqdm

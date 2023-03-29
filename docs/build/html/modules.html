@@ -1,683 +1,132 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
+    <title>source &#8212; chowclassifier 1.0.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
 
-    <meta itemprop="sphinx_documatt_theme" content="0.0.5"><title>Chowclassifier &mdash; chowclassifier 1.1 documentation</title>
+  </head><body>
 
-    
-        
-        <link rel="stylesheet" href="_static/css/main.css">
-        
-        <link rel="stylesheet" href="_static/pygments.css" type="text/css"/>
-        
-        
-            <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-        
-            <link rel="stylesheet" type="text/css" href="_static/css/main.css" />
-        
-    
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          chowclassifier</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
 
-    <script type="text/javascript" src="_static/js/main.js"></script>
-
-        <script type="text/javascript" id="documentation_options"
-                data-url_root="./"
-                src="_static/documentation_options.js"></script>
-
-        
-            <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-            <script src="_static/jquery.js"></script>
-            <script src="_static/underscore.js"></script>
-            <script src="_static/doctools.js"></script>
-    
-
-    
-        
-        <link rel="shortcut icon" href="_static/img/favicon.ico"/>
-    
-            <link rel="index" title="Index" href="genindex.html"/>
-            <link rel="search" title="Search" href="search.html"/>
-            <link rel="prev" title="Welcome to chowclassifier’s documentation!" href="index.html"/>
-
-    
-
-    
-</head>
-<body>
-
-
-    <header>
-        
-            <nav class="navbar" role="navigation" aria-label="main navigation">
-                <div class="container">
-                    <div class="navbar-brand">
-                        <a class="navbar-item" href="index.html">
-                            <img
-                                
-                                    src="_static/img/logo.svg"
-                                
-                                alt="Logo"
-                                
-                                    style="width: 10rem;"
-                                
-                                />
-                            
-                        </a>
-                        <!--<a role="button" class="navbar-burger burger" aria-label="menu"
-                           aria-expanded="false"
-                           data-target="navbarMenu">
-                            <span aria-hidden="true"></span>
-                            <span aria-hidden="true"></span>
-                            <span aria-hidden="true"></span>
-                        </a>-->
-                    </div>
-
-                    
-                        <div id="navbarMenu" class="navbar-menu">
-                            <div class="navbar-end">
-                                <!--
-                                <a class="navbar-item" href="https://documatt.com">Documatt</a>
-                                <a class="navbar-item"
-                                   href="https://snippets.documatt.com">Snippets</a>
-                                <a class="navbar-item is-active" href="https://blog.documatt.com">Blog</a>
-                                -->
-                            </div>
-                        </div>
-                    
-                </div>
-            </nav>
-        
-
-        
-            <nav class="breadcrumb" aria-label="breadcrumbs">
-                <div class="container">
-                    <ul>
-                        <li><a href="index.html">chowclassifier</a></li>
-                        
-
-    <li class="is-active">Chowclassifier</li>
-
-                    </ul>
-                </div>
-            </nav>
-        
-    </header>
-
-
-
-    <section class="section site-hero" style="padding-bottom: 0;">
-        <div class="container">
-            <div class="columns">
-                <div class="column content is-8 is-offset-2">
-                        
-                            <h1 class="title is-2">
-                                <a href="index.html">chowclassifier</a>
-                            </h1>
-                            <div class="motto subtitle is-4">
-                                
-                            </div>
-                        
-                    
-                </div>
-                <div class="column">
-                    
-                    
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-<hr>
-
-
-    
-        <section class="section is-paddingless" id="document">
-            <div class="container">
-                <div class="columns">
-                    <div class="column is-2 mt-2 is-family-sans-serif">
-                        
-<div class="content globaltoc">
-    <p class="has-text-weight-bold">Table of Contents</p>
-    <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Chowclassifier</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#module-chowclassifier.__main__">Script call</a></li>
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">source</a></li>
 </ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/modules.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
 
-</div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/modules.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-                        
-                    </div>
-                    <div class="column is-8">
-                        
-                        <article class="content is-medium sphinx-body">
-                            
-  <section id="module-chowclassifier.chow">
-<span id="chowclassifier"></span><h1>Chowclassifier<a class="headerlink" href="#module-chowclassifier.chow" title="Permalink to this headline">¶</a></h1>
-<p>Implementation of a Chow Classifier</p>
-<dl class="py class">
-<dt class="sig sig-object py" id="chowclassifier.chow.ChewData">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">chowclassifier.chow.</span></span><span class="sig-name descname"><span class="pre">ChewData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namecol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'name'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_breakpoint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">breakpoints</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">','</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timecol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'year'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ycol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'value'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">margin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.ChewData" title="Permalink to this definition">¶</a></dt>
-<dd><p>Handle a full data frame with grouping of time series</p>
-<dl class="field-list simple">
-<dt class="field-odd">Params df</dt>
-<dd class="field-odd"><p>dataset (as a pandas DataFrame) or</p>
-</dd>
-<dt class="field-even">Params filename</dt>
-<dd class="field-even"><p>path to dataframe (used if df not given)</p>
-</dd>
-<dt class="field-odd">Params namecol</dt>
-<dd class="field-odd"><p>name of the column with group names (used in groupby)</p>
-</dd>
-<dt class="field-even">Params initial_breakpoint</dt>
-<dd class="field-even"><p>initial breakpoint</p>
-</dd>
-<dt class="field-odd">Params breakpoints</dt>
-<dd class="field-odd"><p>candidates for breakpoints</p>
-</dd>
-<dt class="field-even">Params sep</dt>
-<dd class="field-even"><p>separator in csv</p>
-</dd>
-<dt class="field-odd">Params timecol</dt>
-<dd class="field-odd"><p>name of the time column in dataset</p>
-</dd>
-<dt class="field-even">Params ycol</dt>
-<dd class="field-even"><p>name of the variable column in dataset</p>
-</dd>
-<dt class="field-odd">Params margin</dt>
-<dd class="field-odd"><p>range of indexes around breakpoint/midpoint, see Chow.get_breakpoints</p>
-</dd>
-<dt class="field-even">Params alpha</dt>
-<dd class="field-even"><p>significance level at which to test the trends (Bonferroni correction will be applied later)</p>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="chowclassifier.chow.ChewData.get_df">
-<span class="sig-name descname"><span class="pre">get_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.ChewData.get_df" title="Permalink to this definition">¶</a></dt>
-<dd><p>get dataframe from file</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chowclassifier.chow.ChewData.melt">
-<span class="sig-name descname"><span class="pre">melt</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.ChewData.melt" title="Permalink to this definition">¶</a></dt>
-<dd><p>pivot the dataframe from wide to long</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chowclassifier.chow.ChewData.parse_timecol">
-<span class="sig-name descname"><span class="pre">parse_timecol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'%Y-%m-%d'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.ChewData.parse_timecol" title="Permalink to this definition">¶</a></dt>
-<dd><p>Timecol must be numeric, if you have dates instead, use this method to transform
-that column. (you need to adjust the breakpoint accordingly!)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Params format</dt>
-<dd class="field-odd"><p>give the date format (default yyyy-mm-dd)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chowclassifier.chow.ChewData.plot">
-<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">divide</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nrows</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ncols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scatterparams</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fillparams</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitparams</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.ChewData.plot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot all trends in one image</p>
-<dl class="field-list simple">
-<dt class="field-odd">Params filename</dt>
-<dd class="field-odd"><p>name of the output with extension (e.g name.pdf)</p>
-</dd>
-<dt class="field-even">Params title</dt>
-<dd class="field-even"><p>title printed on the output</p>
-</dd>
-<dt class="field-odd">Params divide</dt>
-<dd class="field-odd"><p>divide the plots into n files</p>
-</dd>
-<dt class="field-even">Params ncols</dt>
-<dd class="field-even"><p>number of columns</p>
-</dd>
-<dt class="field-odd">Params nrows</dt>
-<dd class="field-odd"><p>number of rows</p>
-</dd>
-<dt class="field-even">Params scatterparams</dt>
-<dd class="field-even"><p>dictionnary of parameters for the scatter part of the plot, passed to chew plot</p>
-</dd>
-<dt class="field-odd">Params fillparams</dt>
-<dd class="field-odd"><p>dictionnary of parameters for the error fill area of the plot, passed to chew plot</p>
-</dd>
-<dt class="field-even">Params fitparams</dt>
-<dd class="field-even"><p>dictionnary of parameters for the fitted line, passed to chew plot</p>
-</dd>
-<dt class="field-odd">Params params</dt>
-<dd class="field-odd"><p>named parameters passed to matplotlib, eg xlabel, ylabel, sharey, figsize, pad</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chowclassifier.chow.ChewData.plot_individually">
-<span class="sig-name descname"><span class="pre">plot_individually</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">savingpath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'figs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'pdf'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.ChewData.plot_individually" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot all trends in individual files</p>
-<dl class="field-list simple">
-<dt class="field-odd">Params savingpath</dt>
-<dd class="field-odd"><p>path where the plots will be saved</p>
-</dd>
-<dt class="field-even">Params format</dt>
-<dd class="field-even"><p>format of the image</p>
-</dd>
-<dt class="field-odd">Params params</dt>
-<dd class="field-odd"><p>named parameters passed to matplotlib, eg. xlabel, ylabel, sharey, figsize</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chowclassifier.chow.ChewData.results_df">
-<span class="sig-name descname"><span class="pre">results_df</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.ChewData.results_df" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create dataframe with results</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chowclassifier.chow.ChewData.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_breakpoint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.ChewData.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run the classification for each group</p>
-<dl class="field-list simple">
-<dt class="field-odd">Params breakpoint</dt>
-<dd class="field-odd"><p>initial break point for Chow test (if None, will take midpoint of timecol)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chowclassifier.chow.ChewData.save_to_file">
-<span class="sig-name descname"><span class="pre">save_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.ChewData.save_to_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Export results to excel or csv</p>
-<dl class="field-list simple">
-<dt class="field-odd">Params filename</dt>
-<dd class="field-odd"><p>filename</p>
-</dd>
-<dt class="field-even">Params kwargs</dt>
-<dd class="field-even"><p>other parameters passed to pd.DataFrame.to_csv</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chowclassifier.chow.ChewData.to_csv">
-<span class="sig-name descname"><span class="pre">to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.ChewData.to_csv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Export results to csv</p>
-<dl class="field-list simple">
-<dt class="field-odd">Params filename</dt>
-<dd class="field-odd"><p>filename</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chowclassifier.chow.ChewData.to_excel">
-<span class="sig-name descname"><span class="pre">to_excel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.ChewData.to_excel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Export results to excel</p>
-<dl class="field-list simple">
-<dt class="field-odd">Params filename</dt>
-<dd class="field-odd"><p>filename</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="chowclassifier.chow.Chow">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">chowclassifier.chow.</span></span><span class="sig-name descname"><span class="pre">Chow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_breakpoint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">breakpoints</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timecol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'year'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ycol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'value'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">margin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.Chow" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class handling the chow analysis
-Call <cite>run()</cite> to run the analysis (find breakpoint and classify)
-Call afterwards <cite>params()</cite> to get the regressions (y=k * x + b) parameters as
-[[model1_k, model1_b, model1_Rsquared],[model2_k, model2_b, model2_Rsquared]]
-(if the breakpoint is not significant, model1 = model2)
-The significance level of the breakpoint is adjusted with Bonferroni correction,
-i.e. dividing alpha by the number of tests. The confidence interval of the slope
-and intercept are at significance level alpha (not corrected).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Params df</dt>
-<dd class="field-odd"><p>data on which to perform the Chow categorisation</p>
-</dd>
-<dt class="field-even">Params name</dt>
-<dd class="field-even"><p>name of the dataset (optional)</p>
-</dd>
-<dt class="field-odd">Params breakpoint</dt>
-<dd class="field-odd"><p>breakpoint (if None, midpoint of X series will be used)</p>
-</dd>
-<dt class="field-even">Params breakpoints</dt>
-<dd class="field-even"><p>candidates for the breakpoints</p>
-</dd>
-<dt class="field-odd">Params timecol</dt>
-<dd class="field-odd"><p>name of time column (X)</p>
-</dd>
-<dt class="field-even">Params ycol</dt>
-<dd class="field-even"><p>name of the variable column (Y)</p>
-</dd>
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>alpha</strong> – significance level (without Bonferroni correction), can be changed with <code class="docutils literal notranslate"><span class="pre">Chow.set_alpha(0.01)</span></code></p>
-</dd>
-<dt class="field-even">Params margin</dt>
-<dd class="field-even"><p>range of indexes around breakpoint (or midpoint) where the best breakpoint
-will be searched. E.g. if X = [0,1,1.5,2,3,4,5], breakpoint = 2 and margin = 1,
-the set of breakpoints [1.5,2,3] will be tested.
-(set = 0 if you want to look only at the given breakpoint or the midpoint)</p>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="chowclassifier.chow.Chow.classify">
-<span class="sig-name descname"><span class="pre">classify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.Chow.classify" title="Permalink to this definition">¶</a></dt>
-<dd><p>classify in the dataset based on results of Chow test at significance level alpha
-Possible values are:
-No significant breakpoint and:</p>
-<ol class="arabic simple">
-<li><p>N: non-significant overall trend</p></li>
-<li><p>I: significant increasing overall trend</p></li>
-<li><p>D: significant decreasing overall trend</p></li>
-</ol>
-<p>Significant breakpoint (set1 and set2 indicate points before, respectively after, breakpoint) and:</p>
-<ol class="arabic simple" start="4">
-<li><p>NN: non-significant trend on set1 and non-significant trend on set2</p></li>
-<li><p>NI: non-significant trend on set1 and significant increasing trend on set2</p></li>
-<li><p>ND: non-significant trend on set1 ans significant decreasing trend on set2</p></li>
-<li><p>IN: significant increasing trend on set1 and non-significant trend on set2</p></li>
-<li><p>ID: significant increasing trend on set1 and significant decreasing trend on set2</p></li>
-<li><p>iI: significant increasing trend on both set1 and set2 with greater increase in set2</p></li>
-<li><p>Ii: significant increasing trend on both set1 and set2 with greater increase in set1</p></li>
-<li><p>DN: significant decreasing trend on set1 and non-significant trend on set2</p></li>
-<li><p>DI: significant decreasing trend on set1 and significant increasing trend on set2</p></li>
-<li><p>dD: significant decreasing trend on both set1 and set2 with greater decrease in set2</p></li>
-<li><p>Dd: significant decreasing trend on both set1 and set2 with greater decrease in set1</p></li>
-</ol>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chowclassifier.chow.Chow.find_best_bkp">
-<span class="sig-name descname"><span class="pre">find_best_bkp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">breakpoint_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.Chow.find_best_bkp" title="Permalink to this definition">¶</a></dt>
-<dd><p>finds best breakpoint and run Chow test and find OLS params for either whole set,
-and the two subset broken at best breakpoint</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chowclassifier.chow.Chow.get_breakpoint_indices">
-<span class="sig-name descname"><span class="pre">get_breakpoint_indices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.Chow.get_breakpoint_indices" title="Permalink to this definition">¶</a></dt>
-<dd><p>sets the breakpoints</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chowclassifier.chow.Chow.params">
-<span class="sig-name descname"><span class="pre">params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.Chow.params" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns parameters of model</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chowclassifier.chow.Chow.plot">
-<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(16,</span> <span class="pre">8)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylog</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scatterparams</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fillparams</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitparams</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.Chow.plot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot the regression model(s)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Params color</dt>
-<dd class="field-odd"><p>give color for the points (default defined in TREND_COLORS)</p>
-</dd>
-<dt class="field-even">Params filename</dt>
-<dd class="field-even"><p>filename (with extension format), if None, will call plt.show() instead</p>
-</dd>
-<dt class="field-odd">Params ax</dt>
-<dd class="field-odd"><p>ax on which to plot, if None will create new figure</p>
-</dd>
-<dt class="field-even">Params figsize</dt>
-<dd class="field-even"><p>tuple with figure size</p>
-</dd>
-<dt class="field-odd">Params ylabel</dt>
-<dd class="field-odd"><p>label for y-axis</p>
-</dd>
-<dt class="field-even">Params xlabel</dt>
-<dd class="field-even"><p>label for x-axis</p>
-</dd>
-<dt class="field-odd">Params title</dt>
-<dd class="field-odd"><p>title of the plot/subplot</p>
-</dd>
-<dt class="field-even">Params ylog</dt>
-<dd class="field-even"><p>make the y-axis log-scale</p>
-</dd>
-<dt class="field-odd">Params scatterparams</dt>
-<dd class="field-odd"><p>parameters for the scatter plot</p>
-</dd>
-<dt class="field-even">Params fillparams</dt>
-<dd class="field-even"><p>parameter for the confidence intervals</p>
-</dd>
-<dt class="field-odd">Params fitparams</dt>
-<dd class="field-odd"><p>parameter for the fitted line</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chowclassifier.chow.Chow.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.Chow.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run the chow classification. parameters will be forwarded to run and classify,
-e.g. initial_breakpoint can be passed to run, and alpha to classify</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chowclassifier.chow.Chow.run_chow">
-<span class="sig-name descname"><span class="pre">run_chow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bkp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.Chow.run_chow" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run chow test at breakpoint</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chowclassifier.chow.Chow.set_alpha">
-<span class="sig-name descname"><span class="pre">set_alpha</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.Chow.set_alpha" title="Permalink to this definition">¶</a></dt>
-<dd><p>Changes the current statistical significance level
-The bonferroni correction will be applied</p>
-<dl class="field-list simple">
-<dt class="field-odd">Params alpha</dt>
-<dd class="field-odd"><p>positive float in ]0,1[</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chowclassifier.chow.Chow.summary">
-<span class="sig-name descname"><span class="pre">summary</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.Chow.summary" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the summary of the model(s)</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chowclassifier.chow.conf_int_to_trend">
-<span class="sig-prename descclassname"><span class="pre">chowclassifier.chow.</span></span><span class="sig-name descname"><span class="pre">conf_int_to_trend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ci</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'X'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.conf_int_to_trend" title="Permalink to this definition">¶</a></dt>
-<dd><p>return trend  0, 1, 2 from the confidence interval:</p>
-<ul class="simple">
-<li><p>if ci crosses 0, then returns 0</p></li>
-<li><p>if ci is completely below 0, then returns 2</p></li>
-<li><p>else returns 1</p></li>
-</ul>
-<dl class="field-list simple">
-<dt class="field-odd">Params ci</dt>
-<dd class="field-odd"><p>confidence interval to process, either a tuple (length 2), a dataframe or result from conf_int given by statsmodles</p>
-</dd>
-<dt class="field-even">Params param</dt>
-<dd class="field-even"><p>name column to use if a dataframe was given as ci</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chowclassifier.chow.guess_timelapse_type">
-<span class="sig-prename descclassname"><span class="pre">chowclassifier.chow.</span></span><span class="sig-name descname"><span class="pre">guess_timelapse_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pandas.core.series.Series</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'%Y-%m-%d'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.guess_timelapse_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Guess the time lapse in a series and index it</p>
-<dl class="field-list simple">
-<dt class="field-odd">Params series</dt>
-<dd class="field-odd"><p>data</p>
-</dd>
-<dt class="field-even">Params date_format</dt>
-<dd class="field-even"><p>format of the datetime</p>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>indexed series and datetype</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chowclassifier.chow.infer_date_format">
-<span class="sig-prename descclassname"><span class="pre">chowclassifier.chow.</span></span><span class="sig-name descname"><span class="pre">infer_date_format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.infer_date_format" title="Permalink to this definition">¶</a></dt>
-<dd><p>Infer date format from a sample</p>
-<dl class="field-list simple">
-<dt class="field-odd">Params s_date</dt>
-<dd class="field-odd"><p>sample date to infer date format from.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
-<section id="module-chowclassifier.__main__">
-<span id="script-call"></span><h1>Script call<a class="headerlink" href="#module-chowclassifier.__main__" title="Permalink to this headline">¶</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="chowclassifier.__main__.main">
-<span class="sig-prename descclassname"><span class="pre">chowclassifier.__main__.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.__main__.main" title="Permalink to this definition">¶</a></dt>
-<dd><p>run analysis on given data</p>
-<dl class="field-list simple">
-<dt class="field-odd">Params -f, –filename</dt>
-<dd class="field-odd"><p>filename</p>
-</dd>
-<dt class="field-even">Params -s, –sep</dt>
-<dd class="field-even"><p>separator for parsing the filename (if type csv)</p>
-</dd>
-<dt class="field-odd">Params -X, –timecol</dt>
-<dd class="field-odd"><p>timecol</p>
-</dd>
-<dt class="field-even">Params -y, –ycol</dt>
-<dd class="field-even"><p>ycol</p>
-</dd>
-<dt class="field-odd">Params -n, –namecol</dt>
-<dd class="field-odd"><p>name of column for groupby</p>
-</dd>
-<dt class="field-even">Params -b, –breakpoint</dt>
-<dd class="field-even"><p>initial breakpoint (if None, midpoint will be taken)</p>
-</dd>
-<dt class="field-odd">Params -k, –breakpoints</dt>
-<dd class="field-odd"><p>candidates for breakpoints (list)</p>
-</dd>
-<dt class="field-even">Params -m, –margin</dt>
-<dd class="field-even"><p>margin around initial breakpoint</p>
-</dd>
-<dt class="field-odd">Params -o, –output</dt>
-<dd class="field-odd"><p>filename for the excel or csv file output</p>
-</dd>
-<dt class="field-even">Params -p, –path</dt>
-<dd class="field-even"><p>path where the figures will be saved</p>
-</dd>
-<dt class="field-odd">Params -a, –alpha</dt>
-<dd class="field-odd"><p>significance level in (0,1)</p>
-</dd>
-<dt class="field-even">Params –no-figures</dt>
-<dd class="field-even"><p>Do not export figures</p>
-</dd>
-<dt class="field-odd">Params –no-table</dt>
-<dd class="field-odd"><p>Do not export results table</p>
-</dd>
-<dt class="field-even">Params –nrows</dt>
-<dd class="field-even"><p>Numbers of rows in the grouped figure (leave ncols blank)</p>
-</dd>
-<dt class="field-odd">Params –ncols</dt>
-<dd class="field-odd"><p>Number of columns in the groupe figure (leave nrows blank)</p>
-</dd>
-<dt class="field-even">Params –fig-title</dt>
-<dd class="field-even"><p>title of the figure</p>
-</dd>
-<dt class="field-odd">Params –xlabel</dt>
-<dd class="field-odd"><p>label of the x axis</p>
-</dd>
-<dt class="field-even">Params –ylabel</dt>
-<dd class="field-even"><p>label of the y axis</p>
-</dd>
-<dt class="field-odd">Params –sharey</dt>
-<dd class="field-odd"><p>share y axis across subplots</p>
-</dd>
-<dt class="field-even">Params –figsize</dt>
-<dd class="field-even"><p>size of figures</p>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
-
-
-
-                            
-                            
-                                <p class="has-text-weight-light is-size-6 my-4">
-                                    Previous:
-                                    <a href="index.html"
-                                       title="previous chapter">Welcome to chowclassifier’s documentation!</a>
-                                
-                                </p>
-                            
-                        </article>
-                    </div>
-                    <div class="column is-2 mt-2  is-family-sans-serif">
-                        
-  <div class="content localtoc">
-    <p class="has-text-weight-bold">On this page</p>
-    <ul>
-<li><a class="reference internal" href="#">Chowclassifier</a></li>
-<li><a class="reference internal" href="#module-chowclassifier.__main__">Script call</a></li>
-</ul>
-
   </div>
-                        
-                    </div>
-                </div>
-            </div>
-        </section>
-    
 
-    <footer class="footer">
-        <div class="container">
-            <div class="content has-text-centered has-text-primary">
-                <a href="index.html">
-                    <img
-                        
-                            src="_static/img/logo.svg"
-                        
-                        alt="Logo"
-                        
-                            style="width: 10rem;"
-                        
-                    />
-                 </a>
-                 <div class="footer-text">
-                
-                    <p></p>
-                
-                </div>
-
-                <p class="mt-4">Copyright &copy; 2023, Luc T Miaz</p>
-            </div>
-        </div>
-    </footer>
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <section id="source">
+<h1>source<a class="headerlink" href="#source" title="Permalink to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="conf.html">conf module</a></li>
+</ul>
+</div>
+</section>
 
 
-</body>
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2023, Luc T Miaz.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
 </html>

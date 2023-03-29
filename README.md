@@ -51,24 +51,44 @@ savingpath_figures = 'example/fig'
 timecol = 'Date'
 # what name has the y/value column?
 ycol = 'Close'
+# what level of confidence? Note, when
+# testing multiple breakpoint, a Bonferroni correction will be applied
+alpha = 0.01
 # initial breakpoint ?
 initial_breakpoint = None
 
 C = ChewData(filename = f"{'/'.join([x for x in [filepath,filename] if x not in [None,'']])}",
-            timecol = timecol, ycol = ycol)
+            timecol = timecol,# name of time column (used as x-axis)
+            ycol = ycol,# name for value column (used as y-axis) Leave blank if multiple
+            alpha = alpha# level of confidence to use
+            )
 
 ########## use the code line below if your X/time column is not a number, e.g. a date
 ########## comment it otherwise
-C.parse_timecol(date_format = '%Y-%m-%d') # 
+# C.parse_timecol(date_format = '%Y-%m-%d') # 
 
-C.run(breakpoint = initial_breakpoint)
-C.plot(xlabel = 'time', ylabel='value',# labels given to the axes
-        title = "Chow Classification",# title of the main plot
-        filename = f"{'/'.join([x for x in [savingpath_figures,filename] if x not in [None,'']])}.png",
-        figsize=(16,8),sharey=True)
-C.plot_individually(savingpath = savingpath_figures, format = 'png',
-                    xlabel = 'time', ylabel='value',# labels given to the axes
+C.run(initial_breakpoint = initial_breakpoint)
+C.plot(xlabel = 'time',# label for x axis
+       ylabel='value',# label for y axis
+       title = "Chow Classification",# title of the main plot
+       filename = f"{'/'.join([x for x in [savingpath_figures,filename] if x not in [None,'']])}.png",# filename for the figure
+       figsize=(16,8),# figure size
+       sharey=True # whether the individual plots are forced to share y axis
+       )
+C.plot_individually(savingpath = savingpath_figures,# Saving path for the figures
+                    format = 'png',# figure format
+                    xlabel = 'time',# label for x axis
+                    ylabel='value',# label for y axis
                     )
+
+C.plot_by_group('g',
+                savingpath = savingpath_figures,# Saving path for the figures
+                format = 'png',# figure format
+                xlabel = 'time',# label for x axis
+                ylabel='value',# label for y axis
+                plot_overall = True,# Whether to plot an overall trend across groups (including confidence inverval fill)
+                plot_individual_fill = True# Whether to plot individual confidence inverval fills
+                )
 ```
 
 ## References
@@ -78,3 +98,12 @@ C.plot_individually(savingpath = savingpath_figures, format = 'png',
 [^2]: Fisher, Franklin M. ‘Tests of Equality Between Sets of Coefficients in Two Linear Regressions: An Expository Note’. Econometrica2 38, no. 2 (1970): 361–66. [jstor.org/stable/1913018](https://www.jstor.org/stable/1913018).
 
 [^3]: *Chow test* entry on Wikipedia: https://en.wikipedia.org/wiki/Chow_test
+
+## Version changes
+
+1.0.6 Added option to change linestyle by trend individually
+1.0.5 Added option to plot confidence interval fill for individual group trends
+1.0.4 Added support for plotting individual trends by group
+1.0.3 Bug correction
+1.0.2 Added support to parse full csv/excel automatically
+1.0.1 First implementation of algorithm

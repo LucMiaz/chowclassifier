@@ -1,12 +1,7 @@
-Chowclassifier
---------------
+chowclassifier
+==============
 
-.. automodule:: chowclassifier.chow
-   :members:
+.. toctree::
+   :maxdepth: 4
 
-
-Script call
------------
-
-.. automodule:: chowclassifier.__main__
-   :members:
+   chowclassifier

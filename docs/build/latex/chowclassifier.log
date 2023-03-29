@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.12) (preloaded format=pdflatex 2023.1.18)  15 FEB 2023 14:23
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.12) (preloaded format=pdflatex 2023.1.18)  27 MAR 2023 15:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -187,7 +187,7 @@ Package: fncychap 2007/07/30 v1.34 LaTeX package (Revised chapters)
 \c@AlphaCnt=\count274
 \c@AlphaDecCnt=\count275
 ) (sphinx.sty
-Package: sphinx 2021/01/27 v4.0.0 LaTeX package (Sphinx markup)
+Package: sphinx 2023/01/06 v6.1.2 LaTeX package (Sphinx markup)
 
 (C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\xcolor.sty
 Package: xcolor 2022/06/12 v2.14 LaTeX color extensions (UK)
@@ -336,25 +336,45 @@ Package graphics Info: Driver file: pdftex.def on input line 107.
 File: sphinxlatexgraphics.sty 2021/01/27 graphics
 \spx@image@maxheight=\dimen170
 \spx@image@box=\box101
-) (sphinxlatexadmonitions.sty
-File: sphinxlatexadmonitions.sty 2021/01/27 admonitions
+) (sphinxpackageboxes.sty
+Package: sphinxpackageboxes 2022/07/04 v5.1.0 advanced colored boxes
+\spx@tempboxa=\box102
+\spx@tempboxb=\box103
+\spx@boxes@border=\dimen171
+\spx@boxes@border@top=\dimen172
+\spx@boxes@border@right=\dimen173
+\spx@boxes@border@bottom=\dimen174
+\spx@boxes@border@left=\dimen175
+\spx@boxes@padding@top=\dimen176
+\spx@boxes@padding@right=\dimen177
+\spx@boxes@padding@bottom=\dimen178
+\spx@boxes@padding@left=\dimen179
+\spx@boxes@shadow@xoffset=\dimen180
+\spx@boxes@shadow@yoffset=\dimen181
+\spx@boxes@radius@topleft=\dimen182
+\spx@boxes@radius@topright=\dimen183
+\spx@boxes@radius@bottomright=\dimen184
+\spx@boxes@radius@bottomleft=\dimen185
+)
+(sphinxlatexadmonitions.sty
+File: sphinxlatexadmonitions.sty 2023/01/03 admonitions
 
 (C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/framed\framed.sty
 Package: framed 2011/10/22 v 0.96: framed or shaded text with page breaks
 \OuterFrameSep=\skip62
-\fb@frw=\dimen171
-\fb@frh=\dimen172
-\FrameRule=\dimen173
-\FrameSep=\dimen174
+\fb@frw=\dimen186
+\fb@frh=\dimen187
+\FrameRule=\dimen188
+\FrameSep=\dimen189
 ))
 (sphinxlatexliterals.sty
-File: sphinxlatexliterals.sty 2021/12/06 code-blocks and parsed literals
+File: sphinxlatexliterals.sty 2022/07/29 code-blocks and parsed literals
 
 (C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/fancyvrb\fancyvrb.sty
 Package: fancyvrb 2022/06/06 4.5 verbatim text (tvz,hv)
 \FV@CodeLineNo=\count288
 \FV@InFile=\read3
-\FV@TabBox=\box102
+\FV@TabBox=\box104
 \c@FancyVerbLine=\count289
 \FV@StepNumber=\count290
 \FV@OutFile=\write3
@@ -369,38 +389,37 @@ tim
 ty
 Package: needspace 2010/09/12 v1.3d reserve vertical space
 )
-\sphinxcontinuationbox=\box103
-\sphinxvisiblespacebox=\box104
-\sphinxVerbatim@TitleBox=\box105
-\sphinxVerbatim@ContentsBox=\box106
-\spx@scratchbox=\box107
+\sphinxcontinuationbox=\box105
+\sphinxvisiblespacebox=\box106
+\sphinxVerbatim@TitleBox=\box107
+\sphinxVerbatim@ContentsBox=\box108
 ) (sphinxlatexshadowbox.sty
-File: sphinxlatexshadowbox.sty 2021/01/27 sphinxShadowBox
+File: sphinxlatexshadowbox.sty 2023/01/06 sphinxShadowBox
 ) (sphinxlatexcontainers.sty
 File: sphinxlatexcontainers.sty 2021/05/03 containers
 )
 (sphinxhighlight.sty
-Package: sphinxhighlight 2016/05/29 stylesheet for highlighting with pygments
+Package: sphinxhighlight 2022/06/30 stylesheet for highlighting with pygments
 ) (sphinxlatextables.sty
-File: sphinxlatextables.sty 2021/01/27 tables
+File: sphinxlatextables.sty 2022/08/15 tables
 
 (C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/tabulary\tabulary.sty
 Package: tabulary 2014/06/11 v0.10 tabulary package (DPC)
 (C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/tools\array.sty
 Package: array 2022/03/10 v2.5f Tabular extension package (FMi)
-\col@sep=\dimen175
-\ar@mcellbox=\box108
-\extrarowheight=\dimen176
+\col@sep=\dimen190
+\ar@mcellbox=\box109
+\extrarowheight=\dimen191
 \NC@list=\toks27
 \extratabsurround=\skip63
 \backup@length=\skip64
-\ar@cellbox=\box109
+\ar@cellbox=\box110
 )
 \TY@count=\count291
-\TY@linewidth=\dimen177
-\tymin=\dimen178
-\tymax=\dimen179
-\TY@tablewidth=\dimen180
+\TY@linewidth=\dimen192
+\tymin=\dimen193
+\tymax=\dimen194
+\TY@tablewidth=\dimen195
 )
 (C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/tools\longtable.sty
 Package: longtable 2021-09-01 v4.17 Multi-page Table package (DPC)
@@ -409,12 +428,12 @@ Package: longtable 2021-09-01 v4.17 Multi-page Table package (DPC)
 \LTpre=\skip67
 \LTpost=\skip68
 \LTchunksize=\count292
-\LTcapwidth=\dimen181
-\LT@head=\box110
-\LT@firsthead=\box111
-\LT@foot=\box112
-\LT@lastfoot=\box113
-\LT@gbox=\box114
+\LTcapwidth=\dimen196
+\LT@head=\box111
+\LT@firsthead=\box112
+\LT@foot=\box113
+\LT@lastfoot=\box114
+\LT@gbox=\box115
 \LT@cols=\count293
 \LT@rows=\count294
 \c@LT@tables=\count295
@@ -423,25 +442,52 @@ Package: longtable 2021-09-01 v4.17 Multi-page Table package (DPC)
 )
 (C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/varwidth\varwidth.sty
 Package: varwidth 2009/03/30 ver 0.92;  Variable-width minipages
-\@vwid@box=\box115
+\@vwid@box=\box116
 \sift@deathcycles=\count297
-\@vwid@loff=\dimen182
-\@vwid@roff=\dimen183
+\@vwid@loff=\dimen197
+\@vwid@roff=\dimen198
 )
-\sphinx@TY@tablewidth=\dimen184
-) (sphinxlatexnumfig.sty
+\sphinx@TY@tablewidth=\dimen199
+
+(C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/colortbl\colortbl.sty
+Package: colortbl 2022/06/20 v1.0f Color table columns (DPC)
+\everycr=\toks29
+\minrowclearance=\skip69
+\rownum=\count298
+)
+(C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/booktabs\booktabs.sty
+Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
+\heavyrulewidth=\dimen256
+\lightrulewidth=\dimen257
+\cmidrulewidth=\dimen258
+\belowrulesep=\dimen259
+\belowbottomsep=\dimen260
+\aboverulesep=\dimen261
+\abovetopsep=\dimen262
+\cmidrulesep=\dimen263
+\cmidrulekern=\dimen264
+\defaultaddspace=\dimen265
+\@cmidla=\count299
+\@cmidlb=\count300
+\@aboverulesep=\dimen266
+\@belowrulesep=\dimen267
+\@thisruleclass=\count301
+\@lastruleclass=\count302
+\@thisrulewidth=\dimen268
+)) (sphinxlatexnumfig.sty
 File: sphinxlatexnumfig.sty 2021/01/27 numbering
 ) (sphinxlatexlists.sty
-File: sphinxlatexlists.sty 2021/01/27 lists
+File: sphinxlatexlists.sty 2021/12/20 lists
+\spx@lineitemlabel=\toks30
 )
-\c@sphinxscope=\count298
-\c@sphinxexplicit=\count299
+\c@sphinxscope=\count303
  (sphinxpackagefootnote.sty
-Package: sphinxpackagefootnote 2021/02/04 v1.1d footnotehyper adapted to sphinx
- (Sphinx team)
-\FNH@notes=\box116
-\FNH@toks=\toks29
-\FNH@width=\dimen185
+Package: sphinxpackagefootnote 2022/08/15 v5.3.0 Sphinx custom footnotehyper pa
+ckage (Sphinx team)
+\FNH@notes=\box117
+\FNH@toks=\toks31
+\FNH@width=\dimen269
+\c@sphinxfootnotemark=\count304
 )
 (sphinxlatexindbibtoc.sty
 File: sphinxlatexindbibtoc.sty 2021/01/27 index, bib., toc
@@ -463,36 +509,37 @@ Package: parskip 2001/04/09 non-zero parskip adjustments
 (C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/fancyhdr\fancyhdr.sty
 Package: fancyhdr 2022/11/09 v4.1 Extensive control of page headers and footers
 
-\f@nch@headwidth=\skip69
-\f@nch@O@elh=\skip70
-\f@nch@O@erh=\skip71
-\f@nch@O@olh=\skip72
-\f@nch@O@orh=\skip73
-\f@nch@O@elf=\skip74
-\f@nch@O@erf=\skip75
-\f@nch@O@olf=\skip76
-\f@nch@O@orf=\skip77
+\f@nch@headwidth=\skip70
+\f@nch@O@elh=\skip71
+\f@nch@O@erh=\skip72
+\f@nch@O@olh=\skip73
+\f@nch@O@orh=\skip74
+\f@nch@O@elf=\skip75
+\f@nch@O@erf=\skip76
+\f@nch@O@olf=\skip77
+\f@nch@O@orf=\skip78
 )) (sphinxlatexstyleheadings.sty
-File: sphinxlatexstyleheadings.sty 2021/01/27 headings
+File: sphinxlatexstyleheadings.sty 2022/08/15 headings
 
 (C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/titlesec\titlesec.sty
 Package: titlesec 2021/07/05 v2.14 Sectioning titles
-\ttl@box=\box117
-\beforetitleunit=\skip78
-\aftertitleunit=\skip79
-\ttl@plus=\dimen186
-\ttl@minus=\dimen187
-\ttl@toksa=\toks30
-\titlewidth=\dimen188
-\titlewidthlast=\dimen189
-\titlewidthfirst=\dimen190
+\ttl@box=\box118
+\beforetitleunit=\skip79
+\aftertitleunit=\skip80
+\ttl@plus=\dimen270
+\ttl@minus=\dimen271
+\ttl@toksa=\toks32
+\titlewidth=\dimen272
+\titlewidthlast=\dimen273
+\titlewidthfirst=\dimen274
 )) (sphinxlatexstyletext.sty
-File: sphinxlatexstyletext.sty 2021/12/06 text styling
+File: sphinxlatexstyletext.sty 2022/07/02 text styling
 ) (sphinxlatexobjects.sty
-File: sphinxlatexobjects.sty 2021/12/05 documentation environments
-\py@argswidth=\skip80
-\lineblockindentation=\skip81
-\DUlineblockindent=\skip82
+File: sphinxlatexobjects.sty 2022/01/13 documentation environments
+\sphinxsignaturesep=\skip81
+\py@argswidth=\skip82
+\lineblockindentation=\skip83
+\DUlineblockindent=\skip84
 ))
 (C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.sty
 Package: geometry 2020/01/02 v5.9 Page Geometry
@@ -502,18 +549,18 @@ Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
 (C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty
 Package: iftex 2022/02/03 v1.0f TeX engine tests
 ))
-\Gm@cnth=\count300
-\Gm@cntv=\count301
-\c@Gm@tempcnt=\count302
-\Gm@bindingoffset=\dimen191
-\Gm@wd@mp=\dimen192
-\Gm@odd@mp=\dimen193
-\Gm@even@mp=\dimen194
-\Gm@layoutwidth=\dimen195
-\Gm@layoutheight=\dimen196
-\Gm@layouthoffset=\dimen197
-\Gm@layoutvoffset=\dimen198
-\Gm@dimlist=\toks31
+\Gm@cnth=\count305
+\Gm@cntv=\count306
+\c@Gm@tempcnt=\count307
+\Gm@bindingoffset=\dimen275
+\Gm@wd@mp=\dimen276
+\Gm@odd@mp=\dimen277
+\Gm@even@mp=\dimen278
+\Gm@layoutwidth=\dimen279
+\Gm@layoutheight=\dimen280
+\Gm@layouthoffset=\dimen281
+\Gm@layoutvoffset=\dimen282
+\Gm@dimlist=\toks33
 
 (C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.cfg
 ))
@@ -561,11 +608,11 @@ Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 itlestring.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
-\c@section@level=\count303
+\c@section@level=\count308
 )
-\@linkdim=\dimen199
-\Hy@linkcounter=\count304
-\Hy@pagecounter=\count305
+\@linkdim=\dimen283
+\Hy@linkcounter=\count309
+\Hy@pagecounter=\count310
 
 (C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def
 File: pd1enc.def 2022-11-13 v7.00u Hyperref: PDFDocEncoding definition (HO)
@@ -579,7 +626,7 @@ Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 ty
 Package: etexcmds 2019/12/15 v1.7 Avoid name clashes with e-TeX commands (HO)
 )
-\Hy@SavedSpaceFactor=\count306
+\Hy@SavedSpaceFactor=\count311
 
 (C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def
 File: puenc.def 2022-11-13 v7.00u Hyperref: PDF Unicode definition (HO)
@@ -596,14 +643,14 @@ Package hyperref Info: Plain pages OFF on input line 4177.
 Package hyperref Info: Backreferencing OFF on input line 4182.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4410.
-\c@Hy@tempcnt=\count307
+\c@Hy@tempcnt=\count312
 
 (C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty
 \Urlmuskip=\muskip17
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
 LaTeX Info: Redefining \url on input line 4748.
-\XeTeXLinkMargin=\dimen256
+\XeTeXLinkMargin=\dimen284
 
 (C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/generic/bitset\bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
@@ -613,9 +660,9 @@ lc.sty
 Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
 )
 ))
-\Fld@menulength=\count308
-\Field@Width=\dimen257
-\Fld@charsize=\dimen258
+\Fld@menulength=\count313
+\Field@Width=\dimen285
+\Fld@charsize=\dimen286
 Package hyperref Info: Hyper figures OFF on input line 6027.
 Package hyperref Info: Link nesting OFF on input line 6032.
 Package hyperref Info: Hyper index ON on input line 6035.
@@ -628,9 +675,9 @@ Package hyperref Info: PDF/A mode OFF on input line 6057.
 Package: atbegshi-ltx 2021/01/10 v1.0c Emulation of the original atbegshi
 package with kernel methods
 )
-\Hy@abspage=\count309
-\c@Item=\count310
-\c@Hfootnote=\count311
+\Hy@abspage=\count314
+\c@Item=\count315
+\c@Hfootnote=\count316
 )
 Package hyperref Info: Driver (autodetected): hpdftex.
 
@@ -643,8 +690,8 @@ Package: atveryend-ltx 2020/08/19 v1.0a Emulation of the original atveryend pac
 kage
 with kernel methods
 )
-\Fld@listcount=\count312
-\c@bookmark@seq@number=\count313
+\Fld@listcount=\count317
+\c@bookmark@seq@number=\count318
 
 (C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/rerunfilecheck\rerunf
 ilecheck.sty
@@ -657,7 +704,7 @@ Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
 Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 85.
 )
-\Hy@SectionHShift=\skip83
+\Hy@SectionHShift=\skip85
 )
 (C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/oberdiek\hypcap.sty
 Package: hypcap 2016/05/16 v1.12 Adjusting the anchors of captions (HO)
@@ -670,7 +717,7 @@ Package: sphinxmessages 2019/01/04 v2.0 Localized LaTeX macros (Sphinx team)
 
 
 Writing index file chowclassifier.idx
-LaTeX Font Info:    Trying to load font information for T1+qtm on input line 70
+LaTeX Font Info:    Trying to load font information for T1+qtm on input line 73
 .
 (C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/tex-gyre\t1qtm.fd
 File: t1qtm.fd 2009/09/25 v1.2 font definition file for T1/qtm
@@ -678,44 +725,44 @@ File: t1qtm.fd 2009/09/25 v1.2 font definition file for T1/qtm
 (C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-p
 dftex.def
 File: l3backend-pdftex.def 2022-10-26 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count314
-\l__pdf_internal_box=\box118
+\l__color_backend_stack_int=\count319
+\l__pdf_internal_box=\box119
 ) (chowclassifier.aux)
 \openout1 = `chowclassifier.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 70.
-LaTeX Font Info:    ... okay on input line 70.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 70.
-LaTeX Font Info:    ... okay on input line 70.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 70.
-LaTeX Font Info:    ... okay on input line 70.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 70.
-LaTeX Font Info:    ... okay on input line 70.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 70.
-LaTeX Font Info:    ... okay on input line 70.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 70.
-LaTeX Font Info:    ... okay on input line 70.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 70.
-LaTeX Font Info:    ... okay on input line 70.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 70.
-LaTeX Font Info:    ... okay on input line 70.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 70.
-LaTeX Font Info:    ... okay on input line 70.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 73.
+LaTeX Font Info:    ... okay on input line 73.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 73.
+LaTeX Font Info:    ... okay on input line 73.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 73.
+LaTeX Font Info:    ... okay on input line 73.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 73.
+LaTeX Font Info:    ... okay on input line 73.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 73.
+LaTeX Font Info:    ... okay on input line 73.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 73.
+LaTeX Font Info:    ... okay on input line 73.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 73.
+LaTeX Font Info:    ... okay on input line 73.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 73.
+LaTeX Font Info:    ... okay on input line 73.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 73.
+LaTeX Font Info:    ... okay on input line 73.
 
 (C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.
 mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count315
-\scratchdimen=\dimen259
-\scratchbox=\box119
-\nofMPsegments=\count316
-\nofMParguments=\count317
-\everyMPshowfont=\toks32
-\MPscratchCnt=\count318
-\MPscratchDim=\dimen260
-\MPnumerator=\count319
-\makeMPintoPDFobject=\count320
-\everyMPtoPDFconversion=\toks33
+\scratchcounter=\count320
+\scratchdimen=\dimen287
+\scratchbox=\box120
+\nofMPsegments=\count321
+\nofMParguments=\count322
+\everyMPshowfont=\toks34
+\MPscratchCnt=\count323
+\MPscratchDim=\dimen288
+\MPnumerator=\count324
+\makeMPintoPDFobject=\count325
+\everyMPtoPDFconversion=\toks35
 )
 (C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf
 -base.sty
@@ -727,7 +774,29 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 .cfg
 File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
-\c@literalblock=\count321
+(C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/pict2e\pict2e.sty
+Package: pict2e 2020/09/30 v0.4b Improved picture commands (HjG,RN,JT)
+
+(C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/pict2e\pict2e.cfg
+File: pict2e.cfg 2016/02/05 v0.1u pict2e configuration for teTeX/TeXLive
+)
+Package pict2e Info: Driver file: pdftex.def on input line 112.
+Package pict2e Info: Driver file for pict2e: p2e-pdftex.def on input line 114.
+
+(C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/pict2e\p2e-pdftex.def
+File: p2e-pdftex.def 2016/02/05 v0.1u Driver-dependant file (RN,HjG,JT)
+)
+\pIIe@GRAPH=\toks36
+\@arclen=\dimen289
+\@arcrad=\dimen290
+\pIIe@tempdima=\dimen291
+\pIIe@tempdimb=\dimen292
+\pIIe@tempdimc=\dimen293
+\pIIe@tempdimd=\dimen294
+\pIIe@tempdime=\dimen295
+\pIIe@tempdimf=\dimen296
+)
+\c@literalblock=\count326
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -763,25 +832,25 @@ File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package hyperref Info: Link coloring ON on input line 70.
+Package hyperref Info: Link coloring ON on input line 73.
 (chowclassifier.out) (chowclassifier.out)
 \@outlinefile=\write5
 \openout5 = `chowclassifier.out'.
 
-Package hyperref Info: Option `pageanchor' set `false' on input line 73.
-LaTeX Font Info:    Trying to load font information for T1+qhv on input line 73
+Package hyperref Info: Option `pageanchor' set `false' on input line 81.
+LaTeX Font Info:    Trying to load font information for T1+qhv on input line 81
 .
 
 (C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/tex-gyre\t1qhv.fd
 File: t1qhv.fd 2009/09/25 v1.2 font definition file for T1/qhv
 )<<ot1.cmap>><<oml.cmap>><<oms.cmap>><<omx.cmap>>
-LaTeX Font Info:    Trying to load font information for U+msa on input line 73.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 81.
 
 
 (C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 73.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 81.
 
 
 (C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
@@ -795,7 +864,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ]
 (chowclassifier.toc
 LaTeX Font Info:    Trying to load font information for T1+txtt on input line 1
-2.
+5.
 
 (C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/txfonts\t1txtt.fd
 File: t1txtt.fd 2000/12/15 v3.1
@@ -809,171 +878,141 @@ File: t1txtt.fd 2000/12/15 v3.1
 ] [2
 
 ]
-LaTeX Font Info:    Trying to load font information for TS1+qtm on input line 8
-3.
+LaTeX Font Info:    Trying to load font information for TS1+qtm on input line 9
+1.
 
 (C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/tex-gyre\ts1qtm.fd
 File: ts1qtm.fd 2009/09/25 v1.2 font definition file for TS1/qtm
 )
 
 LaTeX Warning: Hyper reference `index:welcome-to-chowclassifier-s-documentation
-' on page 1 undefined on input line 85.
+' on page 1 undefined on input line 93.
 
 LaTeX Font Info:    Font shape `T1/txtt/m/it' in size <10> not available
-(Font)              Font shape `T1/txtt/m/sl' tried instead on input line 125.
+(Font)              Font shape `T1/txtt/m/sl' tried instead on input line 131.
 [1] [2
 
 ]
 Chapter 1.
-<schema.png, id=132, 312.9291pt x 355.5684pt>
+<schema.png, id=145, 312.9291pt x 355.5684pt>
 File: schema.png Graphic file (type png)
 <use schema.png>
-Package pdftex.def Info: schema.png  used on input line 311.
+Package pdftex.def Info: schema.png  used on input line 322.
 (pdftex.def)             Requested size: 312.92831pt x 355.56752pt.
 [3] [4 <./schema.png>]
 LaTeX Font Info:    Font shape `T1/txtt/b/n' in size <10> not available
-(Font)              Font shape `T1/txtt/bx/n' tried instead on input line 349.
+(Font)              Font shape `T1/txtt/bx/n' tried instead on input line 360.
 LaTeX Font Info:    Trying to load font information for TS1+txtt on input line 
-355.
+366.
 
 (C:\Users\LucMiaz\AppData\Local\Programs\MiKTeX\tex/latex/txfonts\ts1txtt.fd
 File: ts1txtt.fd 2000/12/15 v3.1
 )
-[5] [6
+LaTeX Font Info:    Font shape `TS1/txtt/m/it' in size <10> not available
+(Font)              Font shape `TS1/txtt/m/sl' tried instead on input line 385.
 
-]
+
+[5] [6]
 Chapter 2.
-[7]
-Underfull \hbox (badness 5388) in paragraph at lines 623--632
+[7
+
+] [8] [9]
+Underfull \hbox (badness 5388) in paragraph at lines 782--791
 \T1/qtm/m/n/10 af-ter-wards \T1/qtm/m/it/10 params() \T1/qtm/m/n/10 to get the 
 re-gres-sions (y=k * x + b) pa-ram-e-ters as [[model1_k, model1_b,
  []
 
-[8] [9] [10] [11] [12
+[10] [11] [12] [13] [14
 
 ]
 Chapter 3.
+[15] [16
+
+]
+Chapter 4.
 LaTeX Font Info:    Font shape `T1/txtt/b/n' in size <14.4> not available
-(Font)              Font shape `T1/txtt/bx/n' tried instead on input line 1053.
+(Font)              Font shape `T1/txtt/bx/n' tried instead on input line 1179.
 
 
-Overfull \hbox (13.77493pt too wide) in alignment at lines 1066--1079
+Overfull \hbox (12.17491pt too wide) in alignment at lines 1195--1208
  [] [] [] 
  []
 
 
-Overfull \hbox (13.77493pt too wide) in alignment at lines 1079--1095
+Overfull \hbox (12.17491pt too wide) in alignment at lines 1208--1225
  [] [] [] 
  []
 
 
-Overfull \hbox (13.77493pt too wide) in alignment at lines 1095--1099
+Overfull \hbox (12.17491pt too wide) in alignment at lines 1225--1231
  [] [] [] 
  []
 
 
-Overfull \hbox (13.77493pt too wide) in alignment at lines 1099--1101
+Overfull \hbox (12.17491pt too wide) in alignment at lines 1231--1233
  [] [] [] 
  []
 
 
-Overfull \hbox (13.77493pt too wide) in alignment at lines 1101--1535
+Overfull \hbox (12.17491pt too wide) in alignment at lines 1233--1668
  [] [] [] 
  []
 
-[13] [14] [15
+[17] [18]
+Chapter 5.
+[19
 
+] [20
 
-
-] (chowclassifier.ind [16
+] [21
 
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 13--14
-[]\T1/txtt/m/n/10 conf_int_to_trend() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 in mod-ul
-e chow-clas-si-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 21--23
-[]\T1/txtt/m/n/10 get_breakpoint_indices() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 chow
--clas-si-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 24--25
-[]\T1/txtt/m/n/10 guess_timelapse_type() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 in mod
--ule chow-clas-si-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 28--29
-[]\T1/txtt/m/n/10 infer_date_format() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 in mod-ul
-e chow-clas-si-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 39--40
-[]\T1/txtt/m/n/10 parse_timecol() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 chow-clas-si-
-fier.chow.ChewData
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 54--55
-[]\T1/txtt/m/n/10 save_to_file() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 chow-clas-si-f
-ier.chow.ChewData
- []
-
-
-Underfull \hbox (badness 5939) in paragraph at lines 60--61
-[]\T1/txtt/m/n/10 to_excel() \T1/qtm/m/n/10 (\T1/qtm/m/it/10 chow-clas-si-fier.
-chow.ChewData method\T1/qtm/m/n/10 ),
- []
-
-[17
-
-]) (chowclassifier.aux)
+No file chowclassifier.ind.
+(chowclassifier.aux)
 
 LaTeX Warning: There were undefined references.
 
 Package rerunfilecheck Info: File `chowclassifier.out' has not changed.
-(rerunfilecheck)             Checksum: 23EE255F0B517BB4D76506EA2AFABB92;1669.
+(rerunfilecheck)             Checksum: E10CB816C7CDE6971ED6AAE3E089E95A;2236.
  ) 
 Here is how much of TeX's memory you used:
- 14889 strings out of 475281
- 244203 string characters out of 2773121
- 658441 words of memory out of 3000000
- 35885 multiletter control sequences out of 15000+600000
- 530201 words of font info for 86 fonts, out of 8000000 for 9000
+ 15844 strings out of 475281
+ 267880 string characters out of 2773121
+ 709817 words of memory out of 3000000
+ 36802 multiletter control sequences out of 15000+600000
+ 539041 words of font info for 92 fonts, out of 8000000 for 9000
  1142 hyphenation exceptions out of 8191
- 70i,11n,76p,1935b,741s stack positions out of 10000i,1000n,20000p,200000b,80000s
+ 70i,11n,76p,1873b,764s stack positions out of 10000i,1000n,20000p,200000b,80000s
 {C:/Users/LucMiaz/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/tex-gyre/q-ec
 .enc}{C:/Users/LucMiaz/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/tex-gyre/q
--ts1.enc}<C:/Users/LucMiaz/AppData/Local/Programs/MiKTeX/fonts/type1/public/ams
-fonts/cm/cmmi10.pfb><C:/Users/LucMiaz/AppData/Local/Programs/MiKTeX/fonts/type1
-/public/amsfonts/cm/cmmi5.pfb><C:/Users/LucMiaz/AppData/Local/Programs/MiKTeX/f
-onts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/LucMiaz/AppData/Local/Program
-s/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/LucMiaz/AppData/Loc
-al/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Users/LucMiaz/Ap
-pData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/L
-ucMiaz/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-<C:/Users/LucMiaz/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/
-cmsy5.pfb><C:/Users/LucMiaz/AppData/Local/Programs/MiKTeX/fonts/type1/public/am
-sfonts/cm/cmsy7.pfb><C:/Users/LucMiaz/AppData/Local/Programs/MiKTeX/fonts/type1
-/public/tex-gyre/qhvb.pfb><C:/Users/LucMiaz/AppData/Local/Programs/MiKTeX/fonts
-/type1/public/tex-gyre/qhvbi.pfb><C:/Users/LucMiaz/AppData/Local/Programs/MiKTe
-X/fonts/type1/public/tex-gyre/qhvr.pfb><C:/Users/LucMiaz/AppData/Local/Programs
-/MiKTeX/fonts/type1/public/tex-gyre/qtmb.pfb><C:/Users/LucMiaz/AppData/Local/Pr
-ograms/MiKTeX/fonts/type1/public/tex-gyre/qtmr.pfb><C:/Users/LucMiaz/AppData/Lo
-cal/Programs/MiKTeX/fonts/type1/public/tex-gyre/qtmri.pfb><C:/Users/LucMiaz/App
-Data/Local/Programs/MiKTeX/fonts/type1/public/txfonts/t1xbtt.pfb><C:/Users/LucM
-iaz/AppData/Local/Programs/MiKTeX/fonts/type1/public/txfonts/t1xtt.pfb><C:/User
-s/LucMiaz/AppData/Local/Programs/MiKTeX/fonts/type1/public/txfonts/t1xtt.pfb><C
-:/Users/LucMiaz/AppData/Local/Programs/MiKTeX/fonts/type1/public/txfonts/tcxtt.
-pfb>
-Output written on chowclassifier.pdf (21 pages, 584823 bytes).
+-ts1.enc}{C:/Users/LucMiaz/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8
+r.enc}<C:/Users/LucMiaz/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfon
+ts/cm/cmmi10.pfb><C:/Users/LucMiaz/AppData/Local/Programs/MiKTeX/fonts/type1/pu
+blic/amsfonts/cm/cmmi5.pfb><C:/Users/LucMiaz/AppData/Local/Programs/MiKTeX/font
+s/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/LucMiaz/AppData/Local/Programs/M
+iKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/LucMiaz/AppData/Local/
+Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Users/LucMiaz/AppDa
+ta/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/LucM
+iaz/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:
+/Users/LucMiaz/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cms
+y5.pfb><C:/Users/LucMiaz/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
+nts/cm/cmsy7.pfb><C:/Users/LucMiaz/AppData/Local/Programs/MiKTeX/fonts/type1/pu
+blic/tex-gyre/qhvb.pfb><C:/Users/LucMiaz/AppData/Local/Programs/MiKTeX/fonts/ty
+pe1/public/tex-gyre/qhvbi.pfb><C:/Users/LucMiaz/AppData/Local/Programs/MiKTeX/f
+onts/type1/public/tex-gyre/qhvr.pfb><C:/Users/LucMiaz/AppData/Local/Programs/Mi
+KTeX/fonts/type1/public/tex-gyre/qtmb.pfb><C:/Users/LucMiaz/AppData/Local/Progr
+ams/MiKTeX/fonts/type1/public/tex-gyre/qtmr.pfb><C:/Users/LucMiaz/AppData/Local
+/Programs/MiKTeX/fonts/type1/public/tex-gyre/qtmri.pfb><C:/Users/LucMiaz/AppDat
+a/Local/Programs/MiKTeX/fonts/type1/public/txfonts/t1xbtt.pfb><C:/Users/LucMiaz
+/AppData/Local/Programs/MiKTeX/fonts/type1/public/txfonts/t1xtt.pfb><C:/Users/L
+ucMiaz/AppData/Local/Programs/MiKTeX/fonts/type1/public/txfonts/t1xtt.pfb><C:/U
+sers/LucMiaz/AppData/Local/Programs/MiKTeX/fonts/type1/public/txfonts/tcxtt.pfb
+><C:/Users/LucMiaz/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.p
+fb>
+Output written on chowclassifier.pdf (25 pages, 592457 bytes).
 PDF statistics:
- 373 PDF objects out of 1000 (max. 8388607)
- 90 named destinations out of 1000 (max. 500000)
- 138 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 393 PDF objects out of 1000 (max. 8388607)
+ 104 named destinations out of 1000 (max. 500000)
+ 162 words of extra memory for PDF output out of 10000 (max. 10000000)
 

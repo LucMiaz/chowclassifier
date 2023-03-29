@@ -426,6 +426,8 @@ class Chow(object):
                 tt = conf_int_to_trend(model.conf_int(alpha = self.alpha))
                 FILLPARAMS['color'] = fillparams.get('color',CI_COLORS[tt])
                 FITPARAMS['color'] = fitparams.get('color',TREND_COLORS[tt])
+                if model.ci_l < 0 and model.ci_u > 0:
+                    FITPARAMS["linestyle"] = 'dashed'
                 ax.fill_between(x = X, y1=ci_l, y2 = ci_u, **FILLPARAMS)
             ax.plot(sub_df['X'], model.fittedvalues, marker = None,**FITPARAMS)
         if ax is None:
@@ -439,6 +441,7 @@ class Chow(object):
         else:
             add_reg_plot(self.df,self.model0)
         SCATTERPARAMS['color'] = scatterparams.get('color',self.color)
+        SCATTERPARAMS['']
         ax.scatter(self.df['X'],self.df['y'],
                     **SCATTERPARAMS)
         # Tweak the visual presentation
