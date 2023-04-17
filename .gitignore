@@ -1,0 +1,18 @@
+#ignore pycache
+**/__pycache__/*
+
+#ignore Cpython
+*.pyc
+
+# ignore vs settings
+**/.vscode/*
+
+# ignore sdf files
+*.sdf
+
+# ignore accdb
+*.accdb
+*.laccdb
+
+# ignore pdfs
+*.pdf

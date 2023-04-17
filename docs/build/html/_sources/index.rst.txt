@@ -53,7 +53,7 @@ ChowClassifier aims to solve this. It is a script that performs a series of Chow
 where set1 and set2 indicate respectively the data before the breakpoint and after. The decision process for this classification is shown in the following schema:
 
 
-.. image:: schema.png
+.. image:: source/schema.png
    :alt: Schema
    :align: right
 
@@ -98,20 +98,37 @@ The script can be ran on any file with ``python -m chowclassifier -f path/to/fil
    initial_breakpoint = None
 
    C = ChewData(filename = f"{'/'.join([x for x in [filepath,filename] if x not in [None,'']])}",
-               timecol = timecol, ycol = ycol, alpha = alpha)
+               timecol = timecol,# name of time column (used as x-axis)
+               ycol = ycol,# name for value column (used as y-axis) Leave blank if multiple
+               alpha = alpha# level of confidence to use
+               )
 
    ########## use the code line below if your X/time column is not a number, e.g. a date
    ########## comment it otherwise
-   C.parse_timecol(date_format = '%Y-%m-%d') # 
+   # C.parse_timecol(date_format = '%Y-%m-%d') # 
 
-   C.run(breakpoint = initial_breakpoint)
-   C.plot(xlabel = 'time', ylabel='value',# labels given to the axes
+   C.run(initial_breakpoint = initial_breakpoint)
+   C.plot(xlabel = 'time',# label for x axis
+         ylabel='value',# label for y axis
          title = "Chow Classification",# title of the main plot
-         filename = f"{'/'.join([x for x in [savingpath_figures,filename] if x not in [None,'']])}.png",
-         figsize=(16,8),sharey=True)
-   C.plot_individually(savingpath = savingpath_figures, format = 'png',
-                     xlabel = 'time', ylabel='value',# labels given to the axes
+         filename = f"{'/'.join([x for x in [savingpath_figures,filename] if x not in [None,'']])}.png",# filename for the figure
+         figsize=(16,8),# figure size
+         sharey=True # whether the individual plots are forced to share y axis
+         )
+   C.plot_individually(savingpath = savingpath_figures,# Saving path for the figures
+                     format = 'png',# figure format
+                     xlabel = 'time',# label for x axis
+                     ylabel='value',# label for y axis
                      )
+
+   C.plot_by_group('g',
+                  savingpath = savingpath_figures,# Saving path for the figures
+                  format = 'png',# figure format
+                  xlabel = 'time',# label for x axis
+                  ylabel='value',# label for y axis
+                  plot_overall = True,# Whether to plot an overall trend across groups (including confidence inverval fill)
+                  plot_individual_fill = True# Whether to plot individual confidence inverval fills
+                  )
 
 
 
@@ -126,12 +143,13 @@ Class and method descriptions
 
 .. toctree::
    :maxdepth: 2
+   :caption: Chow
 
-   modules
+   source/modules
 
 
 Licence
--------
+=======
 
 GNU LESSER GENERAL PUBLIC LICENSE 
 Version 2.1, February 1999
@@ -243,3 +261,19 @@ The output's columns are described in the following table. ``model0`` correspond
 +------------+------------------------------+---------------------------------------------------------------------------------------------+
 |            | alpha_Bonferroni_corrected   | Bonferroni corrected significance level at which the breakpoints were tested                |
 +------------+------------------------------+---------------------------------------------------------------------------------------------+
+
+
+Version changes
+===============
+
++------------+--------------------------------------------------------------------------------------------+
+|   1.0.5    | Added option to plot confidence interval fill for individual group trends                  |
++------------+--------------------------------------------------------------------------------------------+
+|   1.0.4    | Added support for plotting individual trends by group                                      |
++------------+--------------------------------------------------------------------------------------------+
+|   1.0.3    | Bug correction                                                                             |
++------------+--------------------------------------------------------------------------------------------+
+|   1.0.2    | Added support to parse full csv/excel automatically                                        |
++------------+--------------------------------------------------------------------------------------------+
+|   1.0.1    | First implementation of algorithm                                                          |
++------------+--------------------------------------------------------------------------------------------+
