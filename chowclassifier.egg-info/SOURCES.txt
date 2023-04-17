@@ -16,6 +16,5 @@ chowclassifier.egg-info/entry_points.txt
 chowclassifier.egg-info/requires (conflicted copy 2023-03-27 154554).txt
 chowclassifier.egg-info/requires.txt
 chowclassifier.egg-info/top_level.txt
-chowclassifier/chowclassifier/chow.py
 tests/test_chow.py
 tests/test_with_synt_data.py

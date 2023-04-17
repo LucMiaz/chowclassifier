@@ -283,7 +283,7 @@ class ChewData():
                 params['title'] = params.get('title', chowObj.name)
                 params['xlabel'] = params.get('xlabel', self.timecol)
                 params['ylabel'] = params.get('ylabel', self.ycol)
-                chowObj.plot_by_group(filename = f"{savingpath}/{self.name}_{chowObj.name}.{format}", groupcol = self.groupcol, cmap = cmap, **params)
+                chowObj.plot_by_group(filename = f"{savingpath}/{chowObj.name}.{format}", groupcol = self.groupcol, cmap = cmap, **params)
                 plt.savefig(f'{savingpath}/{chowObj.name}_bygroups.{format}')
                 bar.update(1)
 

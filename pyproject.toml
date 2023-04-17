@@ -29,14 +29,11 @@ dependencies = [
     "seaborn >= 0.11.2",
     "statsmodels >= 0.12.1",
     "tqdm >= 4.65.0"
-    "statsmodels >= 0.12.1",
-    "tqdm >= 4.65.0"
 ]
 requires-python = ">=3.6"
 
 [tool.pytest.ini_options]
 pythonpath = [
-  "chowclassifier"
   "chowclassifier"
 ]
 
