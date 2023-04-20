@@ -3,7 +3,6 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from matplotlib.pyplot import colormaps
 from typing import Union
 import os
 from tqdm import tqdm
@@ -46,7 +45,10 @@ class ChewData():
         self.namecol = namecol
         self.timecol = timecol
         self.groupcol = groupcol
-        self.ycol = ycol
+        if ycol is None:
+            self.ycol = 'value'
+        else:
+            self.ycol = ycol
         self.margin = margin
         self.alpha = alpha
         self.initial_breakpoint = initial_breakpoint
@@ -137,7 +139,7 @@ class ChewData():
         with tqdm(total = len(self.df.groupby(self.namecol))) as bar:
             for name, sub_df in self.df.groupby(self.namecol):
                 if sub_df.shape[0] > 1:
-                    params,C = self.run_C(sub_df, name, initial_breakpoint)
+                    params,C = self.run_C(sub_df, name = name, initial_breakpoint=initial_breakpoint)
                     if C is None:
                         self.failed.append(name)
                     else:
@@ -147,7 +149,7 @@ class ChewData():
                     self.failed.append(name)
                 bar.update(1)
         self.results = pd.DataFrame(results) # put the results in a dataframe
-    def plot(self,filename:str,
+    def plot(self,filename:Union[str,None]=None,
              grouped:bool = False,
              divide:int = 1,
              nrows:Union[None,int] = None,
@@ -174,20 +176,15 @@ class ChewData():
         :params fitparams: dictionnary of parameters for the fitted line, passed to chew plot
         :params params: named parameters passed to matplotlib, eg xlabel, ylabel, sharey, figsize, pad
         """
-        if isinstance(cmap,str):
-            cmap = colormaps[cmap].colors
-        elif isinstance(cmap,list):
-            pass
-        else:
-            cmap = colormaps['Set1'].colors
         def get_n(m,_nplots = len(self.chows)):
                 n = _nplots/m
                 if n-int(n) == 0.:
                     return int(n)
                 return int(n)+1
-        f = filename.split(".")
-        filename = ".".join(f[0:-1])
-        ext = f[-1]
+        if filename is not None:
+            f = filename.split(".")
+            filename = ".".join(f[0:-1])
+            ext = f[-1]
         nplots = get_n(divide)
         print("Plotting trends")
         with tqdm(total = divide) as bar:
@@ -224,8 +221,11 @@ class ChewData():
                             scatterparams = scatterparams,
                             fillparams = fillparams,
                             fitparams = fitparams)
-                plt.savefig(f'{filename}_{i:02d}.{ext}')
+                if filename is not None:
+                    plt.savefig(f'{filename}_{i:02d}.{ext}')
                 bar.update(1)
+        if filename is None:
+            plt.show()
     def plot_individually(self, savingpath:str = 'figs', format:str = 'pdf', **params):
         """
         Plot all trends in individual files
@@ -241,19 +241,16 @@ class ChewData():
         with tqdm(total = len(self.chows)) as bar:
             for chowObj in self.chows:
                 plt.clf()
-                params['title'] = params.get('title', chowObj.name)
-                params['xlabel'] = params.get('xlabel', self.timecol)
-                params['ylabel'] = params.get('ylabel', self.ycol)
                 chowObj.plot(filename = f'{"/".join([savingpath, chowObj.name])}.{format}',
-                             xlabel=params.get('xlabel','X'),
-                             ylabel=params.get('ylabel','y'),
-                             title=chowObj.name,
+                             xlabel=params.get('xlabel', self.timecol),
+                             ylabel=params.get('ylabel', self.ycol),
+                             title=params.get('prefix','')+chowObj.name,
                              scatterparams = params.get('scatterparams',{}),
                              fillparams = params.get('fillparams',{}),
                              fitparams = params.get('fitparams',{}))
                 bar.update(1)
     def plot_by_group(self,
-                      savingpath:str = 'figs',
+                      savingpath:Union[None,str] = 'figs',
                       format:str = 'pdf',
                       cmap:str = 'Set1',
                       **params):
@@ -271,21 +268,20 @@ class ChewData():
         if not os.path.isdir(savingpath):
             os.makedirs(savingpath)
         print("Plotting trends by group")
-        if isinstance(cmap,str):
-            cmap = colormaps[cmap].colors
-        elif isinstance(cmap,list):
-            pass
-        else:
-            cmap = colormaps['Set1'].colors
         with tqdm(total = len(self.chows)) as bar:
             for chowObj in self.chows:
                 plt.clf()
                 params['title'] = params.get('title', chowObj.name)
                 params['xlabel'] = params.get('xlabel', self.timecol)
                 params['ylabel'] = params.get('ylabel', self.ycol)
-                chowObj.plot_by_group(filename = f"{savingpath}/{chowObj.name}.{format}", groupcol = self.groupcol, cmap = cmap, **params)
-                plt.savefig(f'{savingpath}/{chowObj.name}_bygroups.{format}')
+                if savingpath is not None:
+                    filename = f"{savingpath}/{chowObj.name}_bygroups.{format}"
+                else:
+                    filename = None
+                chowObj.plot_by_group(filename = filename, groupcol = self.groupcol, cmap = cmap, **params)
                 bar.update(1)
+        if savingpath is None:
+            plt.show()
 
     def results_df(self):
         """Create dataframe with results"""

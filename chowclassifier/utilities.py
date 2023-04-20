@@ -1,14 +1,27 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib import colormaps
 import seaborn as sns
 from typing import Union
 from datetime import datetime
 
-TREND_COLORS = ['#7570b3','#d95f02','#1b9e77']# constant, increasing,decreasing 
-CI_COLORS = ['#aeabd3','#fd7d1c','#25daa4']
-SCATTERPARAMS = {"marker": 'x', "linewidths":0.5, "alpha":1,"s":50,"label":'_nolegend_'}
+TREND_COLORS = ["#4d4c49", "#d85e5e", "#3a668c", "#000000"]# constant, increasing,decreasing 
+CI_COLORS = ["#fef5da", "#ff988c", "#b4c5f4", "#474747"]
+SCATTERPARAMS = {"marker": 'o', "linewidths":0.5, "alpha":1,"s":50,"label":'_nolegend_'}
 FILLPARAMS = {"linestyle":"None", "alpha":0.3,"label":'_nolegend_'}
 FITPARAMS = {"label":'_nolegend_'}
+
+def parse_cmap(cmap):
+    if isinstance(cmap,str):
+        cmap = {i:x for i,x in enumerate(colormaps[cmap].colors)}
+    elif isinstance(cmap,list):
+        cmap = {i:x for i,x in enumerate(cmap)}
+    elif isinstance(cmap, dict):
+        if not all(isinstance(item, int) for item in cmap.keys()):
+            cmap.update({i:v for i,(k,v) in enumerate(cmap.items())})
+    else:
+        cmap = {i:x for i,x in enumerate(colormaps['Set1'].colors)}
+    return cmap
 
 def conf_int_to_trend(ci:Union[pd.DataFrame,list], param:str='X'):
     """return trend  0, 1, 2 from the confidence interval:

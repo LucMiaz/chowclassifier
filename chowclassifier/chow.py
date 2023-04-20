@@ -5,9 +5,8 @@ import pandas as pd
 from scipy.stats import f as Fdist
 import matplotlib.pyplot as plt
 import seaborn as sns
-from matplotlib import colormaps
 import statsmodels.api as sm
-from .utilities import conf_int_to_trend
+from .utilities import conf_int_to_trend, parse_cmap
 from .utilities import SCATTERPARAMS, FILLPARAMS, FITPARAMS, CI_COLORS, TREND_COLORS
 
 ### Set plot style
@@ -68,6 +67,7 @@ class Chow(object):
         self.margin=margin
         self.breakpoints = None
         self.normalise=False
+        self.tt = -1
         self.m = margin*2+1 # number of hypotheses tested, will be used for Bonferroni correction
         self.F=None
         self.alpha0 = alpha # original significance level
@@ -136,6 +136,7 @@ class Chow(object):
         X2=self.df.loc[self.df['X']>=bkp,'X']
         y1=self.df.loc[self.df['X']<bkp,'y']
         y2=self.df.loc[self.df['X']>=bkp,'y']
+        self.successful = False
         if np.any(X1) and np.any(X2):
             X1=sm.add_constant(X1)
             X2=sm.add_constant(X2)
@@ -148,9 +149,10 @@ class Chow(object):
             self.ss_res_2=np.sum((y2-self.model2.predict(X2))**2)
             k = 3 # Total number of parameters
             self.F=((self.ss_res_0-(self.ss_res_1+self.ss_res_2))/k) / ((self.ss_res_1+self.ss_res_2)/(X.shape[0]-2*k))
-            self.score=Fdist.sf(self.F, 3, X.shape[0]-2*3)
-            self.successful=True
-        elif np.any(X) and X.shape[0]>1:
+            if X.shape[0]-2*3 >0:
+                self.score=Fdist.sf(self.F, 3, X.shape[0]-2*3)
+                self.successful=True
+        if self.successful is False and np.any(X) and X.shape[0]>1:
             X=sm.add_constant(X)
             self.model0=sm.OLS(y,X).fit()
             self.model1 = self.model0
@@ -160,8 +162,8 @@ class Chow(object):
             self.ss_res_2 = None
             self.F = None
             self.score = 1
-            self.successful = False
-        else:
+            #self.successful = False
+        elif self.successful is False:
             raise ValueError("Data missing for at least one period for {}, with breakpoint {}".format(self.name,self.initial_breakpoint))
         return {"score" : self.score,
                 "F" : self.F,
@@ -233,8 +235,8 @@ class Chow(object):
                     tc=['DN','DI'][tt2]
         else:
             #N0, N1 or N2
-            tt= conf_int_to_trend(self.model0.conf_int(alpha = self.alpha0))
-            tc = ['N','I','D'][tt]
+            self.tt= conf_int_to_trend(self.model0.conf_int(alpha = self.alpha0))
+            tc = ['N','I','D'][self.tt]
             self.initial_breakpoint=None
         self.treeclass = tc
         self.set_color()
@@ -244,7 +246,7 @@ class Chow(object):
         'Dd':'#c7eae5','dD':'#80cdc1','DN':'#35978f','ND':'#01665e',
         'NN':'#555555','NI':'#006837','ND':'#d73027','N':'#AAAAAA','I':'#1a9850','D':'#a50026',
         'ID':'#9970ab','DI':'#762a83'}
-        self.color = colors[self.treeclass]
+        self.color = TREND_COLORS[self.tt]
     def params_names(self):
         return ['intercept','slope',
                 'R2','se_intercept','se_slope','n',
@@ -306,8 +308,8 @@ class Chow(object):
         else:
             print(f"Summary model 0: whole dataset")
             self.model0.summary()
-    def plot(self, color = None, filename:str = None, ax = None, figsize = (16,8),
-            ylabel:str = '', xlabel:str = '', title:str = '', ylog:bool=False,
+    def plot(self, filename:str = None, ax = None, figsize = (16,8),
+            ylog:bool=False,
             fill:bool = True,
             scatter:bool = True,
             scatterparams:dict = {},
@@ -331,7 +333,9 @@ class Chow(object):
         :params scatterparams: parameters for the scatter plot
         :params fillparams: parameter for the confidence intervals
         :params fitparams: parameter for the fitted line
-        :params linestyles: select the linestyle of each trend (list of size 3)
+        :params linestyles: select the linestyle of each trend (list of size 3), set to None if you want to define it in fitparams
+        :params xlim: tuple with the left and right limits of the x axis
+        :params ylim: tuple with the lower and upper limits of the y axis
         """
         ### update plot parameters
         SCATTERPARAMS.update(scatterparams)
@@ -344,17 +348,25 @@ class Chow(object):
         def add_reg_plot(sub_df, model):
             # X values
             X = sorted(set(sub_df['X']))
+            inc = (max(X)-min(X))/max(1,len(X)-1)
+            X = np.linspace(min(X)-0.5*inc, max(X)+0.5*inc, 2*(len(X)+1))
             Xc = sm.add_constant(X)
             # get confidence interval
             ci_l,ci_u = zip(*model.get_prediction(Xc).conf_int(alpha = self.alpha))
             tt = conf_int_to_trend(model.conf_int(alpha = self.alpha))
-            if fill:
+            if fill is True:
                 # set color depending on time trend
                 FILLPARAMS['color'] = fillparams.get('color',CI_COLORS[tt])   
                 ax.fill_between(x = X, y1=ci_l, y2 = ci_u, **FILLPARAMS)
             FITPARAMS['color'] = fitparams.get('color',TREND_COLORS[tt])
-            FITPARAMS['linestyle'] = linestyles[tt]
-            ax.plot(sub_df['X'], model.fittedvalues, marker = None,**FITPARAMS)
+            try:
+                FITPARAMS['linestyle'] = linestyles[tt]
+            except:
+                FITPARAMS['linestyle'] = FITPARAMS.get('linestyle','solid')
+            intercept, slope = model.params
+            y0 = intercept + slope * min(X)
+            y1 = intercept + slope * max(X)
+            ax.plot((min(X),max(X)),(y0,y1), marker = None, **FITPARAMS)
         if ax is None:
             plt.clf()
             f, (ax) = plt.subplots(nrows=1, ncols=1, figsize=figsize)
@@ -373,9 +385,12 @@ class Chow(object):
         ax.xaxis.grid(True)
         ax.yaxis.grid(True)
         ax.minorticks_on()
-        ax.set(ylabel=ylabel,
-            xlabel=xlabel,
-            title=title)
+        ax.set(ylabel=params.get("ylabel", 'y'),
+            xlabel=params.get("xlabel",'X'),
+            title=params.get("title",self.name))
+        ax.set_xlim(*params.get('xlim',(self.df['X'].min(), self.df['X'].max())))
+        if params.get('ylim') is not None:
+            ax.set_ylim(*params.get('ylim',(self.df['y'].min(), self.df['y'].max())))
         if ylog is True:
             ax.set_yscale('log')
         #sns.despine(trim=True, left=True)
@@ -395,6 +410,7 @@ class Chow(object):
                       scatterparams:dict = {},
                       fillparams:dict = {},
                       fitparams:dict = {},
+                      groups_order:list = None,
                       **params):
         """
         Plot the regression model(s)
@@ -416,7 +432,9 @@ class Chow(object):
         :params fillparams: parameter for the confidence intervals
         :params fitparams: parameter for the fitted line
         :params linestyles: select the linestyle of each trend (list of size 3)
+        :params groups_order: a list that shows the order in which the groups must be plotted
         """
+        cmap = parse_cmap(cmap)
         scatterparams = params.get('scatterparams',{})
         fillparams = params.get('fillparams',{})
         fitparams = params.get('fitparams',{})
@@ -430,8 +448,13 @@ class Chow(object):
                     ncols=1,
                     sharey=params.get("sharey",True),
                     figsize=params.get('figsize',figsize))
-        ax.set(title = self.name)
-        for i,(n,dfg) in enumerate(self.df.groupby('g')):
+        if groups_order is None:
+            groups_order = []
+        params['title'] = self.name
+        groups_order = groups_order + [x for x in set(self.df['g']) if x not in groups_order]
+        self.df['go'] = [groups_order.index(x) for x in self.df['g']]
+        for i,(n,dfg) in enumerate(self.df.groupby(['go','g'],sort=True)):
+            n = n[1]
             if n not in self.gCs.keys():
                 self.gCs[n] = Chow(df = dfg,
                             name = n,
@@ -445,11 +468,10 @@ class Chow(object):
             if success is None:
                 print(f"Analysis failed for {self.name} {n}")
             else:
-                scatterparams['color'] = cmap[i]
-                fitparams['color'] = cmap[i]
-                fillparams['color'] = cmap[i]
+                scatterparams['color'] = cmap.get(n,cmap[i])
+                fitparams['color'] = cmap.get(n,cmap[i])
+                fillparams['color'] = cmap.get(n,cmap[i])
                 scatterparams['label'] = n
-                
                 self.gCs[n].plot(ax = ax,
                     fill = plot_individual_fill,
                     scatterparams = scatterparams,
