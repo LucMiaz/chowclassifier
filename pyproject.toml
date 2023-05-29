@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "chowclassifier"
-version = "1.0.9"
+version = "1.0.10"
 description = "Classification of time trends using Chow test"
 readme = "README.md"
 authors = [{ name = "Luc Miaz", email = "luc@miaz.ch" }]

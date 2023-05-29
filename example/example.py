@@ -57,5 +57,6 @@ C.plot_by_group(savingpath = savingpath_figures,# Saving path for the figures
                 xlabel = 'time',# label for x axis
                 ylabel='value',# label for y axis
                 plot_overall = True,# Whether to plot an overall trend across groups (including confidence inverval fill)
-                plot_individual_fill = True# Whether to plot individual confidence inverval fills
+                plot_individual_fill = True,# Whether to plot individual confidence inverval fills
+                show_legend = False
                 )

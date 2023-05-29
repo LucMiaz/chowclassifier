@@ -265,7 +265,16 @@ The output's columns are described in the following table. ``model0`` correspond
 
 Version changes
 ===============
-
++------------+--------------------------------------------------------------------------------------------+
+|   1.0.10   | Minor addition, with show_legend option                                                    |
++------------+--------------------------------------------------------------------------------------------+
+|   1.0.9    | Correction of bugs, added jupyter notebook example.                                        |
++------------+--------------------------------------------------------------------------------------------+
+|   1.0.8    | Correction of bugs.                                                                        |
++------------+--------------------------------------------------------------------------------------------+
+|   1.0.7    | Split main classes and utilities in multiple files, added option to ChewData.plot to have  |
+|            | grouped trends, corrected input parsing, corrected inconsistancy with                      |
+|            | intial_breakpoint/margin. Added option to change linestyle by trend individually           |
 +------------+--------------------------------------------------------------------------------------------+
 |   1.0.5    | Added option to plot confidence interval fill for individual group trends                  |
 +------------+--------------------------------------------------------------------------------------------+

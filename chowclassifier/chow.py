@@ -6,6 +6,7 @@ from scipy.stats import f as Fdist
 import matplotlib.pyplot as plt
 import seaborn as sns
 import statsmodels.api as sm
+from typing import Union
 from .utilities import conf_int_to_trend, parse_cmap
 from .utilities import SCATTERPARAMS, FILLPARAMS, FITPARAMS, CI_COLORS, TREND_COLORS
 
@@ -316,6 +317,7 @@ class Chow(object):
             fillparams:dict = {},
             fitparams:dict = {},
             linestyles:list = ['dashed','solid','solid'],
+            show_legend:bool = True,
             **params):
         """
         Plot the regression model(s)
@@ -336,6 +338,7 @@ class Chow(object):
         :params linestyles: select the linestyle of each trend (list of size 3), set to None if you want to define it in fitparams
         :params xlim: tuple with the left and right limits of the x axis
         :params ylim: tuple with the lower and upper limits of the y axis
+        :params show_legend: legend options passed to ax.legend(), see https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.legend.html
         """
         ### update plot parameters
         SCATTERPARAMS.update(scatterparams)
@@ -393,6 +396,8 @@ class Chow(object):
             ax.set_ylim(*params.get('ylim',(self.df['y'].min(), self.df['y'].max())))
         if ylog is True:
             ax.set_yscale('log')
+        if show_legend is False:
+            ax.get_legend().remove()
         #sns.despine(trim=True, left=True)
         #f.suptitle("")
         if filename is not None and main_p is True:
