@@ -148,10 +148,10 @@ class Chow(object):
             self.ss_res_0=np.sum((y-self.model0.predict(X))**2)
             self.ss_res_1=np.sum((y1-self.model1.predict(X1))**2)
             self.ss_res_2=np.sum((y2-self.model2.predict(X2))**2)
-            k = 3 # Total number of parameters
+            k = 2 # Total number of parameters
             self.F=((self.ss_res_0-(self.ss_res_1+self.ss_res_2))/k) / ((self.ss_res_1+self.ss_res_2)/(X.shape[0]-2*k))
-            if X.shape[0]-2*3 >0:
-                self.score=Fdist.sf(self.F, 3, X.shape[0]-2*3)
+            if X.shape[0]-2*k >0:
+                self.score=Fdist.sf(self.F, 2, X.shape[0]-2*k)
                 self.successful=True
         if self.successful is False and np.any(X) and X.shape[0]>1:
             X=sm.add_constant(X)
