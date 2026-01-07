@@ -12,6 +12,15 @@ FILLPARAMS = {"linestyle":"None", "alpha":0.3,"label":'_nolegend_'}
 FITPARAMS = {"label":'_nolegend_'}
 
 def parse_cmap(cmap):
+    """
+    Parse and normalize colormap to dictionary format.
+    
+    Converts string colormap names, lists, or dictionaries to a standardized
+    dictionary format with integer keys.
+    
+    :param cmap: Colormap as string name, list of colors, or dictionary
+    :return: Dictionary mapping integers to color values
+    """
     if isinstance(cmap,str):
         cmap = {i:x for i,x in enumerate(colormaps[cmap].colors)}
     elif isinstance(cmap,list):
@@ -24,14 +33,18 @@ def parse_cmap(cmap):
     return cmap
 
 def conf_int_to_trend(ci:Union[pd.DataFrame,list], param:str='X'):
-    """return trend  0, 1, 2 from the confidence interval:
-
-    - if ci crosses 0, then returns 0
-    - if ci is completely below 0, then returns 2
-    - else returns 1
+    """
+    Convert confidence interval to trend classification.
     
-    :params ci: confidence interval to process, either a tuple (length 2), a dataframe or result from conf_int given by statsmodles
-    :params param: name column to use if a dataframe was given as ci
+    Returns trend code 0, 1, or 2 from the confidence interval:
+
+    - if ci crosses 0, then returns 0 (non-significant)
+    - if ci is completely below 0, then returns 2 (decreasing)
+    - else returns 1 (increasing)
+    
+    :param ci: Confidence interval to process, either a tuple (length 2), a DataFrame, or result from conf_int given by statsmodels
+    :param param: Column name to use if a DataFrame was given as ci
+    :return: Integer trend code (0, 1, or 2)
     """
     if isinstance(ci, list) and len(ci)==2:
         l,u = ci
@@ -46,9 +59,10 @@ def conf_int_to_trend(ci:Union[pd.DataFrame,list], param:str='X'):
 
 def infer_date_format(s_date:str):
     """
-    Infer date format from a sample
+    Infer date format from a sample date string.
 
-    :params s_date: sample date to infer date format from.
+    :param s_date: Sample date string to infer format from
+    :return: Date format string if successfully inferred, None otherwise
     """
     date_patterns = ["%d-%m-%Y","%d-%m-%Y %H:%M:%S",
                      "%Y-%m-%d","%Y-%m-%d %H:%M:%S",
@@ -66,11 +80,16 @@ def infer_date_format(s_date:str):
             return pattern
 
 def guess_timelapse_type(series:Union[list,pd.DataFrame,pd.Series], date_format:str = "%Y-%m-%d"):
-    """Guess the time lapse in a series and index it
+    """
+    Guess the time lapse unit in a time series and re-index it.
+    
+    Analyzes datetime differences to determine whether data is indexed by
+    seconds, minutes, hours, days, or years.
 
-    :params series: data
-    :params date_format: format of the datetime
-    :return: indexed series and datetype"""
+    :param series: Time series data (list, DataFrame, or Series)
+    :param date_format: Format string for parsing datetime values
+    :return: Tuple of (indexed series, datetype string)
+    """
     try:
         series = pd.to_datetime(series, format = date_format)
     except:

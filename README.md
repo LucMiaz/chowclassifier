@@ -36,6 +36,17 @@ Chow test was first derived by Gregory Chow[^1] in 1960 and later by Franklin Fi
 pip install chowclassifier
 ```
 
+## Citation
+
+If you use this package in your research, please cite:
+
+Influence of Season on Biodegradation Rates in Rivers
+Run Tian, Malte Posselt, Luc T. Miaz, Kathrin Fenner, and Michael S. McLachlan
+Environmental Science & Technology 2024 58 (16), 7144-7153
+DOI: [10.1021/acs.est.3c10541](https://doi.org/10.1021/acs.est.3c10541)
+
+[Download citation](https://pubs.acs.org/action/downloadCitation?doi=10.1021%2Facs.est.3c10541&include=cit&format=ris&direct=true&downloadFileName=acs.est.3c10541)
+
 ## Use
 The script can be ran on any file with `python -m chowclassifier -f path/to/file/filename.csv -X xcol -y ycol -n grouping_name` or it can be imported:
 

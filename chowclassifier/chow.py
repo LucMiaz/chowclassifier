@@ -30,15 +30,14 @@ class Chow(object):
     i.e. dividing alpha by the number of tests. The confidence interval of the slope
     and intercept are at significance level alpha (not corrected).
 
-    :params df: data on which to perform the Chow categorisation
-    :params name: name of the dataset (optional)
-    :params breakpoint: breakpoint (if None, midpoint of X series will be used)
-    :params breakpoints: candidates for the breakpoints
-    :params timecol: name of time column (X)
-    :params ycol: name of the variable column (y)
-    :params groupcol: name of the group column (g) if not in df will be ignored
+    :param df: data on which to perform the Chow categorisation
+    :param name: name of the dataset (optional)
+    :param initial_breakpoint: breakpoint (if None, midpoint of X series will be used)
+    :param timecol: name of time column (X)
+    :param ycol: name of the variable column (y)
+    :param groupcol: name of the group column (g) if not in df will be ignored
     :param alpha: significance level (without Bonferroni correction), can be changed with ``Chow.set_alpha(0.01)``
-    :params margin: range of indexes around breakpoint (or midpoint) where the best breakpoint
+    :param margin: range of indexes around breakpoint (or midpoint) where the best breakpoint
                     will be searched. E.g. if X = [0,1,1.5,2,3,4,5], breakpoint = 2 and margin = 1,
                     the set of breakpoints [1.5,2,3] will be tested.
                     (set = 0 if you want to look only at the given breakpoint or the midpoint)
@@ -52,7 +51,16 @@ class Chow(object):
                 alpha = 0.01,
                 margin:int = 2):
         """
+        Initialize a Chow classifier object.
         
+        :param df: DataFrame containing the data to analyze
+        :param name: Name identifier for this dataset
+        :param initial_breakpoint: Initial breakpoint value (if None, uses midpoint)
+        :param timecol: Name of the time column in df
+        :param ycol: Name of the dependent variable column in df
+        :param groupcol: Name of the grouping column in df (optional)
+        :param alpha: Significance level for statistical tests
+        :param margin: Range around breakpoint to search for optimal break
         """
         try:
             self.df = df.loc[:,[timecol,groupcol, ycol]]
@@ -80,7 +88,11 @@ class Chow(object):
         self.successful=None
         self.color = "#000000"
     def get_breakpoint_indices(self):
-        """sets the breakpoints"""
+        """
+        Calculate and set the breakpoint indices to search.
+        
+        :return: List of breakpoint indices to test
+        """
         X = sorted(set(self.df['X']))
         if self.breakpoints is not None:
             self.breakpoints = sorted(set(self.breakpoints).intersection(set(X)))
@@ -106,8 +118,13 @@ class Chow(object):
         return breakpoint_indices
     def find_best_bkp(self, breakpoint_indices=None,**kwargs):
         """
-           finds best breakpoint and run Chow test and find OLS params for either whole set,
-           and the two subset broken at best breakpoint
+        Find the best breakpoint and run Chow test to find OLS parameters.
+        
+        Tests multiple breakpoints and selects the one with the best score.
+        Updates self.initial_breakpoint with the optimal value.
+        
+        :param breakpoint_indices: Optional list of indices to test. If None, uses get_breakpoint_indices()
+        :param kwargs: Additional keyword arguments (currently unused)
         """
         if breakpoint_indices is not None:
             if not isinstance(breakpoint_indices, list):
@@ -128,7 +145,16 @@ class Chow(object):
         self.m = len(breakpoint_indices)
         self.set_alpha(self.alpha0)
     def run_chow(self, bkp, normalise = False):
-        """Run chow test at breakpoint"""
+        """
+        Run Chow test at specified breakpoint.
+        
+        Fits OLS models to the full dataset and two subsets (before and after breakpoint),
+        then calculates the F-statistic to test for structural break.
+        
+        :param bkp: Breakpoint value at which to split the data
+        :param normalise: Whether to normalize the y values before fitting
+        :return: Dictionary containing score, F-statistic, and residual sum of squares
+        """
         if self.normalise:
             self.df['y']=(self.df['y']-self.df['y'].mean())/self.df['y'].std()
         X=self.df.loc[:,'X']
@@ -173,19 +199,21 @@ class Chow(object):
                 "ss_res_2" : self.ss_res_2,}
     def classify(self,**kwargs):
         """
-        classify in the dataset based on results of Chow test at significance level alpha
-        Possible values are:
-        No significant breakpoint and:
+        Classify the dataset based on results of Chow test at significance level alpha.
+        
+        Possible classification values:
+        
+        **No significant breakpoint:**
 
         1. N: non-significant overall trend
         2. I: significant increasing overall trend
         3. D: significant decreasing overall trend
 
-        Significant breakpoint (set1 and set2 indicate points before, respectively after, breakpoint) and:
+        **Significant breakpoint** (set1 and set2 indicate points before/after breakpoint):
 
         4. NN: non-significant trend on set1 and non-significant trend on set2
         5. NI: non-significant trend on set1 and significant increasing trend on set2
-        6. ND: non-significant trend on set1 ans significant decreasing trend on set2
+        6. ND: non-significant trend on set1 and significant decreasing trend on set2
         7. IN: significant increasing trend on set1 and non-significant trend on set2
         8. ID: significant increasing trend on set1 and significant decreasing trend on set2
         9. iI: significant increasing trend on both set1 and set2 with greater increase in set2
@@ -193,7 +221,10 @@ class Chow(object):
         11. DN: significant decreasing trend on set1 and non-significant trend on set2
         12. DI: significant decreasing trend on set1 and significant increasing trend on set2
         13. dD: significant decreasing trend on both set1 and set2 with greater decrease in set2
-        14. Dd: significant decreasing trend on both set1 and set2 with greater decrease in set1 
+        14. Dd: significant decreasing trend on both set1 and set2 with greater decrease in set1
+        
+        :param kwargs: Additional keyword arguments (currently unused)
+        :return: Dictionary with model parameters
         """
         if self.alpha is None:
             self.set_alpha(self.alpha0)
@@ -213,15 +244,15 @@ class Chow(object):
                 if right_limit >= left_limit:
                     if b2 + lci2 * self.initial_breakpoint > b1 + uci1 * self.initial_breakpoint:
                         if tt1==0:
-                            tt1==1 # the trend is in fact increasing
+                            tt1=1 # the trend is in fact increasing
                         if tt2==0:
-                            tt2==2 # the trend is in fact decreasing
+                            tt2=2 # the trend is in fact decreasing
                 else:
                     if b2 + uci2 * self.initial_breakpoint < b1 + lci1 * self.initial_breakpoint:
                         if tt1==0:
-                            tt1==2 # the trend is in fact decreasing
+                            tt1=2 # the trend is in fact decreasing
                         if tt2==0:
-                            tt2==1 # the trend is in fact increasing
+                            tt2=1 # the trend is in fact increasing
             if tt1==0:
                 tc=['NN','NI','ND'][tt2]
             elif tt1==1:
@@ -243,12 +274,22 @@ class Chow(object):
         self.set_color()
         return self.params()
     def set_color(self):
+        """
+        Set the color attribute based on the trend type (tt).
+        
+        Uses predefined color scheme from TREND_COLORS.
+        """
         colors = {'Ii':'#8c510a','iI':'#bf812d','IN':'#dfc27d','NI':'#f6e8c3',
         'Dd':'#c7eae5','dD':'#80cdc1','DN':'#35978f','ND':'#01665e',
         'NN':'#555555','NI':'#006837','ND':'#d73027','N':'#AAAAAA','I':'#1a9850','D':'#a50026',
         'ID':'#9970ab','DI':'#762a83'}
         self.color = TREND_COLORS[self.tt]
     def params_names(self):
+        """
+        Get list of parameter names for model output.
+        
+        :return: List of parameter name strings
+        """
         return ['intercept','slope',
                 'R2','se_intercept','se_slope','n',
                 'intercept_pvalue', 'slope_pvalue',
@@ -256,7 +297,13 @@ class Chow(object):
                 'slope_ci_lower','slope_ci_upper',
                 'alpha','alpha_Bonferroni_corrected']
     def params(self):
-        """Returns parameters of model"""
+        """
+        Return parameters of the fitted model(s).
+        
+        :return: Dictionary containing model0, model1, and model2 parameters.
+                 If breakpoint is significant, model0 is empty and model1/model2 are populated.
+                 Otherwise, model0 is populated and model1/model2 are empty.
+        """
         def get_params(model):
             d = [*[i for i in model.params],\
                 model.rsquared,\
@@ -277,8 +324,15 @@ class Chow(object):
                     'model1':{},
                     'model2':{}}    
     def run(self, **kwargs):
-        """Run the chow classification. parameters will be forwarded to run and classify,
-        e.g. initial_breakpoint can be passed to run, and alpha to classify"""
+        """
+        Run the complete Chow classification analysis.
+        
+        Finds best breakpoint, runs Chow test, and classifies the trend.
+        
+        :param kwargs: Keyword arguments forwarded to find_best_bkp and classify.
+                      Can include 'normalise' for run_chow, 'alpha' for classify.
+        :return: Classification code (string) or None if analysis fails
+        """
         if np.any(self.df):
             try:
                 self.find_best_bkp(**kwargs)
@@ -291,16 +345,23 @@ class Chow(object):
             self.successful=False
             return None
     def set_alpha(self, alpha:float):
-        """Changes the current statistical significance level
-        The bonferroni correction will be applied
+        """
+        Change the current statistical significance level.
+        
+        The Bonferroni correction will be applied based on the number of tests.
 
-        :params alpha: positive float in ]0,1[
+        :param alpha: Significance level, positive float in (0,1)
         """
         self.alpha0 = alpha
         self.alpha = self.alpha0 / max(self.m,1) # applying bonferroni correction
 
     def summary(self):
-        """Print the summary of the model(s)"""
+        """
+        Print the statistical summary of the fitted model(s).
+        
+        If breakpoint is significant, prints summaries for both model1 and model2.
+        Otherwise, prints summary for model0 (whole dataset).
+        """
         if self.score < self.alpha:
             print(f"Summary model 1: start-{self.initial_breakpoint}")
             self.model1.summary()
@@ -320,25 +381,20 @@ class Chow(object):
             show_legend:bool = True,
             **params):
         """
-        Plot the regression model(s)
+        Plot the regression model(s).
 
-        :params color: give color for the points (default defined in TREND_COLORS)
-        :params filename: filename (with extension format), if None, will call plt.show() instead
-        :params ax: ax on which to plot, if None will create new figure
-        :params figsize: tuple with figure size
-        :params ylabel: label for y-axis
-        :params xlabel: label for x-axis
-        :params title: title of the plot/subplot
-        :params ylog: make the y-axis log-scale
-        :params fill: plot the confidence interval
-        :params scatter: plot individual points
-        :params scatterparams: parameters for the scatter plot
-        :params fillparams: parameter for the confidence intervals
-        :params fitparams: parameter for the fitted line
-        :params linestyles: select the linestyle of each trend (list of size 3), set to None if you want to define it in fitparams
-        :params xlim: tuple with the left and right limits of the x axis
-        :params ylim: tuple with the lower and upper limits of the y axis
-        :params show_legend: legend options passed to ax.legend(), see https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.legend.html
+        :param filename: Filename (with extension format), if None, will call plt.show() instead
+        :param ax: Matplotlib axis on which to plot, if None will create new figure
+        :param figsize: Tuple with figure size
+        :param ylog: Make the y-axis log-scale
+        :param fill: Plot the confidence interval
+        :param scatter: Plot individual points
+        :param scatterparams: Parameters for the scatter plot
+        :param fillparams: Parameters for the confidence intervals
+        :param fitparams: Parameters for the fitted line
+        :param linestyles: Select the linestyle of each trend (list of size 3), set to None if you want to define it in fitparams
+        :param show_legend: Legend options passed to ax.legend()
+        :param params: Additional parameters including color, xlabel, ylabel, title, xlim, ylim
         """
         ### update plot parameters
         SCATTERPARAMS.update(scatterparams)
@@ -418,26 +474,20 @@ class Chow(object):
                       groups_order:list = None,
                       **params):
         """
-        Plot the regression model(s)
+        Plot the regression model(s) grouped by the group column.
 
-        :params color: give color for the points (default defined in TREND_COLORS)
-        :params filename: filename (with extension format), if None, will call plt.show() instead
-        :params ax: ax on which to plot, if None will create new figure
-        :params figsize: tuple with figure size
-        :params ylabel: label for y-axis
-        :params xlabel: label for x-axis
-        :params title: title of the plot/subplot
-        :params ylog: make the y-axis log-scale
-        :params fill: plot the confidence interval
-        :params show_legend: include the legend
-        :params plot_overall: Plot overall trend and confidence interval
-        :params plot_individual_fill:  Plot confidence interval for each individual group in addition to the overall one (if applicable)
-        :params scatter: plot individual points
-        :params scatterparams: parameters for the scatter plot
-        :params fillparams: parameter for the confidence intervals
-        :params fitparams: parameter for the fitted line
-        :params linestyles: select the linestyle of each trend (list of size 3)
-        :params groups_order: a list that shows the order in which the groups must be plotted
+        :param filename: Filename (with extension format), if None, will call plt.show() instead
+        :param ax: Matplotlib axis on which to plot, if None will create new figure
+        :param figsize: Tuple with figure size
+        :param cmap: Colormap name (from matplotlib) or custom color mapping
+        :param show_legend: Include the legend
+        :param plot_overall: Plot overall trend and confidence interval
+        :param plot_individual_fill: Plot confidence interval for each individual group
+        :param scatterparams: Parameters for the scatter plot
+        :param fillparams: Parameters for the confidence intervals
+        :param fitparams: Parameters for the fitted line
+        :param groups_order: List showing the order in which the groups must be plotted
+        :param params: Additional parameters including xlabel, ylabel, title, ylog, scatter
         """
         cmap = parse_cmap(cmap)
         scatterparams = params.get('scatterparams',{})

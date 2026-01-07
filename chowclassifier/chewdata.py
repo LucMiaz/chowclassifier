@@ -12,18 +12,18 @@ from .chow import Chow
 
 class ChewData():
     """
-    Handle a full data frame with grouping of time series
+    Handle a full data frame with grouping of time series.
     
-    :params df: dataset (as a pandas DataFrame) or
-    :params filename: path to dataframe (used if df not given)
-    :params namecol: name of the column with group names (used in groupby)
-    :params initial_breakpoint: initial breakpoint
-    :params sep: separator in csv
-    :params timecol: name of the time column in dataset
-    :params ycol: name of the variable column in dataset
-    :params groupcol: name of the grouping column in dataset
-    :params margin: range of indexes around breakpoint/midpoint, see Chow.get_breakpoints
-    :params alpha: significance level at which to test the trends (Bonferroni correction will be applied later)
+    :param df: Dataset as a pandas DataFrame (optional if filename provided)
+    :param filename: Path to dataframe file (used if df not given)
+    :param namecol: Name of the column with group names (used in groupby)
+    :param initial_breakpoint: Initial breakpoint value
+    :param sep: Separator character in CSV files
+    :param timecol: Name of the time column in dataset
+    :param ycol: Name of the variable column in dataset
+    :param groupcol: Name of the grouping column in dataset
+    :param margin: Range of indexes around breakpoint/midpoint, see Chow.get_breakpoint_indices
+    :param alpha: Significance level at which to test the trends (Bonferroni correction will be applied later)
     """
     def __init__(self, 
                 df:pd.DataFrame = None, 
@@ -37,7 +37,10 @@ class ChewData():
                 margin:int = 2,
                 alpha:float = 0.01):
         """
+        Initialize a ChewData object for analyzing multiple time series.
         
+        Either df or filename must be provided. The class will automatically
+        detect wide vs long format and convert if necessary.
         """
         # get dataframe
         
@@ -67,14 +70,27 @@ class ChewData():
             if date_format is not None:
                 self.parse_timecol(date_format)
     def melt(self):
-        """pivot the dataframe from wide to long"""
+        """
+        Pivot the dataframe from wide to long format.
+        
+        Converts a wide-format dataframe (with time series in columns) to
+        long format (with a variable column for series names).
+        """
         if self.groupcol in self.df.columns:
             self.df = self.df.melt(id_vars=[self.timecol,self.groupcol], value_name=self.ycol).dropna()
         else:
             self.df = self.df.melt(id_vars=[self.timecol], value_name=self.ycol).dropna()
         self.namecol = 'variable'
     def get_df(self, filename, sep):
-        """get dataframe from file"""
+        """
+        Load dataframe from file.
+        
+        Supports Excel (.xlsx, .xls), CSV (.csv), and TSV (.tsv) formats.
+        
+        :param filename: Path to the file
+        :param sep: Separator character for CSV files
+        :raises ValueError: If file extension is not recognized
+        """
         ext = filename.split('.')[-1]
         if ext == 'xlsx' or ext == 'xls':
             self.df = pd.read_excel(filename, engine='openpyxl')
@@ -86,10 +102,13 @@ class ChewData():
             raise ValueError(f"Filename {filename} does not have a recognised extension")
     def parse_timecol(self, date_format:str = '%Y-%m-%d'):
         """
-        Timecol must be numeric, if you have dates instead, use this method to transform
-        that column. (you need to adjust the breakpoint accordingly!)
+        Transform time column from dates to numeric values.
+        
+        The time column must be numeric for analysis. If you have dates instead,
+        use this method to transform that column. Note: you need to adjust the
+        breakpoint accordingly!
 
-        :params format: give the date format (default yyyy-mm-dd)
+        :param date_format: Date format string (default '%Y-%m-%d')
         """
         series,self.datetype = guess_timelapse_type(self.df[self.timecol], date_format = date_format)
         self.df[self.datetype] = series
@@ -97,12 +116,12 @@ class ChewData():
         print(f'Indexed the time column {self.timecol} as {self.datetype}s')
     def run_C(self, sub_df:pd.DataFrame, name:str, initial_breakpoint:Union[float,int])->(dict,Chow):
         """
-        Run the classification on a dataframe
+        Run the Chow classification on a single dataframe.
         
-        :params sub_df: dataframe
-        :params name: name of the series
-        :params initial_breakpoint: initial break point for Chow test (if None, will take midpoint of timecol)
-        :returns: dictionary of parameters from the analysis, Chow object from the analysis
+        :param sub_df: DataFrame containing the time series data
+        :param name: Name identifier for the series
+        :param initial_breakpoint: Initial break point for Chow test (if None, will take midpoint of timecol)
+        :return: Tuple of (dictionary of parameters from the analysis, Chow object from the analysis)
         """
         C = Chow(df = sub_df,
                 name = name,
@@ -121,9 +140,9 @@ class ChewData():
             return params, C
     def run(self, initial_breakpoint = None):
         """
-        Run the classification for each group
+        Run the Chow classification for each group in the dataset.
         
-        :params initial_breakpoint: initial break point for Chow test (if None, will take midpoint of timecol)
+        :param initial_breakpoint: Initial break point for Chow test (if None, will take midpoint of timecol)
         """
         results = []
         self.chows = []
@@ -160,21 +179,18 @@ class ChewData():
              fitparams:dict = {},
              **params):
         """
-        Plot all trends in one image
+        Plot all trends in one image.
         
-        :params filename: name of the output with extension (e.g name.pdf)
-        :params grouped: whether to plot overall trends or grouped trends
-        :params cmap: (grouped) Name of one of matplotlib cmaps
-        :params plot_overall: (grouped) Plot overall trend and confidence interval
-        :params plot_individual_fill: (grouped) Plot confidence interval for each individual group in addition to the overall one (if applicable)
-        :params title: title printed on the output
-        :params divide: divide the plots into n files
-        :params ncols: number of columns
-        :params nrows: number of rows
-        :params scatterparams: dictionnary of parameters for the scatter part of the plot, passed to chew plot
-        :params fillparams: dictionnary of parameters for the error fill area of the plot, passed to chew plot
-        :params fitparams: dictionnary of parameters for the fitted line, passed to chew plot
-        :params params: named parameters passed to matplotlib, eg xlabel, ylabel, sharey, figsize, pad
+        :param filename: Name of the output file with extension (e.g., 'name.pdf')
+        :param grouped: Whether to plot overall trends or grouped trends
+        :param divide: Divide the plots into n files
+        :param nrows: Number of rows in subplot grid
+        :param ncols: Number of columns in subplot grid
+        :param cmap: (grouped) Name of one of matplotlib cmaps
+        :param scatterparams: Dictionary of parameters for the scatter part of the plot
+        :param fillparams: Dictionary of parameters for the error fill area of the plot
+        :param fitparams: Dictionary of parameters for the fitted line
+        :param params: Named parameters passed to matplotlib (e.g., xlabel, ylabel, sharey, figsize, pad, plot_overall, plot_individual_fill, title)
         """
         def get_n(m,_nplots = len(self.chows)):
                 n = _nplots/m
@@ -211,7 +227,7 @@ class ChewData():
                                               title=chowObj.name,
                                               scatterparams = scatterparams,
                                               fillparams = fillparams,
-                                              fitparams = fitparams
+                                              fitparams = fitparams,
                                               **params)
                     else:
                         chowObj.plot(ax=ax,
@@ -228,11 +244,11 @@ class ChewData():
             plt.show()
     def plot_individually(self, savingpath:str = 'figs', format:str = 'pdf', **params):
         """
-        Plot all trends in individual files
+        Plot all trends in individual files.
         
-        :params savingpath: path where the plots will be saved
-        :params format: format of the image
-        :params params: named parameters passed to matplotlib, eg. xlabel, ylabel, sharey, figsize
+        :param savingpath: Path where the plots will be saved
+        :param format: Format of the image (e.g., 'pdf', 'png')
+        :param params: Named parameters passed to matplotlib (e.g., xlabel, ylabel, prefix, scatterparams, fillparams, fitparams)
         """
         # check if saving path exists:
         if not os.path.isdir(savingpath):
@@ -255,15 +271,14 @@ class ChewData():
                       cmap:str = 'Set1',
                       **params):
         """
-        Plot all trends in individual files
+        Plot all trends in individual files, grouped by category.
         
-        :params savingpath: path where the plots will be saved
-        :params format: format of the image
-        :params cmap: Name of one of matplotlib cmaps
-        :params show_legend: include the legend
-        :params plot_overall: Plot overall trend and confidence interval
-        :params plot_individual_fill:  Plot confidence interval for each individual group in addition to the overall one (if applicable)
-        :params params: named parameters passed to matplotlib, eg. xlabel, ylabel, sharey, figsize, overall_label
+        :param savingpath: Path where the plots will be saved (None to show instead of save)
+        :param format: Format of the image (e.g., 'pdf', 'png')
+        :param cmap: Name of one of matplotlib cmaps
+        :param params: Named parameters passed to matplotlib and plot_by_group.
+                      Includes: show_legend, plot_overall, plot_individual_fill,
+                      xlabel, ylabel, title, overall_label
         """
         if not os.path.isdir(savingpath):
             os.makedirs(savingpath)
@@ -284,7 +299,11 @@ class ChewData():
             plt.show()
 
     def results_df(self):
-        """Create dataframe with results"""
+        """
+        Create dataframe with analysis results.
+        
+        :return: DataFrame with multi-level columns containing results for all analyzed series
+        """
         d = {'name': [],
              'breakpoint': [],
              'score': [],
@@ -317,9 +336,13 @@ class ChewData():
         return df
     def to_excel(self, filename:str, **kwargs):
         """
-        Export results to excel
+        Export results to Excel file.
+        
+        Creates multiple sheets: 'results' (analysis results), 'data' (input data),
+        and 'failed' (list of failed analyses).
 
-        :params filename: filename
+        :param filename: Output filename with .xlsx or .xls extension
+        :param kwargs: Additional keyword arguments passed to pd.ExcelWriter
         """
         df = self.results_df()
         with pd.ExcelWriter(filename, **kwargs) as writer:
@@ -328,19 +351,24 @@ class ChewData():
             pd.DataFrame([[x] for x in self.failed],columns=['Name']).to_excel(writer, sheet_name='failed')
     def to_csv(self, filename:str, **kwargs):
         """
-        Export results to csv
+        Export results to CSV file.
 
-        :params filename: filename
+        :param filename: Output filename with .csv extension
+        :param kwargs: Additional keyword arguments passed to pd.DataFrame.to_csv
         """
 
         df = self.results_df()
         df.to_csv(filename, **kwargs)
     def save_to_file(self, filename:str, **kwargs):
         """
-        Export results to excel or csv
+        Export results to Excel or CSV file based on extension.
+        
+        Automatically detects file format from extension and calls the appropriate
+        export method.
 
-        :params filename: filename
-        :params kwargs: other parameters passed to pd.DataFrame.to_csv
+        :param filename: Output filename with extension (.xlsx, .xls, or .csv)
+        :param kwargs: Additional keyword arguments passed to export methods
+        :raises ValueError: If filename extension is not supported
         """
 
         ext = filename.split('.')[-1]

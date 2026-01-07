@@ -1,4 +1,4 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: chowclassifier
 Version: 1.0.10
 Summary: Classification of time trends using Chow test
@@ -471,8 +471,18 @@ Classifier: Development Status :: 4 - Beta
 Classifier: Programming Language :: Python :: 3
 Requires-Python: >=3.6
 Description-Content-Type: text/markdown
-Provides-Extra: dev
 License-File: LICENSE
+Requires-Dist: matplotlib>=3.5.0
+Requires-Dist: numpy>=1.19.4
+Requires-Dist: pandas>=1.1.5
+Requires-Dist: openpyxl
+Requires-Dist: scipy>=1.1.5
+Requires-Dist: seaborn>=0.11.2
+Requires-Dist: statsmodels>=0.13.1
+Requires-Dist: tqdm>=4.65.0
+Provides-Extra: dev
+Requires-Dist: pytest; extra == "dev"
+Dynamic: license-file
 
 # ChowClassifier
 
