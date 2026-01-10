@@ -1,10 +1,10 @@
 from chowclassifier import ChewData
 # define the path to data
-filepath = "example/data"
+filepath = "data"
 # define the name of the file containing the data (with extension)
 filename = "stocks.csv"
 # define the path where figures will be saved
-savingpath_figures = 'example/fig'
+savingpath_figures = 'fig'
 # what name has the X/time column?
 timecol = 'Date'
 # what name has the y/value column?
