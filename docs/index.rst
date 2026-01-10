@@ -81,11 +81,15 @@ Citation
 If you use this package in your research, please cite:
 
 Influence of Season on Biodegradation Rates in Rivers
-Run Tian, Malte Posselt, Luc T. Miaz, Kathrin Fenner, and Michael S. McLachlan
-Environmental Science & Technology 2024 58 (16), 7144-7153
-DOI: [10.1021/acs.est.3c10541](https://doi.org/10.1021/acs.est.3c10541)
 
-[Download citation](https://pubs.acs.org/action/downloadCitation?doi=10.1021%2Facs.est.3c10541&include=cit&format=ris&direct=true&downloadFileName=acs.est.3c10541)
+Run Tian, Malte Posselt, Luc T. Miaz, Kathrin Fenner, and Michael S. McLachlan
+
+*Environmental Science & Technology* 2024 58 (16), 7144-7153
+
+DOI: https://doi.org/10.1021/acs.est.3c10541
+
+`Download citation <https://pubs.acs.org/action/downloadCitation?doi=10.1021%2Facs.est.3c10541&include=cit&format=ris&direct=true&downloadFileName=acs.est.3c10541>`_
+
 
 Use
 ---

@@ -1,0 +1,56 @@
+{% set name = "chowclassifier" %}
+{% set version = "1.0.10" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  path: ..
+
+build:
+  noarch: python
+  number: 0
+  script: {{ PYTHON }} -m pip install . -vv
+  entry_points:
+    - chowclassifier = chowclassifier.__main__:main
+
+requirements:
+  host:
+    - python >=3.6
+    - pip
+    - setuptools >=61.0.0
+    - wheel
+  run:
+    - python >=3.6
+    - matplotlib >=3.5.0
+    - numpy >=1.19.4
+    - pandas >=1.1.5
+    - openpyxl
+    - scipy >=1.1.5
+    - seaborn >=0.11.2
+    - statsmodels >=0.13.1
+    - tqdm >=4.65.0
+
+test:
+  imports:
+    - chowclassifier
+  commands:
+    - chowclassifier --help
+
+about:
+  home: https://chowclassifier.readthedocs.io/en/latest/
+  license: LGPL-2.0-or-later
+  license_family: LGPL
+  license_file: LICENSE
+  summary: Classification of time trends using Chow test
+  description: |
+    ChowClassifier is a Python package for classification of time trends
+    using the Chow test. It provides tools for analyzing time series data
+    and detecting structural breaks.
+  doc_url: https://chowclassifier.readthedocs.io/en/latest/
+  dev_url: https://github.com/lucmiaz/chowclassifier
+
+extra:
+  recipe-maintainers:
+    - lucmiaz
