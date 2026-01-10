@@ -10,9 +10,8 @@ version = "1.0.10"
 description = "Classification of time trends using Chow test"
 readme = "README.md"
 authors = [{ name = "Luc Miaz", email = "luc@miaz.ch" }]
-license = { file = "LICENSE" }
+license = "CC-BY-NC-4.0"
 classifiers = [
-    "License :: OSI Approved :: GNU Lesser General Public License v2 or later (LGPLv2+)",
     "Programming Language :: Python",
     "Natural Language :: English",
     "Development Status :: 4 - Beta",
@@ -31,6 +30,9 @@ dependencies = [
     "tqdm >= 4.65.0"
 ]
 requires-python = ">=3.6"
+
+[tool.setuptools]
+packages = ["chowclassifier"]
 
 [tool.pytest.ini_options]
 pythonpath = [
