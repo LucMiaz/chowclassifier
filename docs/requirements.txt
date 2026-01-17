@@ -1,2 +1,2 @@
-sphinx>=5.0
-sphinx-bootstrap-theme
+sphinx>=5.0,<10.0
+sphinx-bootstrap-theme>=0.8.0
