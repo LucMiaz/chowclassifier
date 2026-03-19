@@ -37,11 +37,14 @@ class Chow:
     :param timecol: name of time column (X)
     :param ycol: name of the variable column (y)
     :param groupcol: name of the group column (g) if not in df will be ignored
-    :param alpha: significance level (without Bonferroni correction), can be changed with ``Chow.set_alpha(0.01)``
+    :param alpha: significance level (without Bonferroni correction), 
+                  can be changed with ``Chow.set_alpha(0.01)``
     :param margin: range of indexes around breakpoint (or midpoint) where the best breakpoint
-                    will be searched. E.g. if X = [0,1,1.5,2,3,4,5], breakpoint = 2 and margin = 1,
+                    will be searched. E.g. if X = [0,1,1.5,2,3,4,5], 
+                    breakpoint = 2 and margin = 1,
                     the set of breakpoints [1.5,2,3] will be tested.
-                    (set = 0 if you want to look only at the given breakpoint or the midpoint)
+                    (set = 0 if you want to look only at the given 
+                    breakpoint or the midpoint)
     """
     def __init__(self, df,
                 name:str = "",
@@ -56,7 +59,8 @@ class Chow:
         
         :param df: DataFrame containing the data to analyze
         :param name: Name identifier for this dataset
-        :param initial_breakpoint: Initial breakpoint value (if None, uses midpoint)
+        :param initial_breakpoint: Initial breakpoint value 
+                                   (if None, uses midpoint)
         :param timecol: Name of the time column in df
         :param ycol: Name of the dependent variable column in df
         :param groupcol: Name of the grouping column in df (optional)
@@ -94,6 +98,7 @@ class Chow:
         self.ss_res_2 = None
         self.score = None
         self.treeclass = None
+        self.breakpoint = None
     def get_breakpoint_indices(self):
         """
         Calculate and set the breakpoint indices to search.
@@ -133,7 +138,8 @@ class Chow:
         Tests multiple breakpoints and selects the one with the best score.
         Updates self.initial_breakpoint with the optimal value.
         
-        :param breakpoint_indices: Optional list of indices to test. If None, uses get_breakpoint_indices()
+        :param breakpoint_indices: Optional list of indices to test. 
+                                   If None, uses get_breakpoint_indices()
         :param kwargs: Additional keyword arguments (currently unused)
         """
         if breakpoint_indices is not None:
@@ -158,12 +164,14 @@ class Chow:
         """
         Run Chow test at specified breakpoint.
         
-        Fits OLS models to the full dataset and two subsets (before and after breakpoint),
+        Fits OLS models to the full dataset and two subsets 
+        (before and after breakpoint),
         then calculates the F-statistic to test for structural break.
         
         :param bkp: Breakpoint value at which to split the data
         :param normalise: Whether to normalize the y values before fitting
-        :return: Dictionary containing score, F-statistic, and residual sum of squares
+        :return: Dictionary containing score, F-statistic, 
+                 and residual sum of squares
         """
         if normalise:
             self.df['y']=(self.df['y']-self.df['y'].mean())/self.df['y'].std()
@@ -209,10 +217,12 @@ class Chow:
                 "F" : self.F,
                 "ss_res_0" : self.ss_res_0,
                 "ss_res_1" : self.ss_res_1,
-                "ss_res_2" : self.ss_res_2,}
+                "ss_res_2" : self.ss_res_2,
+                }
     def classify(self, **_):
         """
-        Classify the dataset based on results of Chow test at significance level alpha.
+        Classify the dataset based on results of Chow test at 
+        significance level alpha.
         
         Possible classification values:
         
@@ -222,19 +232,30 @@ class Chow:
         2. I: significant increasing overall trend
         3. D: significant decreasing overall trend
 
-        **Significant breakpoint** (set1 and set2 indicate points before/after breakpoint):
+        **Significant breakpoint** (set1 and set2 indicate points 
+        before/after breakpoint):
 
         4. NN: non-significant trend on set1 and non-significant trend on set2
-        5. NI: non-significant trend on set1 and significant increasing trend on set2
-        6. ND: non-significant trend on set1 and significant decreasing trend on set2
-        7. IN: significant increasing trend on set1 and non-significant trend on set2
-        8. ID: significant increasing trend on set1 and significant decreasing trend on set2
-        9. iI: significant increasing trend on both set1 and set2 with greater increase in set2
-        10. Ii: significant increasing trend on both set1 and set2 with greater increase in set1
-        11. DN: significant decreasing trend on set1 and non-significant trend on set2
-        12. DI: significant decreasing trend on set1 and significant increasing trend on set2
-        13. dD: significant decreasing trend on both set1 and set2 with greater decrease in set2
-        14. Dd: significant decreasing trend on both set1 and set2 with greater decrease in set1
+        5. NI: non-significant trend on set1 and significant increasing
+               trend on set2
+        6. ND: non-significant trend on set1 and significant decreasing
+               trend on set2
+        7. IN: significant increasing trend on set1 and non-significant
+               trend on set2
+        8. ID: significant increasing trend on set1 and significant
+               decreasing trend on set2
+        9. iI: significant increasing trend on both set1 and set2
+               with greater increase in set2
+        10. Ii: significant increasing trend on both set1 and set2
+                with greater increase in set1
+        11. DN: significant decreasing trend on set1 and non-significant
+                trend on set2
+        12. DI: significant decreasing trend on set1 and significant
+                increasing trend on set2
+        13. dD: significant decreasing trend on both set1 and set2 with
+                greater decrease in set2
+        14. Dd: significant decreasing trend on both set1 and set2 with
+                greater decrease in set1
         
         :param kwargs: Additional keyword arguments (currently unused)
         :return: Dictionary with model parameters
@@ -378,7 +399,7 @@ class Chow:
             print(f"Summary model 2: {self.initial_breakpoint}-end")
             self.model2.summary()
         else:
-            print(f"Summary model 0: whole dataset")
+            print("Summary model 0: whole dataset")
             self.model0.summary()
     def plot(self, filename:str = None, ax = None, figsize = (16,8),
             ylog:bool=False,
@@ -514,7 +535,7 @@ class Chow:
         main_p = ax is None
         if ax is None:
             plt.clf()
-            f, (ax) = plt.subplots(nrows=1,
+            _, (ax) = plt.subplots(nrows=1,
                     ncols=1,
                     sharey=params.get("sharey",True),
                     figsize=params.get('figsize',figsize))
@@ -525,7 +546,7 @@ class Chow:
         self.df['go'] = [groups_order.index(x) for x in self.df['g']]
         for i,(n,dfg) in enumerate(self.df.groupby(['go','g'],sort=True)):
             n = n[1]
-            if n not in self.gCs.keys():
+            if n not in self.gCs:
                 self.gCs[n] = Chow(df = dfg,
                             name = n,
                             initial_breakpoint = self.initial_breakpoint,

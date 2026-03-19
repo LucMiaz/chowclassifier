@@ -42,7 +42,8 @@ def conf_int_to_trend(ci:Union[pd.DataFrame,list], param:str='X'):
     - if ci is completely below 0, then returns 2 (decreasing)
     - else returns 1 (increasing)
     
-    :param ci: Confidence interval to process, either a tuple (length 2), a DataFrame, or result from conf_int given by statsmodels
+    :param ci: Confidence interval to process, either a tuple (length 2), 
+               a DataFrame, or result from conf_int given by statsmodels
     :param param: Column name to use if a DataFrame was given as ci
     :return: Integer trend code (0, 1, or 2)
     """

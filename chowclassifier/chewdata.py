@@ -22,8 +22,10 @@ class ChewData():
     :param timecol: Name of the time column in dataset
     :param ycol: Name of the variable column in dataset
     :param groupcol: Name of the grouping column in dataset
-    :param margin: Range of indexes around breakpoint/midpoint, see Chow.get_breakpoint_indices
-    :param alpha: Significance level at which to test the trends (Bonferroni correction will be applied later)
+    :param margin: Range of indexes around breakpoint/midpoint, 
+                   see Chow.get_breakpoint_indices
+    :param alpha: Significance level at which to test the trends
+                  (Bonferroni correction will be applied later)
     """
     def __init__(self, 
                 df:pd.DataFrame = None, 
@@ -120,14 +122,19 @@ class ChewData():
         self.df[self.datetype] = series
         self.timecol = self.datetype
         print(f'Indexed the time column {self.timecol} as {self.datetype}s')
-    def run_single(self, sub_df:pd.DataFrame, name:str, initial_breakpoint:Union[float,int])->(dict,Chow):
+    def run_single(self,
+                   sub_df:pd.DataFrame,
+                   name:str,
+                   initial_breakpoint:Union[float,int])->(dict,Chow):
         """
         Run the Chow classification on a single dataframe.
         
         :param sub_df: DataFrame containing the time series data
         :param name: Name identifier for the series
-        :param initial_breakpoint: Initial break point for Chow test (if None, will take midpoint of timecol)
-        :return: Tuple of (dictionary of parameters from the analysis, Chow object from the analysis)
+        :param initial_breakpoint: Initial break point for Chow test 
+                                   (if None, will take midpoint of timecol)
+        :return: Tuple of (dictionary of parameters from the analysis,
+                 Chow object from the analysis)
         """
         chow = Chow(df = sub_df,
                 name = name,
@@ -147,7 +154,8 @@ class ChewData():
         """
         Run the Chow classification for each group in the dataset.
         
-        :param initial_breakpoint: Initial break point for Chow test (if None, will take midpoint of timecol)
+        :param initial_breakpoint: Initial break point for Chow test
+                                  (if None, will take midpoint of timecol)
         """
         results = []
         self.chows = []
@@ -188,16 +196,21 @@ class ChewData():
         """
         Plot all trends in one image.
         
-        :param filename: Name of the output file with extension (e.g., 'name.pdf')
+        :param filename: Name of the output file with extension
+                         (e.g., 'name.pdf')
         :param grouped: Whether to plot overall trends or grouped trends
         :param divide: Divide the plots into n files
         :param nrows: Number of rows in subplot grid
         :param ncols: Number of columns in subplot grid
         :param cmap: (grouped) Name of one of matplotlib cmaps
-        :param scatterparams: Dictionary of parameters for the scatter part of the plot
-        :param fillparams: Dictionary of parameters for the error fill area of the plot
+        :param scatterparams: Dictionary of parameters for the scatter 
+                              part of the plot
+        :param fillparams: Dictionary of parameters for the error fill 
+                           area of the plot
         :param fitparams: Dictionary of parameters for the fitted line
-        :param params: Named parameters passed to matplotlib (e.g., xlabel, ylabel, sharey, figsize, pad, plot_overall, plot_individual_fill, title)
+        :param params: Named parameters passed to matplotlib 
+                       (e.g., xlabel, ylabel, sharey, figsize, pad,
+                       plot_overall, plot_individual_fill, title)
         """
         scatterparams = scatterparams or {}
         fillparams = fillparams or {}
@@ -261,7 +274,9 @@ class ChewData():
         
         :param savingpath: Path where the plots will be saved
         :param fmt: Format of the image (e.g., 'pdf', 'png')
-        :param params: Named parameters passed to matplotlib (e.g., xlabel, ylabel, prefix, scatterparams, fillparams, fitparams)
+        :param params: Named parameters passed to matplotlib
+                       (e.g., xlabel, ylabel, prefix, scatterparams,
+                       fillparams, fitparams)
         """
         # check if saving path exists:
         if not os.path.isdir(savingpath):
@@ -287,7 +302,8 @@ class ChewData():
         """
         Plot all trends in individual files, grouped by category.
         
-        :param savingpath: Path where the plots will be saved (None to show instead of save)
+        :param savingpath: Path where the plots will be saved
+                           (None to show instead of save)
         :param fmt: Format of the image (e.g., 'pdf', 'png')
         :param cmap: Name of one of matplotlib cmaps
         :param params: Named parameters passed to matplotlib and plot_by_group.
@@ -318,7 +334,8 @@ class ChewData():
         """
         Create dataframe with analysis results.
         
-        :return: DataFrame with multi-level columns containing results for all analyzed series
+        :return: DataFrame with multi-level columns containing results
+                 for all analyzed series
         """
         d = {'name': [],
              'breakpoint': [],
@@ -354,7 +371,8 @@ class ChewData():
         """
         Export results to Excel file.
         
-        Creates multiple sheets: 'results' (analysis results), 'data' (input data),
+        Creates multiple sheets: 'results' (analysis results), 
+        'data' (input data),
         and 'failed' (list of failed analyses).
 
         :param filename: Output filename with .xlsx or .xls extension
@@ -379,8 +397,8 @@ class ChewData():
         """
         Export results to Excel or CSV file based on extension.
         
-        Automatically detects file format from extension and calls the appropriate
-        export method.
+        Automatically detects file format from extension and 
+        calls the appropriate export method.
 
         :param filename: Output filename with extension (.xlsx, .xls, or .csv)
         :param kwargs: Additional keyword arguments passed to export methods
