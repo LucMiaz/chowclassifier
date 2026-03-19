@@ -87,8 +87,8 @@ def synt_data(n=1000,m=50,seed = None):
         if bk is not None:
             a1, b1 = next(A),next(b)
             a2 = next(A)
-            if np.abs(a1-a2) < 0.1: # make sure the two slopes are different enough to be detected
-                a2 += 0.1 if a1>=0 else -0.1
+            if np.abs(a1-a2) < 0.15: # make sure the two slopes are different enough to be detected
+                a2 += 0.15 if a1>=0 else -0.15
             b2 = a2 * bk + b1
             s1 = synt_series(X[:bk],a1,b1,r,seed = seed)
             s2 = synt_series(X[bk:],a2,b2,r,seed = seed)
@@ -155,7 +155,7 @@ def test_synt_data():
     res['acc_bk'] = [v['bk'] == v['ebk'] if v['bk'] is not None and v['ebk'] is not None else True for i,v in res.iterrows()]
     breakpoint_acc = sum(res['acc_bk'])/len(res)
     print(f"Breakpoint accuracy: {breakpoint_acc:.2%}")
-    assert breakpoint_acc > 0.8, f"Got wrong breakpoint accurary, {sum(res['acc_bk'])/len(res)}"
+    assert breakpoint_acc > 0.85, f"Got wrong breakpoint accurary, {sum(res['acc_bk'])/len(res)}"
     assert sum(res['acc'])/len(res) < 0.6, f"Got many missmatch {res.loc[res['tt']!=res['ett'],:]}"
 
 

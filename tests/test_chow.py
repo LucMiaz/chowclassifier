@@ -23,6 +23,7 @@ class small_noise_gen():
 
 def test_chow():
     """Expects perfect categorisation on quasi-perfectly aligned data"""
+    np.random.seed(42)
     X = range(0,100)
     cl = {'iI':{'bkp':50,'A':[1,2]},
             'Ii':{'bkp':50,'A':[2,1]},
@@ -55,6 +56,8 @@ def test_chow():
         C = Chow(df = df,margin = 50)
         C.run()
         p+=int(C.treeclass == k)
+        if C.treeclass != k:
+            print(f"Expected {k}, got {C.treeclass}")
         i+=1
     assert p/float(i) > 0.99, f"Divergence in test_chow, found true class with rate {p}."
     

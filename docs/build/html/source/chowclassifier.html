@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>chowclassifier package &#8212; chowclassifier 1.0.10 documentation</title>
+    <title>chowclassifier package &#8212; chowclassifier 1.1.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=4468db6d" />
-    <script src="../_static/documentation_options.js?v=377e76b0"></script>
+    <script src="../_static/documentation_options.js?v=58fbf978"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -206,18 +206,22 @@ and intercept are at significance level alpha (not corrected).</p>
 <li><p><strong>timecol</strong> – name of time column (X)</p></li>
 <li><p><strong>ycol</strong> – name of the variable column (y)</p></li>
 <li><p><strong>groupcol</strong> – name of the group column (g) if not in df will be ignored</p></li>
-<li><p><strong>alpha</strong> – significance level (without Bonferroni correction), can be changed with <code class="docutils literal notranslate"><span class="pre">Chow.set_alpha(0.01)</span></code></p></li>
+<li><p><strong>alpha</strong> – significance level (without Bonferroni correction),
+can be changed with <code class="docutils literal notranslate"><span class="pre">Chow.set_alpha(0.01)</span></code></p></li>
 <li><p><strong>margin</strong> – range of indexes around breakpoint (or midpoint) where the best breakpoint
-will be searched. E.g. if X = [0,1,1.5,2,3,4,5], breakpoint = 2 and margin = 1,
+will be searched. E.g. if X = [0,1,1.5,2,3,4,5],
+breakpoint = 2 and margin = 1,
 the set of breakpoints [1.5,2,3] will be tested.
-(set = 0 if you want to look only at the given breakpoint or the midpoint)</p></li>
+(set = 0 if you want to look only at the given
+breakpoint or the midpoint)</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="chowclassifier.chow.Chow.classify">
-<span class="sig-name descname"><span class="pre">classify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.Chow.classify" title="Link to this definition">¶</a></dt>
-<dd><p>Classify the dataset based on results of Chow test at significance level alpha.</p>
+<span class="sig-name descname"><span class="pre">classify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.Chow.classify" title="Link to this definition">¶</a></dt>
+<dd><p>Classify the dataset based on results of Chow test at
+significance level alpha.</p>
 <p>Possible classification values:</p>
 <p><strong>No significant breakpoint:</strong></p>
 <ol class="arabic simple">
@@ -225,19 +229,60 @@ the set of breakpoints [1.5,2,3] will be tested.
 <li><p>I: significant increasing overall trend</p></li>
 <li><p>D: significant decreasing overall trend</p></li>
 </ol>
-<p><strong>Significant breakpoint</strong> (set1 and set2 indicate points before/after breakpoint):</p>
+<p><strong>Significant breakpoint</strong> (set1 and set2 indicate points
+before/after breakpoint):</p>
 <ol class="arabic simple" start="4">
 <li><p>NN: non-significant trend on set1 and non-significant trend on set2</p></li>
-<li><p>NI: non-significant trend on set1 and significant increasing trend on set2</p></li>
-<li><p>ND: non-significant trend on set1 and significant decreasing trend on set2</p></li>
-<li><p>IN: significant increasing trend on set1 and non-significant trend on set2</p></li>
-<li><p>ID: significant increasing trend on set1 and significant decreasing trend on set2</p></li>
-<li><p>iI: significant increasing trend on both set1 and set2 with greater increase in set2</p></li>
-<li><p>Ii: significant increasing trend on both set1 and set2 with greater increase in set1</p></li>
-<li><p>DN: significant decreasing trend on set1 and non-significant trend on set2</p></li>
-<li><p>DI: significant decreasing trend on set1 and significant increasing trend on set2</p></li>
-<li><p>dD: significant decreasing trend on both set1 and set2 with greater decrease in set2</p></li>
-<li><p>Dd: significant decreasing trend on both set1 and set2 with greater decrease in set1</p></li>
+<li><dl class="simple">
+<dt>NI: non-significant trend on set1 and significant increasing</dt><dd><p>trend on set2</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>ND: non-significant trend on set1 and significant decreasing</dt><dd><p>trend on set2</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>IN: significant increasing trend on set1 and non-significant</dt><dd><p>trend on set2</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>ID: significant increasing trend on set1 and significant</dt><dd><p>decreasing trend on set2</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>iI: significant increasing trend on both set1 and set2</dt><dd><p>with greater increase in set2</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Ii: significant increasing trend on both set1 and set2</dt><dd><p>with greater increase in set1</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>DN: significant decreasing trend on set1 and non-significant</dt><dd><p>trend on set2</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>DI: significant decreasing trend on set1 and significant</dt><dd><p>increasing trend on set2</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>dD: significant decreasing trend on both set1 and set2 with</dt><dd><p>greater decrease in set2</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Dd: significant decreasing trend on both set1 and set2 with</dt><dd><p>greater decrease in set1</p>
+</dd>
+</dl>
+</li>
 </ol>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -251,14 +296,15 @@ the set of breakpoints [1.5,2,3] will be tested.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="chowclassifier.chow.Chow.find_best_bkp">
-<span class="sig-name descname"><span class="pre">find_best_bkp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">breakpoint_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.Chow.find_best_bkp" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">find_best_bkp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">breakpoint_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.Chow.find_best_bkp" title="Link to this definition">¶</a></dt>
 <dd><p>Find the best breakpoint and run Chow test to find OLS parameters.</p>
 <p>Tests multiple breakpoints and selects the one with the best score.
 Updates self.initial_breakpoint with the optimal value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>breakpoint_indices</strong> – Optional list of indices to test. If None, uses get_breakpoint_indices()</p></li>
+<li><p><strong>breakpoint_indices</strong> – Optional list of indices to test.
+If None, uses get_breakpoint_indices()</p></li>
 <li><p><strong>kwargs</strong> – Additional keyword arguments (currently unused)</p></li>
 </ul>
 </dd>
@@ -302,7 +348,7 @@ Otherwise, model0 is populated and model1/model2 are empty.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="chowclassifier.chow.Chow.plot">
-<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(16,</span> <span class="pre">8)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylog</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scatter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scatterparams</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fillparams</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitparams</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linestyles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">['dashed',</span> <span class="pre">'solid',</span> <span class="pre">'solid']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_legend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.Chow.plot" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(16,</span> <span class="pre">8)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylog</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scatter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scatterparams</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fillparams</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitparams</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linestyles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_legend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.Chow.plot" title="Link to this definition">¶</a></dt>
 <dd><p>Plot the regression model(s).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -326,7 +372,7 @@ Otherwise, model0 is populated and model1/model2 are empty.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="chowclassifier.chow.Chow.plot_by_group">
-<span class="sig-name descname"><span class="pre">plot_by_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(16,</span> <span class="pre">8)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Set1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_legend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_overall</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_individual_fill</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scatterparams</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fillparams</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitparams</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups_order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.Chow.plot_by_group" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">plot_by_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(16,</span> <span class="pre">8)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Set1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_legend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_overall</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_individual_fill</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scatterparams</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fillparams</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitparams</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups_order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.Chow.plot_by_group" title="Link to this definition">¶</a></dt>
 <dd><p>Plot the regression model(s) grouped by the group column.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -368,7 +414,8 @@ Can include ‘normalise’ for run_chow, ‘alpha’ for classify.</p>
 <dt class="sig sig-object py" id="chowclassifier.chow.Chow.run_chow">
 <span class="sig-name descname"><span class="pre">run_chow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bkp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chowclassifier.chow.Chow.run_chow" title="Link to this definition">¶</a></dt>
 <dd><p>Run Chow test at specified breakpoint.</p>
-<p>Fits OLS models to the full dataset and two subsets (before and after breakpoint),
+<p>Fits OLS models to the full dataset and two subsets
+(before and after breakpoint),
 then calculates the F-statistic to test for structural break.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -378,7 +425,8 @@ then calculates the F-statistic to test for structural break.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Dictionary containing score, F-statistic, and residual sum of squares</p>
+<dd class="field-even"><p>Dictionary containing score, F-statistic,
+and residual sum of squares</p>
 </dd>
 </dl>
 </dd></dl>
@@ -415,6 +463,7 @@ Otherwise, prints summary for model0 (whole dataset).</p>
 </section>
 <section id="module-chowclassifier">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-chowclassifier" title="Link to this heading">¶</a></h2>
+<p>Chow classifier package for time-series trend classification.</p>
 </section>
 </section>
 
