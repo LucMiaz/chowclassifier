@@ -5,7 +5,8 @@ import pandas as pd
 from scipy.stats import f as Fdist
 import matplotlib.pyplot as plt
 import seaborn as sns
-import statsmodels.api as sm
+from statsmodels.regression.linear_model import OLS
+from statsmodels.tools import add_constant
 from typing import Union
 from .utilities import conf_int_to_trend, parse_cmap
 from .utilities import SCATTERPARAMS, FILLPARAMS, FITPARAMS, CI_COLORS, TREND_COLORS
@@ -165,12 +166,12 @@ class Chow(object):
         y2=self.df.loc[self.df['X']>=bkp,'y']
         self.successful = False
         if np.any(X1) and np.any(X2):
-            X1=sm.add_constant(X1)
-            X2=sm.add_constant(X2)
-            X=sm.add_constant(X)
-            self.model0=sm.OLS(y,X).fit()
-            self.model1=sm.OLS(y1,X1).fit()
-            self.model2=sm.OLS(y2,X2).fit()
+            X1=add_constant(X1)
+            X2=add_constant(X2)
+            X=add_constant(X)
+            self.model0=OLS(y,X).fit()
+            self.model1=OLS(y1,X1).fit()
+            self.model2=OLS(y2,X2).fit()
             self.ss_res_0=np.sum((y-self.model0.predict(X))**2)
             self.ss_res_1=np.sum((y1-self.model1.predict(X1))**2)
             self.ss_res_2=np.sum((y2-self.model2.predict(X2))**2)
@@ -180,8 +181,8 @@ class Chow(object):
                 self.score=Fdist.sf(self.F, 2, X.shape[0]-2*k)
                 self.successful=True
         if self.successful is False and np.any(X) and X.shape[0]>1:
-            X=sm.add_constant(X)
-            self.model0=sm.OLS(y,X).fit()
+            X=add_constant(X)
+            self.model0=OLS(y,X).fit()
             self.model1 = self.model0
             self.model2 = self.model0
             self.ss_res_0=np.sum((y-self.model0.predict(X))**2)
@@ -374,10 +375,10 @@ class Chow(object):
             ylog:bool=False,
             fill:bool = True,
             scatter:bool = True,
-            scatterparams:dict = {},
-            fillparams:dict = {},
-            fitparams:dict = {},
-            linestyles:list = ['dashed','solid','solid'],
+            scatterparams:dict = None,
+            fillparams:dict = None,
+            fitparams:dict = None,
+            linestyles:list = None,
             show_legend:bool = True,
             **params):
         """
@@ -397,9 +398,9 @@ class Chow(object):
         :param params: Additional parameters including color, xlabel, ylabel, title, xlim, ylim
         """
         ### update plot parameters
-        SCATTERPARAMS.update(scatterparams)
-        FILLPARAMS.update(fillparams)
-        FITPARAMS.update(fitparams)
+        SCATTERPARAMS.update(scatterparams if scatterparams is not None else {})
+        FILLPARAMS.update(fillparams if fillparams is not None else {})
+        FITPARAMS.update(fitparams if fitparams is not None else {})
         # record if it is plotting for parent process
         main_p = ax is None
         # create the plot:
@@ -409,7 +410,7 @@ class Chow(object):
             X = sorted(set(sub_df['X']))
             inc = (max(X)-min(X))/max(1,len(X)-1)
             X = np.linspace(min(X)-0.5*inc, max(X)+0.5*inc, 2*(len(X)+1))
-            Xc = sm.add_constant(X)
+            Xc = add_constant(X)
             # get confidence interval
             ci_l,ci_u = zip(*model.get_prediction(Xc).conf_int(alpha = self.alpha))
             tt = conf_int_to_trend(model.conf_int(alpha = self.alpha))
@@ -418,9 +419,14 @@ class Chow(object):
                 FILLPARAMS['color'] = fillparams.get('color',CI_COLORS[tt])   
                 ax.fill_between(x = X, y1=ci_l, y2 = ci_u, **FILLPARAMS)
             FITPARAMS['color'] = fitparams.get('color',TREND_COLORS[tt])
-            try:
-                FITPARAMS['linestyle'] = linestyles[tt]
-            except:
+            if linestyles is not None:
+                if isinstance(linestyles, list) and len(linestyles)==3:
+                    FITPARAMS['linestyle'] = linestyles[tt]
+                elif isinstance(linestyles, str):
+                    FITPARAMS['linestyle'] = linestyles
+                else:
+                    raise ValueError("linestyles should be either a string or a list of 3 linestyles for each trend category (neutral, increasing, decreasing).")
+            else:
                 FITPARAMS['linestyle'] = FITPARAMS.get('linestyle','solid')
             intercept, slope = model.params
             y0 = intercept + slope * min(X)
