@@ -10,9 +10,15 @@ before_script:
 pylint:
   stage: lint
   script:
-    - pylint chowclassifier
+    - pylint --fail-under=9.0 chowclassifier
 
 pytest:
   stage: test
+  parallel:
+    matrix:
+      - PYTHON_VERSION: ["3.10", "3.12", "3.14"]
+  image: python:${PYTHON_VERSION}
+  before_script:
+    - pip install -e ".[dev]"
   script:
     - pytest tests/

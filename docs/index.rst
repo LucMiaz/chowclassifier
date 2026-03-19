@@ -282,7 +282,8 @@ The output's columns are described in the following table. ``model0`` correspond
 Version changes
 ===============
 +------------+--------------------------------------------------------------------------------------------+
-|    1.1.1    | Fixed empty unused plots, added breakpoint-margin constraints, added test example, added CI.  |
+|   1.1.1    | Fixed empty unused plots, added breakpoint-margin constraints, added test example,         |
+|            | added CI.                                                                                  |
 +------------+--------------------------------------------------------------------------------------------+
 |   1.0.10   | Minor addition, with show_legend option                                                    |
 +------------+--------------------------------------------------------------------------------------------+
