@@ -142,6 +142,7 @@ C.plot_by_group('g',
 
 ## Version changes
 
+1.1.1 Fixed empty unused plots, added breakpoint-margin constraints, added test example, added CI.
 1.0.10 Minor addition, with show_legend option
 1.0.9 Correction of bugs, added jupyter notebook example.
 1.0.8 Correction of bugs.
