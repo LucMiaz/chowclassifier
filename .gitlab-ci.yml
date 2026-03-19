@@ -1,0 +1,18 @@
+image: python:3.11
+
+stages:
+  - lint
+  - test
+
+before_script:
+  - pip install -e ".[dev]" pylint
+
+pylint:
+  stage: lint
+  script:
+    - pylint chowclassifier
+
+pytest:
+  stage: test
+  script:
+    - pytest tests/
