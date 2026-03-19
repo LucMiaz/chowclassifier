@@ -1,5 +1,6 @@
 """Implementation of a Chow Classifier"""
 
+from typing import Union
 import numpy as np
 import pandas as pd
 from scipy.stats import f as Fdist
@@ -7,7 +8,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from statsmodels.regression.linear_model import OLS
 from statsmodels.tools import add_constant
-from typing import Union
 from .utilities import conf_int_to_trend, parse_cmap
 from .utilities import SCATTERPARAMS, FILLPARAMS, FITPARAMS, CI_COLORS, TREND_COLORS
 
@@ -20,7 +20,7 @@ plt.rcParams.update({'font.family':'serif',
 plt.rcParams['font.serif'] = ['EB Garamond', 'Garamond','Times New Roman','Times']
 
 
-class Chow(object):
+class Chow:
     """
     Class handling the chow analysis
     Call `run()` to run the analysis (find breakpoint and classify)
@@ -88,6 +88,12 @@ class Chow(object):
         self.gCs = {}# sub analysis with grouping on 'g'
         self.successful=None
         self.color = "#000000"
+        self.results = None
+        self.ss_res_0 = None
+        self.ss_res_1 = None
+        self.ss_res_2 = None
+        self.score = None
+        self.treeclass = None
     def get_breakpoint_indices(self):
         """
         Calculate and set the breakpoint indices to search.
@@ -115,9 +121,12 @@ class Chow(object):
             breakpoint_index = len(X)-4
             self.initial_breakpoint = self.breakpoints[breakpoint_index]
             print(f"breakpoint index for {self.name} is above {len(X)-4}, will be replace by {len(X)-4}.\n The new breakpoint is {self.initial_breakpoint}")
-        breakpoint_indices = list(range(breakpoint_index - self.margin, breakpoint_index+self.margin))
+        breakpoint_indices = list(range(
+            max(3, breakpoint_index - self.margin),
+            min(len(X) - 3, breakpoint_index + self.margin)
+        ))
         return breakpoint_indices
-    def find_best_bkp(self, breakpoint_indices=None,**kwargs):
+    def find_best_bkp(self, breakpoint_indices=None, **_):
         """
         Find the best breakpoint and run Chow test to find OLS parameters.
         
@@ -145,7 +154,7 @@ class Chow(object):
         self.initial_breakpoint = self.breakpoints[self.results.score.idxmin()]
         self.m = len(breakpoint_indices)
         self.set_alpha(self.alpha0)
-    def run_chow(self, bkp, normalise = False):
+    def run_chow(self, bkp, normalise=False):
         """
         Run Chow test at specified breakpoint.
         
@@ -156,7 +165,7 @@ class Chow(object):
         :param normalise: Whether to normalize the y values before fitting
         :return: Dictionary containing score, F-statistic, and residual sum of squares
         """
-        if self.normalise:
+        if normalise:
             self.df['y']=(self.df['y']-self.df['y'].mean())/self.df['y'].std()
         X=self.df.loc[:,'X']
         y=self.df.loc[:,'y']
@@ -192,13 +201,16 @@ class Chow(object):
             self.score = 1
             #self.successful = False
         elif self.successful is False:
-            raise ValueError("Data missing for at least one period for {}, with breakpoint {}".format(self.name,self.initial_breakpoint))
+            raise ValueError(
+                f"Data missing for at least one period for {self.name!r},"
+                f" with breakpoint {self.initial_breakpoint}"
+            )
         return {"score" : self.score,
                 "F" : self.F,
                 "ss_res_0" : self.ss_res_0,
                 "ss_res_1" : self.ss_res_1,
                 "ss_res_2" : self.ss_res_2,}
-    def classify(self,**kwargs):
+    def classify(self, **_):
         """
         Classify the dataset based on results of Chow test at significance level alpha.
         
@@ -229,6 +241,7 @@ class Chow(object):
         """
         if self.alpha is None:
             self.set_alpha(self.alpha0)
+        tc = 'N'
         if self.score < self.alpha:#
             tt1= conf_int_to_trend(self.model1.conf_int(alpha = self.alpha0))
             tt2= conf_int_to_trend(self.model2.conf_int(alpha = self.alpha0))
@@ -265,7 +278,7 @@ class Chow(object):
                 if tt2==2:
                     tc = ['dD','Dd'][1*(self.model1.params['X']<self.model2.params['X'])]
                 else:
-                    tc=['DN','DI'][tt2]
+                    tc = 'DN' if tt2 == 0 else 'DI'
         else:
             #N0, N1 or N2
             self.tt= conf_int_to_trend(self.model0.conf_int(alpha = self.alpha0))
@@ -280,10 +293,6 @@ class Chow(object):
         
         Uses predefined color scheme from TREND_COLORS.
         """
-        colors = {'Ii':'#8c510a','iI':'#bf812d','IN':'#dfc27d','NI':'#f6e8c3',
-        'Dd':'#c7eae5','dD':'#80cdc1','DN':'#35978f','ND':'#01665e',
-        'NN':'#555555','NI':'#006837','ND':'#d73027','N':'#AAAAAA','I':'#1a9850','D':'#a50026',
-        'ID':'#9970ab','DI':'#762a83'}
         self.color = TREND_COLORS[self.tt]
     def params_names(self):
         """
@@ -306,13 +315,13 @@ class Chow(object):
                  Otherwise, model0 is populated and model1/model2 are empty.
         """
         def get_params(model):
-            d = [*[i for i in model.params],\
+            d = [*list(model.params),\
                 model.rsquared,\
-                *[i for i in model.bse],\
+                *list(model.bse),\
                 self.df.shape[0],\
-                *[i for i in model.pvalues],\
-                *[i for i in model.conf_int(alpha = self.alpha0).loc['const',:]],\
-                *[i for i in model.conf_int(alpha = self.alpha0).loc['X',:]],\
+                *list(model.pvalues),\
+                *list(model.conf_int(alpha = self.alpha0).loc['const',:]),\
+                *list(model.conf_int(alpha = self.alpha0).loc['X',:]),\
                 self.alpha0,\
                 self.alpha]
             return {k:v for v,k in zip(d,self.params_names())}
@@ -320,10 +329,9 @@ class Chow(object):
             return {'model0':{},
                     'model1':get_params(self.model1),
                     'model2':get_params(self.model2)}
-        else:
-            return {'model0':get_params(self.model0),
-                    'model1':{},
-                    'model2':{}}    
+        return {'model0':get_params(self.model0),
+                'model1':{},
+                'model2':{}}
     def run(self, **kwargs):
         """
         Run the complete Chow classification analysis.
@@ -340,6 +348,7 @@ class Chow(object):
             except IndexError:
                 print(f"No suitable breakpoint found for {self.name}.")
             self.run_chow(bkp = self.initial_breakpoint, normalise = kwargs.get('normalise',False))
+            self.breakpoint = self.initial_breakpoint if self.score < self.alpha else None
             self.classify(**kwargs)
             return self.treeclass
         else:
@@ -474,9 +483,9 @@ class Chow(object):
                       show_legend:bool=True,
                       plot_overall:bool=True,
                       plot_individual_fill:bool = True,
-                      scatterparams:dict = {},
-                      fillparams:dict = {},
-                      fitparams:dict = {},
+                      scatterparams:dict = None,
+                      fillparams:dict = None,
+                      fitparams:dict = None,
                       groups_order:list = None,
                       **params):
         """
@@ -496,9 +505,9 @@ class Chow(object):
         :param params: Additional parameters including xlabel, ylabel, title, ylog, scatter
         """
         cmap = parse_cmap(cmap)
-        scatterparams = params.get('scatterparams',{})
-        fillparams = params.get('fillparams',{})
-        fitparams = params.get('fitparams',{})
+        scatterparams = scatterparams or {}
+        fillparams = fillparams or {}
+        fitparams = fitparams or {}
         params['xlabel'] = params.get('xlabel','X')
         params['ylabel'] = params.get('ylabel','y')
         # record if it is plotting for parent process
@@ -529,9 +538,9 @@ class Chow(object):
             if success is None:
                 print(f"Analysis failed for {self.name} {n}")
             else:
-                scatterparams['color'] = cmap.get(n,cmap[i])
-                fitparams['color'] = cmap.get(n,cmap[i])
-                fillparams['color'] = cmap.get(n,cmap[i])
+                scatterparams['color'] = scatterparams.get('color', cmap.get(n,cmap[i]))
+                fitparams['color'] = fitparams.get('color', cmap.get(n,cmap[i]))
+                fillparams['color'] = fillparams.get('color', cmap.get(n,cmap[i]))
                 scatterparams['label'] = n
                 self.gCs[n].plot(ax = ax,
                     fill = plot_individual_fill,

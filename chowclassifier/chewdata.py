@@ -1,10 +1,10 @@
 """Implementation of a Chow Classifier"""
 
+import os
+from typing import Union
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from typing import Union
-import os
 from tqdm import tqdm
 from .utilities import infer_date_format, guess_timelapse_type
 from .chow import Chow
@@ -55,6 +55,9 @@ class ChewData():
         self.margin = margin
         self.alpha = alpha
         self.initial_breakpoint = initial_breakpoint
+        self.chows = []
+        self.failed = []
+        self.results = None
         if self.df is None:
             self.get_df(filename, sep)
         if self.namecol not in self.df.columns and\
@@ -63,7 +66,10 @@ class ChewData():
             try:
                 self.melt()
             except ValueError as e:
-                raise ValueError("Could not melt the dataframe. Is it really in wide format? Check given namecol")
+                raise ValueError(
+                    "Could not melt the dataframe. Is it really in wide format?"
+                    " Check given namecol"
+                ) from e
         if pd.api.types.is_numeric_dtype(self.df[self.timecol]) is False:
             date_format = infer_date_format(self.df.loc[self.df[self.timecol]!=np.nan,self.timecol][0])
             print(f'Inferred format {date_format} for column {self.timecol}')
@@ -92,7 +98,7 @@ class ChewData():
         :raises ValueError: If file extension is not recognized
         """
         ext = filename.split('.')[-1]
-        if ext == 'xlsx' or ext == 'xls':
+        if ext in ('xlsx', 'xls'):
             self.df = pd.read_excel(filename, engine='openpyxl')
         elif ext == 'csv':
             self.df = pd.read_csv(filename,sep = sep)
@@ -114,7 +120,7 @@ class ChewData():
         self.df[self.datetype] = series
         self.timecol = self.datetype
         print(f'Indexed the time column {self.timecol} as {self.datetype}s')
-    def run_C(self, sub_df:pd.DataFrame, name:str, initial_breakpoint:Union[float,int])->(dict,Chow):
+    def run_single(self, sub_df:pd.DataFrame, name:str, initial_breakpoint:Union[float,int])->(dict,Chow):
         """
         Run the Chow classification on a single dataframe.
         
@@ -123,7 +129,7 @@ class ChewData():
         :param initial_breakpoint: Initial break point for Chow test (if None, will take midpoint of timecol)
         :return: Tuple of (dictionary of parameters from the analysis, Chow object from the analysis)
         """
-        C = Chow(df = sub_df,
+        chow = Chow(df = sub_df,
                 name = name,
                 initial_breakpoint = initial_breakpoint,
                 timecol = self.timecol,
@@ -131,13 +137,12 @@ class ChewData():
                 alpha = self.alpha,
                 margin = self.margin)
         try:
-            C.run()
+            chow.run()
         except ValueError:
-            return None,None
-        else:
-            params = C.params() # get the regressions parameters
-            params['name'] =  name
-            return params, C
+            return None, None
+        params = chow.params() # get the regressions parameters
+        params['name'] = name
+        return params, chow
     def run(self, initial_breakpoint = None):
         """
         Run the Chow classification for each group in the dataset.
@@ -155,28 +160,30 @@ class ChewData():
         elif initial_breakpoint is None:
             initial_breakpoint = self.initial_breakpoint
         print("Running analysis")
-        with tqdm(total = len(self.df.groupby(self.namecol))) as bar:
+        with tqdm(total = len(self.df.groupby(self.namecol))) as pbar:
             for name, sub_df in self.df.groupby(self.namecol):
                 if sub_df.shape[0] > 1:
-                    params,C = self.run_C(sub_df, name = name, initial_breakpoint=initial_breakpoint)
-                    if C is None:
+                    params, chow = self.run_single(
+                        sub_df, name=name, initial_breakpoint=initial_breakpoint
+                    )
+                    if chow is None:
                         self.failed.append(name)
                     else:
                         results.append(params)
-                        self.chows.append(C)
+                        self.chows.append(chow)
                 else:
                     self.failed.append(name)
-                bar.update(1)
+                pbar.update(1)
         self.results = pd.DataFrame(results) # put the results in a dataframe
-    def plot(self,filename:Union[str,None]=None,
+    def plot(self, filename:Union[str,None]=None,
              grouped:bool = False,
              divide:int = 1,
              nrows:Union[None,int] = None,
              ncols:Union[None,int] = None,
              cmap:Union[None,str] = None,
-             scatterparams:dict = {},
-             fillparams:dict = {},
-             fitparams:dict = {},
+             scatterparams:dict = None,
+             fillparams:dict = None,
+             fitparams:dict = None,
              **params):
         """
         Plot all trends in one image.
@@ -192,19 +199,22 @@ class ChewData():
         :param fitparams: Dictionary of parameters for the fitted line
         :param params: Named parameters passed to matplotlib (e.g., xlabel, ylabel, sharey, figsize, pad, plot_overall, plot_individual_fill, title)
         """
-        def get_n(m,_nplots = len(self.chows)):
-                n = _nplots/m
-                if n-int(n) == 0.:
-                    return int(n)
-                return int(n)+1
+        scatterparams = scatterparams or {}
+        fillparams = fillparams or {}
+        fitparams = fitparams or {}
+        def get_n(m, _nplots=len(self.chows)):
+            n = _nplots / m
+            if n - int(n) == 0.:
+                return int(n)
+            return int(n) + 1
         if filename is not None:
             f = filename.split(".")
             filename = ".".join(f[0:-1])
             ext = f[-1]
         nplots = get_n(divide)
         print("Plotting trends")
-        with tqdm(total = divide) as bar:
-            for i in range(0,divide):
+        with tqdm(total = divide) as pbar:
+            for i in range(0, divide):
                 if nrows is None and ncols is None:
                     ncols = 4
                     nrows = get_n(ncols,nplots)
@@ -217,64 +227,68 @@ class ChewData():
                                     sharey=params.get("sharey",True),
                                     figsize=params.get('figsize',(16,8)))
                 f.tight_layout(pad=params.get('pad',3.0)) # increase padding between sub figures
-                for chowObj, ax in zip(self.chows[i*nplots:(i+1)*nplots], axes.reshape(-1)):
-                    if grouped is True and self.groupcol in chowObj.df.colnames:
+                for chow_obj, ax in zip(self.chows[i*nplots:(i+1)*nplots]+[None for _ in range(ncols*nrows - len(self.chows[i*nplots:(i+1)*nplots]))], axes.reshape(-1)):
+                    if chow_obj is None:
+                        ax.axis('off')
+                        continue
+                    if grouped is True and self.groupcol in chow_obj.df.colnames:
                         plt.clf()
-                        chowObj.plot_by_group(ax = ax,
+                        chow_obj.plot_by_group(ax = ax,
                                               xlabel=params.get('xlabel',self.timecol),
                                               ylabel=params.get('ylabel',self.ycol),
-                                              cmap = cmap, 
-                                              title=chowObj.name,
+                                              cmap = cmap,
+                                              title=chow_obj.name,
                                               scatterparams = scatterparams,
                                               fillparams = fillparams,
                                               fitparams = fitparams,
                                               **params)
                     else:
-                        chowObj.plot(ax=ax,
+                        chow_obj.plot(ax=ax,
                             xlabel=params.get('xlabel','X'),
                             ylabel=params.get('ylabel','y'),
-                            title=chowObj.name,
+                            title=chow_obj.name,
                             scatterparams = scatterparams,
                             fillparams = fillparams,
                             fitparams = fitparams)
                 if filename is not None:
                     plt.savefig(f'{filename}_{i:02d}.{ext}')
-                bar.update(1)
+                pbar.update(1)
         if filename is None:
             plt.show()
-    def plot_individually(self, savingpath:str = 'figs', format:str = 'pdf', **params):
+    def plot_individually(self, savingpath:str = 'figs', fmt:str = 'pdf', **params):
         """
         Plot all trends in individual files.
         
         :param savingpath: Path where the plots will be saved
-        :param format: Format of the image (e.g., 'pdf', 'png')
+        :param fmt: Format of the image (e.g., 'pdf', 'png')
         :param params: Named parameters passed to matplotlib (e.g., xlabel, ylabel, prefix, scatterparams, fillparams, fitparams)
         """
         # check if saving path exists:
         if not os.path.isdir(savingpath):
             os.makedirs(savingpath)
         print("Plotting trends individually")
-        with tqdm(total = len(self.chows)) as bar:
-            for chowObj in self.chows:
+        with tqdm(total = len(self.chows)) as pbar:
+            for chow_obj in self.chows:
                 plt.clf()
-                chowObj.plot(filename = f'{"/".join([savingpath, chowObj.name])}.{format}',
-                             xlabel=params.get('xlabel', self.timecol),
-                             ylabel=params.get('ylabel', self.ycol),
-                             title=params.get('prefix','')+chowObj.name,
-                             scatterparams = params.get('scatterparams',{}),
-                             fillparams = params.get('fillparams',{}),
-                             fitparams = params.get('fitparams',{}))
-                bar.update(1)
+                chow_obj.plot(
+                    filename=f'{"/".join([savingpath, chow_obj.name])}.{fmt}',
+                    xlabel=params.get('xlabel', self.timecol),
+                    ylabel=params.get('ylabel', self.ycol),
+                    title=params.get('prefix', '') + chow_obj.name,
+                    scatterparams=params.get('scatterparams', {}),
+                    fillparams=params.get('fillparams', {}),
+                    fitparams=params.get('fitparams', {}))
+                pbar.update(1)
     def plot_by_group(self,
                       savingpath:Union[None,str] = 'figs',
-                      format:str = 'pdf',
+                      fmt:str = 'pdf',
                       cmap:str = 'Set1',
                       **params):
         """
         Plot all trends in individual files, grouped by category.
         
         :param savingpath: Path where the plots will be saved (None to show instead of save)
-        :param format: Format of the image (e.g., 'pdf', 'png')
+        :param fmt: Format of the image (e.g., 'pdf', 'png')
         :param cmap: Name of one of matplotlib cmaps
         :param params: Named parameters passed to matplotlib and plot_by_group.
                       Includes: show_legend, plot_overall, plot_individual_fill,
@@ -283,18 +297,20 @@ class ChewData():
         if not os.path.isdir(savingpath):
             os.makedirs(savingpath)
         print("Plotting trends by group")
-        with tqdm(total = len(self.chows)) as bar:
-            for chowObj in self.chows:
+        with tqdm(total = len(self.chows)) as pbar:
+            for chow_obj in self.chows:
                 plt.clf()
-                params['title'] = params.get('title', chowObj.name)
+                params['title'] = params.get('title', chow_obj.name)
                 params['xlabel'] = params.get('xlabel', self.timecol)
                 params['ylabel'] = params.get('ylabel', self.ycol)
                 if savingpath is not None:
-                    filename = f"{savingpath}/{chowObj.name}_bygroups.{format}"
+                    filename = f"{savingpath}/{chow_obj.name}_bygroups.{fmt}"
                 else:
                     filename = None
-                chowObj.plot_by_group(filename = filename, groupcol = self.groupcol, cmap = cmap, **params)
-                bar.update(1)
+                chow_obj.plot_by_group(
+                    filename=filename, groupcol=self.groupcol, cmap=cmap, **params
+                )
+                pbar.update(1)
         if savingpath is None:
             plt.show()
 
@@ -378,5 +394,3 @@ class ChewData():
             self.to_csv(filename,**kwargs)
         else:
             raise ValueError(f'filename {filename} does not have a supported extension. Should be .csv, .xlsx or .xls.')
-
-

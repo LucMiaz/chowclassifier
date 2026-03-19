@@ -1,11 +1,11 @@
-import pandas as pd
-import matplotlib.pyplot as plt
-from matplotlib import colormaps
-import seaborn as sns
+"""Utility functions and constants for the chowclassifier package."""
+
 from typing import Union
 from datetime import datetime
+import pandas as pd
+from matplotlib import colormaps
 
-TREND_COLORS = ["#4d4c49", "#d85e5e", "#3a668c", "#000000"]# constant, increasing,decreasing 
+TREND_COLORS = ["#4d4c49", "#d85e5e", "#3a668c", "#000000"]  # constant, increasing, decreasing
 CI_COLORS = ["#fef5da", "#ff988c", "#b4c5f4", "#474747"]
 SCATTERPARAMS = {"marker": 'o', "linewidths":0.5, "alpha":1,"s":50,"label":'_nolegend_'}
 FILLPARAMS = {"linestyle":"None", "alpha":0.3,"label":'_nolegend_'}
@@ -22,14 +22,14 @@ def parse_cmap(cmap):
     :return: Dictionary mapping integers to color values
     """
     if isinstance(cmap,str):
-        cmap = {i:x for i,x in enumerate(colormaps[cmap].colors)}
+        cmap = dict(enumerate(colormaps[cmap].colors))
     elif isinstance(cmap,list):
-        cmap = {i:x for i,x in enumerate(cmap)}
+        cmap = dict(enumerate(cmap))
     elif isinstance(cmap, dict):
         if not all(isinstance(item, int) for item in cmap.keys()):
             cmap.update({i:v for i,(k,v) in enumerate(cmap.items())})
     else:
-        cmap = {i:x for i,x in enumerate(colormaps['Set1'].colors)}
+        cmap = dict(enumerate(colormaps['Set1'].colors))
     return cmap
 
 def conf_int_to_trend(ci:Union[pd.DataFrame,list], param:str='X'):
@@ -52,10 +52,9 @@ def conf_int_to_trend(ci:Union[pd.DataFrame,list], param:str='X'):
         l,u=ci.loc[param,:]
     if u<0:
         return 2 # significantly decreasing (at tested level)
-    elif l>0:
+    if l>0:
         return 1 # significantly increasing (at tested level)
-    else:
-        return 0 # non significant (at tested level)
+    return 0 # non significant (at tested level)
 
 def infer_date_format(s_date:str):
     """
@@ -74,10 +73,11 @@ def infer_date_format(s_date:str):
     for pattern in date_patterns:
         try:
             datetime.strptime(s_date, pattern).date()
-        except:
+        except ValueError:
             pass
         else:
             return pattern
+    return None
 
 def guess_timelapse_type(series:Union[list,pd.DataFrame,pd.Series], date_format:str = "%Y-%m-%d"):
     """
@@ -92,17 +92,17 @@ def guess_timelapse_type(series:Union[list,pd.DataFrame,pd.Series], date_format:
     """
     try:
         series = pd.to_datetime(series, format = date_format)
-    except:
+    except (ValueError, TypeError):
         pass
     start = min(series)
     series = series-start # reindex timecol from lowest one
-    if all([i.seconds==0 for i in series]):
+    if all(i.seconds==0 for i in series):
         #check if indexed by minutes
-        if all([i.seconds%60 == 0 for i in series]):
+        if all(i.seconds%60 == 0 for i in series):
             #check if indexed by hour
-            if all([i.seconds%3600 == 0 for i in series]):
+            if all(i.seconds%3600 == 0 for i in series):
                 #check if indexed by year
-                if all([i.days%365==0 or i.days%366==0 for i in series]):
+                if all(i.days%365==0 or i.days%366==0 for i in series):
                     #index by year
                     series = [int(i.days/365) for i in series]
                     datetype = 'year'

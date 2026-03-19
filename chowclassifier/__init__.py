@@ -1,3 +1,5 @@
+"""Chow classifier package for time-series trend classification."""
+
 # __init__.py
 
 # Version of the chowclassifier package

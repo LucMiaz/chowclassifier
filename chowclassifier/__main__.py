@@ -1,3 +1,4 @@
+"""Command-line interface for the chowclassifier package."""
 # __main__.py
 import argparse
 from chowclassifier.chewdata import ChewData
@@ -53,27 +54,26 @@ def main():
     args = parser.parse_args()
     if args.filename is None:
         print("No data given. Please pass filename as argument --filename 'data.csv'")
-        return None
-    C = ChewData(filename = args.filename,
+        return
+    chew = ChewData(filename = args.filename,
                 namecol = args.namecol,
                 ycol = args.ycol,
                 timecol = args.timecol,
                 sep = args.sep,
                 margin = args.margin,
                 alpha = args.alpha,
-                initial_breakpoint = args.breakpoint,
-                breakpoints = args.breakpoints)                                                                  
-    C.run()
+                initial_breakpoint = args.breakpoint)
+    chew.run()
     if args.no_table is False:
-        C.save_to_file(filename = args.output, sep = args.sep)
+        chew.save_to_file(filename = args.output, sep = args.sep)
     if args.no_figures is False:
-        C.plot(f'output.{args.fig_format}',
+        chew.plot(f'output.{args.fig_format}',
                nrows = args.nrows,
                ncols = args.ncols,
                sharey = args.sharey,
                figsize = args.figsize
                )
-        C.plot_individually(savingpath = args.path, format = args.fig_format)
+        chew.plot_individually(savingpath = args.path, format = args.fig_format)
 
 
 if __name__ == "__main__":

@@ -46,13 +46,16 @@ C.plot(xlabel = 'time',# label for x axis
        sharey=True, # whether the individual plots are forced to share y axis
        linestyles = ['dotted','solid','solid'],# linestyle of each trend category (neutral, increasing, decreasing)
        )
+# Customise params for uniform colors across plots
 C.plot(xlabel = 'time',# label for x axis
        ylabel='value',# label for y axis
        title = "Chow Classification",# title of the main plot
-       filename = f"{'/'.join([x for x in [savingpath_figures,filename] if x not in [None,'']])}_grouped.png",# filename for the figure
+       filename = f"{'/'.join([x for x in [savingpath_figures,filename] if x not in [None,'']])}_grouped_uniform_colors.png",# filename for the figure
        figsize=(16,8),# figure size
        sharey=True, # whether the individual plots are forced to share y axis
-       fitparams = {'color':'black','linestyle':'dashed','linewidth':1},# parameters for the overall fit line (if plot_overall = True)
+       scatterparams={'color':'#adeb44','alpha':0.5,'s':20,'label':'data'},# parameters for the scatter points (if plot_scatter = True)
+       fillparams = {'color':'black','alpha':0.1,'label':'confidence interval'},# parameters for the confidence interval fill (if plot_individual_fill = True or plot_overall = True)
+       fitparams = {'color':'black','linestyle':'solid','linewidth':1},# parameters for the overall fit line (if plot_overall = True)
        )
 C.plot_individually(savingpath = savingpath_figures,# Saving path for the figures
                     format = 'png',# figure format
