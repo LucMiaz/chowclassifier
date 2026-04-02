@@ -290,9 +290,7 @@ class ChewData():
                     xlabel=params.get('xlabel', self.timecol),
                     ylabel=params.get('ylabel', self.ycol),
                     title=params.get('prefix', '') + chow_obj.name,
-                    scatterparams=params.get('scatterparams', {}),
-                    fillparams=params.get('fillparams', {}),
-                    fitparams=params.get('fitparams', {}))
+                    **params)
                 pbar.update(1)
     def plot_by_group(self,
                       savingpath:Union[None,str] = 'figs',
