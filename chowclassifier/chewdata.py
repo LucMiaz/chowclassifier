@@ -283,12 +283,15 @@ class ChewData():
             os.makedirs(savingpath)
         print("Plotting trends individually")
         with tqdm(total = len(self.chows)) as pbar:
+            params['xlabel'] = params.get('xlabel', self.timecol)
+            params['ylabel'] = params.get('ylabel', self.ycol)
+            params['scatterparams'] = params.get('scatterparams', {})
+            params['fillparams'] = params.get('fillparams', {})
+            params['fitparams'] = params.get('fitparams', {})
             for chow_obj in self.chows:
                 plt.clf()
                 chow_obj.plot(
                     filename=f'{"/".join([savingpath, chow_obj.name])}.{fmt}',
-                    xlabel=params.get('xlabel', self.timecol),
-                    ylabel=params.get('ylabel', self.ycol),
                     title=params.get('prefix', '') + chow_obj.name,
                     **params)
                 pbar.update(1)
