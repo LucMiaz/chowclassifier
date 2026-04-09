@@ -161,7 +161,7 @@ class ChewData():
         self.chows = []
         self.failed = []
         if initial_breakpoint is None and self.initial_breakpoint is None:
-            x = list(set(self.df[self.timecol]))
+            x = sorted(set(self.df[self.timecol]))
             self.initial_breakpoint = x[int(len(x)/2)]
             initial_breakpoint = self.initial_breakpoint
             print(f"Set {initial_breakpoint = }")
