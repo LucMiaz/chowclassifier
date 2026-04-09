@@ -16,3 +16,6 @@
 
 # ignore pdfs
 *.pdf
+.history/
+.pytest_cache/
+.vscode/

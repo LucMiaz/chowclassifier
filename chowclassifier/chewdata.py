@@ -268,6 +268,7 @@ class ChewData():
                 pbar.update(1)
         if filename is None:
             plt.show()
+            plt.close()
     def plot_individually(self, savingpath:str = 'figs', fmt:str = 'pdf', **params):
         """
         Plot all trends in individual files.
@@ -295,6 +296,7 @@ class ChewData():
                     title=params.get('prefix', '') + chow_obj.name,
                     **params)
                 pbar.update(1)
+                plt.close()
     def plot_by_group(self,
                       savingpath:Union[None,str] = 'figs',
                       fmt:str = 'pdf',
@@ -330,6 +332,7 @@ class ChewData():
                 pbar.update(1)
         if savingpath is None:
             plt.show()
+            plt.close()
 
     def results_df(self):
         """

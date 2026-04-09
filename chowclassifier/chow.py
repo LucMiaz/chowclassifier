@@ -128,8 +128,10 @@ class Chow:
             print(f"breakpoint index for {self.name} is above {len(X)-4}, will be replace by {len(X)-4}.\n The new breakpoint is {self.initial_breakpoint}")
         breakpoint_indices = list(range(
             max(3, breakpoint_index - self.margin),
-            min(len(X) - 3, breakpoint_index + self.margin)
+            min(len(X) - 3, breakpoint_index + self.margin) + 1
         ))
+        if len(breakpoint_indices) == 0:
+            raise ValueError(f"No valid breakpoint indices found for {self.name} with initial breakpoint {self.initial_breakpoint} and margin {self.margin}. Resulted in no breakpoint indices to test.")
         return breakpoint_indices
     def find_best_bkp(self, breakpoint_indices=None, **_):
         """
@@ -369,7 +371,10 @@ class Chow:
             except IndexError:
                 print(f"No suitable breakpoint found for {self.name}.")
             self.run_chow(bkp = self.initial_breakpoint, normalise = kwargs.get('normalise',False))
-            self.breakpoint = self.initial_breakpoint if self.score < self.alpha else None
+            try:
+                self.breakpoint = self.initial_breakpoint if self.score < self.alpha else None
+            except Exception as e:
+                raise ValueError(f"Error determining breakpoint for {self.name}, {self.score=}, {self.alpha=}: {e}")
             self.classify(**kwargs)
             return self.treeclass
         else:
@@ -494,8 +499,10 @@ class Chow:
         #f.suptitle("")
         if filename is not None and main_p is True:
             plt.savefig(f'{filename}')
+            plt.close()
         elif main_p is True:
             plt.show()
+            plt.close()
     def plot_by_group(self,
                       filename:str = None,
                       ax = None,
@@ -584,5 +591,7 @@ class Chow:
             ax.legend()
         if filename is not None and main_p is True:
             plt.savefig(f'{filename}')
+            plt.close()
         elif main_p is True:
             plt.show()
+            plt.close()
