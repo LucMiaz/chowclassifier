@@ -39,7 +39,8 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
     'sphinx.builders.linkcheck',
-    'sphinx.ext.autosummary']
+    'sphinx.ext.autosummary',
+    'myst_parser']   # Markdown pages (the changelog)
 
 templates_path = ['_templates']
 exclude_patterns = ['build', 'Thumbs.db', '.DS_Store']
