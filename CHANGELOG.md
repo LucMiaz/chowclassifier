@@ -4,7 +4,23 @@ All notable changes to chowclassifier are listed here, newest first. Versions
 follow [semantic versioning](https://semver.org/); dates are those of the
 version bump in `pyproject.toml`.
 
-## Unreleased
+## 1.1.4 (2026-11-12)
+
+### Fixed
+- `Chow.plot()` with default arguments raised `AttributeError`; plot options passed to one call (e.g. `fitparams`) no longer stick to every later plot; `show_legend=False` works when there is no legend.
+- `Chow.summary()` prints the regression tables (it printed only the headings).
+- `Chow.plot_by_group()`: each group gets its own colour (all groups had the first group's colour), and the sub-analyses use the uncorrected alpha (it was Bonferroni-corrected twice).
+- `ChewData` passes `groupcol` to `Chow`, so grouping columns not named `g` are used.
+- `ChewData.plot(grouped=True)` works (it raised `AttributeError`); `plot()` forwards options such as `linestyles` to the subplots and shows `title` as the figure title.
+- `plot_individually()` and `plot_by_group()` accept `format=` as an alias of `fmt=`; `format=` was silently ignored and figures came out as PDF.
+- Dates: yearly data spanning several leap years was indexed in days, hourly and minute data in seconds; now indexed in years, hours and minutes. The format is inferred from the first non-missing date.
+- `conf_int_to_trend()` accepts tuples, as documented.
+- Command line: `--no-figures` and `--no-table` are flags (`--no-figures False` used to disable the figures), `--sharey`/`--no-sharey`, `--figsize WIDTH HEIGHT`; `--fig-format` also applies to the individual figures; `--xlabel`, `--ylabel` and `--fig-title` are used; new `-g/--groupcol`; `--breakpoints` (never used) warns that it is ignored.
+
+### Changed
+- Requires Python ≥ 3.9 (the code already needed 3.8; 3.6 was declared).
+- `__pycache__`, `*.egg-info` and the built docs are no longer tracked.
+- `test_examples` fails when the example script fails (its exit status was ignored).
 
 ### Documentation
 - Version shown in the docs and `chowclassifier.__version__` read from the package metadata (they said 1.1.1 and 1.0.9).
