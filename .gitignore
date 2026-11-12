@@ -22,3 +22,7 @@
 # Sphinx build output
 docs/build/
 docs/_build/
+
+# build artefacts
+*.egg-info/
+build/
