@@ -12,15 +12,23 @@
 import os
 import sys
 import sphinx_bootstrap_theme
-sys.path.insert(0, os.path.abspath(os.path.join('..', 'chowclassifier')))
+# The repository root, so that 'import chowclassifier' works without installing.
+sys.path.insert(0, os.path.abspath('..'))
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'chowclassifier'
-copyright = '2023, Luc T Miaz'
+copyright = '2023-2026, Luc T Miaz'
 author = 'Luc T Miaz'
-release = '1.1.1'
+# Read the version from the installed package metadata (RTD installs the
+# package), so the docs cannot drift from pyproject.toml again.
+try:
+    from importlib.metadata import version as _pkg_version
+    release = _pkg_version('chowclassifier')
+except Exception:  # building from a checkout that was never installed
+    release = 'unknown'
+version = release
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

@@ -19,3 +19,6 @@
 .history/
 .pytest_cache/
 .vscode/
+# Sphinx build output
+docs/build/
+docs/_build/
