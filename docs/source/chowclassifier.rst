@@ -12,6 +12,22 @@ chowclassifier.chow module
    :undoc-members:
    :show-inheritance:
 
+chowclassifier.chewdata module
+------------------------------
+
+.. automodule:: chowclassifier.chewdata
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+chowclassifier.bayes module (optional)
+--------------------------------------
+
+.. automodule:: chowclassifier.bayes
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

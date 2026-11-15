@@ -3,7 +3,7 @@
 ## Description
 There are many application where it is useful to analyse rapidly a large number of time-series for overall trends and possible breakpoint at which the trend changes. For example, spotting increasing trends in potential contaminants concentration from the outputs of non-target screening from high resolution mass spectrometry.
 
-ChowClassifier aims to solve this. It is a script that performs a series of Chow tests on a time-indexed dataset to determine if a breakpoint in the time trends is probable. Two classes `Chow` and `ChewData` enable to perform the tests, generate plots and export the results in `csv` and `excel`. Dataset with groups can be ran simultaneously with `ChewData` indicating with `namecol` the name of the grouping column. Calling `run` on a `ChewData` instance will create an instance of `Chow` for each group and classify them into the following categories.
+ChowClassifier aims to solve this. It is a script that performs a series of Chow tests on a time-indexed dataset to determine if a breakpoint in the time trends is probable. Two classes `Chow` and `ChewData` enable to perform the tests (and, optionally, `BayesChow` a Bayesian classification that handles censored data, see below), generate plots and export the results in `csv` and `excel`. Dataset with groups can be ran simultaneously with `ChewData` indicating with `namecol` the name of the grouping column. Calling `run` on a `ChewData` instance will create an instance of `Chow` for each group and classify them into the following categories.
 
 | Breakpoint ? | Category | Description |
 |--------------|----------|-------------|
@@ -132,6 +132,64 @@ C.plot_by_group('g',
                 )
 ```
 
+## Bayesian classification and censored data (optional)
+
+`chowclassifier.bayes.BayesChow` classifies a series into the same 14 categories with a Bayesian
+model instead of F-tests. It is an optional feature: the Chow test does not need it, and its
+dependencies (PyMC, and optionally nutpie or JAX) are only installed on request:
+
+```
+pip install chowclassifier[bayes]     # PyMC
+pip install chowclassifier[nutpie]    # PyMC + nutpie sampler (faster)
+pip install chowclassifier[jax]       # PyMC + NumPyro/JAX sampler (CPU or GPU)
+```
+
+**Censored data.** Environmental and analytical series often contain values below a detection or
+quantification limit. `BayesChow` takes a boolean column (`censcol`) that marks these rows (the
+value is then the limit, and the true value lies below it). They enter the likelihood through the
+normal cumulative distribution function (Tobit model), instead of being dropped, set to half the
+limit, or treated as measured values, which biases slopes when limits change over time.
+
+**Model.** The series is fitted either with a single line or with one breakpoint, with the
+breakpoint a discrete parameter over the candidate times (the same search as `Chow`, controlled
+by `margin`), marginalised in the model. Both lines share their parameters (slope `b` before the
+break and `b + delta` after it; continuous at the break by default, or with a jump in level as in
+the Chow test with `continuous=False`), so that the sampler can move between "break" and
+"no break". The output gives
+
+* `p_break`: posterior probability of a breakpoint, and `breakpoint`, the most probable one
+  (a break is retained when `p_break >= break_threshold`, default 0.95);
+* `treeclass`: the most probable category, and `class_probabilities` for all 14;
+* the slopes before and after the break with 95 % credible intervals.
+
+A trend is "N" when its slope lies within a region of practical equivalence `[-rope, rope]`, so
+the absence of a trend can be supported by the data, and the probabilities do not grow
+overconfident just because a series has many points (as happens when a fitted trend is
+bootstrapped into pseudo-observations and tested). With `log_y=True` the model is fitted to
+log(y) and `rope` is a relative change per time unit (e.g. 0.01 = 1 % per year).
+
+```python
+from chowclassifier.bayes import BayesChow
+bc = BayesChow(df, timecol="year", ycol="conc", censcol="below_limit",
+               log_y=True, rope=0.01, margin=None, sampler="nutpie")
+bc.run()
+print(bc.summary())                 # e.g. "PFOS, Seine: class dD (P = 0.93), P(break) = 0.99 at 2016"
+bc.class_probabilities              # probability of each category
+bc.plot(ylabel="ng/L")              # open triangles: values below the limit
+```
+
+`ChewData` runs it on every group with `method="bayes"`:
+
+```python
+C = ChewData(df=df, namecol="site", timecol="year", ycol="conc", method="bayes",
+             censcol="below_limit", bayes_kwargs=dict(log_y=True, rope=0.01, sampler="nutpie"))
+C.run()
+C.results_df()
+```
+
+Each series is sampled separately (tens of seconds for a few hundred points, minutes for
+tens of thousands of censored points).
+
 ## References
 
 [^1]: Chow, Gregory C. ‘Test of Equality Between Sets of Coefficients in Two Linear Regressions’. Econometrica 28, no. 3 (1960): 591–605. [jstor.org/stable/1910133](https://www.jstor.org/stable/1910133).
@@ -141,6 +199,8 @@ C.plot_by_group('g',
 [^3]: *Chow test* entry on Wikipedia: https://en.wikipedia.org/wiki/Chow_test
 
 ## Version changes
+
+2.0.0 Added the optional Bayesian classification `BayesChow` (`pip install chowclassifier[bayes]`), with support for censored data (values below a limit), and `ChewData(method='bayes')`.
 
 1.1.1 Fixed empty unused plots, added breakpoint-margin constraints, added test example, added CI.
 1.0.10 Minor addition, with show_legend option

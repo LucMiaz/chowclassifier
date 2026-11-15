@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.abspath(os.path.join('..', 'chowclassifier')))
 project = 'chowclassifier'
 copyright = '2023, Luc T Miaz'
 author = 'Luc T Miaz'
-release = '1.1.1'
+release = '2.0.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -32,6 +32,9 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.builders.linkcheck',
     'sphinx.ext.autosummary']
+
+# optional dependencies of chowclassifier.bayes, not needed to build the documentation
+autodoc_mock_imports = ['pymc', 'pytensor', 'arviz', 'nutpie', 'jax', 'numpyro']
 
 templates_path = ['_templates']
 exclude_patterns = ['build', 'Thumbs.db', '.DS_Store']
