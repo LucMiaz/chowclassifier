@@ -53,7 +53,7 @@ ChowClassifier aims to solve this. It is a script that performs a series of Chow
 where set1 and set2 indicate respectively the data before the breakpoint and after. The decision process for this classification is shown in the following schema:
 
 
-.. image:: source/schema.png
+.. image:: img/Categorisation_TT.png
    :alt: Schema
    :align: right
 
@@ -116,7 +116,11 @@ Example::
    C.run()
    C.results_df()
 
-
+Schema for the Bayes version is shown below:
+ 
+.. image:: img/Categorisation_TT_Bayes.svg
+   :alt: Schema
+   :align: right
 Installation
 ------------
 Use the following command to install chowclassifier::
