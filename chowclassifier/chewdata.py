@@ -89,7 +89,9 @@ class ChewData():
                     " Check given namecol"
                 ) from e
         if pd.api.types.is_numeric_dtype(self.df[self.timecol]) is False:
-            date_format = infer_date_format(self.df.loc[self.df[self.timecol]!=np.nan,self.timecol][0])
+            # first non-missing value (x != np.nan is always True, and [0] is a
+            # label lookup that fails when the index has no 0)
+            date_format = infer_date_format(str(self.df[self.timecol].dropna().iloc[0]))
             print(f'Inferred format {date_format} for column {self.timecol}')
             if date_format is not None:
                 self.parse_timecol(date_format)
@@ -167,6 +169,9 @@ class ChewData():
                 initial_breakpoint = initial_breakpoint,
                 timecol = self.timecol,
                 ycol = self.ycol,
+                # without it, Chow looked for a column 'g' and ignored the
+                # user's grouping column
+                groupcol = self.groupcol if self.groupcol else 'g',
                 alpha = self.alpha,
                 margin = self.margin)
         try:
@@ -241,6 +246,10 @@ class ChewData():
         scatterparams = scatterparams or {}
         fillparams = fillparams or {}
         fitparams = fitparams or {}
+        # Options forwarded to each subplot (linestyles, ylog, fill, ...);
+        # figure-level ones are handled here.
+        figure_keys = ('sharey', 'figsize', 'pad', 'title', 'xlabel', 'ylabel')
+        subplot_params = {k: v for k, v in params.items() if k not in figure_keys}
         def get_n(m, _nplots=len(self.chows)):
             n = _nplots / m
             if n - int(n) == 0.:
@@ -265,22 +274,26 @@ class ChewData():
                                     ncols=ncols,
                                     sharey=params.get("sharey",True),
                                     figsize=params.get('figsize',(16,8)))
+                axes = np.atleast_1d(axes)
+                if params.get('title'):
+                    f.suptitle(params['title'])
                 f.tight_layout(pad=params.get('pad',3.0)) # increase padding between sub figures
                 for chow_obj, ax in zip(self.chows[i*nplots:(i+1)*nplots]+[None for _ in range(ncols*nrows - len(self.chows[i*nplots:(i+1)*nplots]))], axes.reshape(-1)):
                     if chow_obj is None:
                         ax.axis('off')
                         continue
-                    if grouped is True and self.groupcol in chow_obj.df.colnames:
-                        plt.clf()
+                    # Chow renames the grouping column to 'g'. (This used
+                    # df.colnames, which does not exist, and plt.clf(), which
+                    # cleared the whole grid of subplots.)
+                    if grouped is True and chow_obj.df['g'].nunique() > 1:
                         chow_obj.plot_by_group(ax = ax,
                                               xlabel=params.get('xlabel',self.timecol),
                                               ylabel=params.get('ylabel',self.ycol),
-                                              cmap = cmap,
-                                              title=chow_obj.name,
-                                              scatterparams = scatterparams,
-                                              fillparams = fillparams,
-                                              fitparams = fitparams,
-                                              **params)
+                                              cmap = cmap if cmap is not None else 'Set1',
+                                              scatterparams = dict(scatterparams),
+                                              fillparams = dict(fillparams),
+                                              fitparams = dict(fitparams),
+                                              **subplot_params)
                     else:
                         chow_obj.plot(ax=ax,
                             xlabel=params.get('xlabel','X'),
@@ -288,9 +301,11 @@ class ChewData():
                             title=chow_obj.name,
                             scatterparams = scatterparams,
                             fillparams = fillparams,
-                            fitparams = fitparams)
+                            fitparams = fitparams,
+                            **subplot_params)
                 if filename is not None:
                     plt.savefig(f'{filename}_{i:02d}.{ext}')
+                    plt.close(f)
                 pbar.update(1)
         if filename is None:
             plt.show()
@@ -303,8 +318,11 @@ class ChewData():
         :param fmt: Format of the image (e.g., 'pdf', 'png')
         :param params: Named parameters passed to matplotlib
                        (e.g., xlabel, ylabel, prefix, scatterparams,
-                       fillparams, fitparams)
+                       fillparams, fitparams). ``format`` is accepted as an
+                       alias of ``fmt``.
         """
+        # 'format' was the documented name and is still used in scripts
+        fmt = params.pop('format', fmt)
         # check if saving path exists:
         if not os.path.isdir(savingpath):
             os.makedirs(savingpath)
@@ -337,9 +355,11 @@ class ChewData():
         :param cmap: Name of one of matplotlib cmaps
         :param params: Named parameters passed to matplotlib and plot_by_group.
                       Includes: show_legend, plot_overall, plot_individual_fill,
-                      xlabel, ylabel, title, overall_label
+                      xlabel, ylabel, title, overall_label. ``format`` is
+                      accepted as an alias of ``fmt``.
         """
-        if not os.path.isdir(savingpath):
+        fmt = params.pop('format', fmt)
+        if savingpath is not None and not os.path.isdir(savingpath):
             os.makedirs(savingpath)
         print("Plotting trends by group")
         with tqdm(total = len(self.chows)) as pbar:

@@ -60,7 +60,7 @@ where set1 and set2 indicate respectively the data before the breakpoint and aft
 Chow test
 ---------
 
-Chow test was first derived by Gregory Chow [#f1]_ in 1960 and later by Franklin Fisher [#f2]_. We test the significance of the breakpoint at level :math:`\alpha^\star = \frac{\alpha}{m}` (where :math:`m` is the number of breakpoints tests, thus :math:`\alpha^\star` is the Bonferroni corrected significance level)  under the null hypothesis :math:`Z=\frac{S_c-(S_1+S_2)}{S_1+S_2}\cdot\frac{N_1+N_2-2\cdot k}{k}` where :math:`k=3` is the total number of parameters. This follows a F-distribution with :math:`k` and :math:`N_1+N_2-6` degrees of freedom, where :math:`S_C`` is the sum of squared residuals of the regression on the full time series, :math:`S_1`, :math:`S_2` are the sums of squared residuals of the regression on the first, and respectively, the second half of the time series and :math:`N_1`, :math:`N_2` are the number of observation for each half. See also [#f3]_.
+Chow test was first derived by Gregory Chow [#f1]_ in 1960 and later by Franklin Fisher [#f2]_. We test the significance of the breakpoint at level :math:`\alpha^\star = \frac{\alpha}{m}` (where :math:`m` is the number of breakpoints tests, thus :math:`\alpha^\star` is the Bonferroni corrected significance level)  under the null hypothesis with the statistic :math:`Z=\frac{S_c-(S_1+S_2)}{S_1+S_2}\cdot\frac{N_1+N_2-2\cdot k}{k}`, where :math:`k=2` is the number of parameters of each regression (intercept and slope). It follows an F-distribution with :math:`k` and :math:`N_1+N_2-2k` degrees of freedom, where :math:`S_C` is the sum of squared residuals of the regression on the full time series, :math:`S_1`, :math:`S_2` are the sums of squared residuals of the regression on the first, and respectively, the second half of the time series and :math:`N_1`, :math:`N_2` are the number of observation for each half. See also [#f3]_.
 
 .. rubric:: References
 
@@ -149,58 +149,36 @@ DOI: https://doi.org/10.1021/acs.est.3c10541
 Use
 ---
 
-The script can be ran on any file with ``python -m chowclassifier -f path/to/file/filename.csv -X xcol -y ycol -n grouping_name`` or it can be imported::
+The script can be run on any file with ``python -m chowclassifier -f path/to/file/filename.csv -X xcol -y ycol -n grouping_name``
+(``chowclassifier --help`` lists all options) or it can be imported::
 
    from chowclassifier import ChewData
-   # define the path to data
-   filepath = "example/data"
-   # define the name of the file containing the data (with extension)
-   filename = "stocks.csv"
-   # define the path where figures will be saved
-   savingpath_figures = 'example/fig'
-   # what name has the X/time column?
-   timecol = 'Date'
-   # what name has the y/value column?
-   ycol = 'Close'
-   # what level of confidence? Note, when
-   # testing multiple breakpoint, a Bonferroni correction will be applied
-   alpha = 0.01
-   # initial breakpoint ?
-   initial_breakpoint = None
 
-   C = ChewData(filename = f"{'/'.join([x for x in [filepath,filename] if x not in [None,'']])}",
-               timecol = timecol,# name of time column (used as x-axis)
-               ycol = ycol,# name for value column (used as y-axis) Leave blank if multiple
-               alpha = alpha# level of confidence to use
-               )
+   C = ChewData(filename="example/data/stocks.csv",
+                timecol="Date",      # name of the time column (x-axis)
+                ycol="Close",        # name of the value column (y-axis)
+                namecol="name",      # one time series per value of this column
+                groupcol="g",        # optional: sub-groups plotted by plot_by_group
+                alpha=0.01)          # significance level; a Bonferroni correction
+                                     # is applied when several breakpoints are tested
 
-   ########## use the code line below if your X/time column is not a number, e.g. a date
-   ########## comment it otherwise
-   # C.parse_timecol(date_format = '%Y-%m-%d') # 
+   # If the time column holds dates, it is converted automatically when the
+   # format can be inferred; otherwise call C.parse_timecol(date_format="%Y-%m-%d").
 
-   C.run(initial_breakpoint = initial_breakpoint)
-   C.plot(xlabel = 'time',# label for x axis
-         ylabel='value',# label for y axis
-         title = "Chow Classification",# title of the main plot
-         filename = f"{'/'.join([x for x in [savingpath_figures,filename] if x not in [None,'']])}.png",# filename for the figure
-         figsize=(16,8),# figure size
-         sharey=True # whether the individual plots are forced to share y axis
-         )
-   C.plot_individually(savingpath = savingpath_figures,# Saving path for the figures
-                     format = 'png',# figure format
-                     xlabel = 'time',# label for x axis
-                     ylabel='value',# label for y axis
-                     )
+   C.run(initial_breakpoint=None)   # None: midpoint of the time column
+   C.save_to_file("results.xlsx")   # or .csv
 
-   C.plot_by_group('g',
-                  savingpath = savingpath_figures,# Saving path for the figures
-                  format = 'png',# figure format
-                  xlabel = 'time',# label for x axis
-                  ylabel='value',# label for y axis
-                  plot_overall = True,# Whether to plot an overall trend across groups (including confidence inverval fill)
-                  plot_individual_fill = True# Whether to plot individual confidence inverval fills
-                  )
+   C.plot(filename="example/fig/stocks.png",   # all series in one figure
+          xlabel="time", ylabel="value",
+          figsize=(16, 8), sharey=True)
+   C.plot_individually(savingpath="example/fig", fmt="png",   # one file per series
+                       xlabel="time", ylabel="value")
+   C.plot_by_group(savingpath="example/fig", fmt="png",       # one file per series, by group
+                   xlabel="time", ylabel="value",
+                   plot_overall=True,          # overall trend across groups
+                   plot_individual_fill=True)  # confidence interval of each group
 
+See ``example/example.py`` in the repository for a complete script.
 
 
 .. toctree::
@@ -222,8 +200,7 @@ Class and method descriptions
 Licence
 =======
 
-GNU LESSER GENERAL PUBLIC LICENSE 
-Version 2.1, February 1999
+Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0), see the ``LICENSE`` file.
 
 Outputs
 =======
@@ -336,27 +313,10 @@ The output's columns are described in the following table. ``model0`` correspond
 
 Version changes
 ===============
-+------------+--------------------------------------------------------------------------------------------+
-|   1.1.1    | Fixed empty unused plots, added breakpoint-margin constraints, added test example,         |
-|            | added CI.                                                                                  |
-+------------+--------------------------------------------------------------------------------------------+
-|   1.0.10   | Minor addition, with show_legend option                                                    |
-+------------+--------------------------------------------------------------------------------------------+
-|   1.0.9    | Correction of bugs, added jupyter notebook example.                                        |
-+------------+--------------------------------------------------------------------------------------------+
-|   1.0.8    | Correction of bugs.                                                                        |
-+------------+--------------------------------------------------------------------------------------------+
-|   1.0.7    | Split main classes and utilities in multiple files, added option to ChewData.plot to have  |
-|            | grouped trends, corrected input parsing, corrected inconsistancy with                      |
-|            | intial_breakpoint/margin. Added option to change linestyle by trend individually           |
-+------------+--------------------------------------------------------------------------------------------+
-|   1.0.5    | Added option to plot confidence interval fill for individual group trends                  |
-+------------+--------------------------------------------------------------------------------------------+
-|   1.0.4    | Added support for plotting individual trends by group                                      |
-+------------+--------------------------------------------------------------------------------------------+
-|   1.0.3    | Bug correction                                                                             |
-+------------+--------------------------------------------------------------------------------------------+
-|   1.0.2    | Added support to parse full csv/excel automatically                                        |
-+------------+--------------------------------------------------------------------------------------------+
-|   1.0.1    | First implementation of algorithm                                                          |
-+------------+--------------------------------------------------------------------------------------------+
+
+See the :doc:`changelog`.
+
+.. toctree::
+   :hidden:
+
+   changelog

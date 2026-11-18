@@ -2,8 +2,13 @@
 
 # __init__.py
 
-# Version of the chowclassifier package
-__version__ = "2.0.0"
+try:
+    # Single source of truth: the version in pyproject.toml.
+    from importlib.metadata import PackageNotFoundError as _PNF, version as _version
+    __version__ = _version("chowclassifier")
+except _PNF:  # imported from a source tree that was never installed
+    __version__ = "unknown"
+
 from chowclassifier.chow import Chow
 from chowclassifier.chewdata import ChewData
 # chowclassifier.bayes (BayesChow) is optional and imported on demand: it needs PyMC

@@ -29,7 +29,7 @@ dependencies = [
     "statsmodels >= 0.13.1",
     "tqdm >= 4.65.0"
 ]
-requires-python = ">=3.6"
+requires-python = ">=3.9"
 
 [tool.setuptools]
 packages = ["chowclassifier"]
@@ -47,8 +47,10 @@ nutpie = ["pymc >= 5.10", "arviz", "nutpie"]
 jax = ["pymc >= 5.10", "arviz", "numpyro", "jax"]
 
 [project.urls]
-Homepage = "https://chowclassifier.readthedocs.io/en/latest/"
-GitLab = "https://gitlab.com/lucmiaz/chowclassifier"
+Homepage = "https://github.com/LucMiaz/chowclassifier"
+Documentation = "https://chowclassifier.readthedocs.io/en/latest/"
+Source = "https://github.com/LucMiaz/chowclassifier"
+Issues = "https://github.com/LucMiaz/chowclassifier/issues"
 
 [project.scripts]
 chowclassifier = "chowclassifier.__main__:main"

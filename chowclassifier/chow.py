@@ -400,12 +400,12 @@ class Chow:
         """
         if self.score < self.alpha:
             print(f"Summary model 1: start-{self.initial_breakpoint}")
-            self.model1.summary()
+            print(self.model1.summary())
             print(f"Summary model 2: {self.initial_breakpoint}-end")
-            self.model2.summary()
+            print(self.model2.summary())
         else:
             print("Summary model 0: whole dataset")
-            self.model0.summary()
+            print(self.model0.summary())
     def plot(self, filename:str = None, ax = None, figsize = (16,8),
             ylog:bool=False,
             fill:bool = True,
@@ -432,10 +432,15 @@ class Chow:
         :param show_legend: Legend options passed to ax.legend()
         :param params: Additional parameters including color, xlabel, ylabel, title, xlim, ylim
         """
-        ### update plot parameters
-        SCATTERPARAMS.update(scatterparams if scatterparams is not None else {})
-        FILLPARAMS.update(fillparams if fillparams is not None else {})
-        FITPARAMS.update(fitparams if fitparams is not None else {})
+        ### plot parameters: copies of the defaults updated with the user's.
+        # (Updating the module-level dicts, as before, made one call's options
+        # stick to every later plot, and None arguments raised AttributeError.)
+        scatterparams = scatterparams or {}
+        fillparams = fillparams or {}
+        fitparams = fitparams or {}
+        scatter_kw = {**SCATTERPARAMS, **scatterparams}
+        fill_kw = {**FILLPARAMS, **fillparams}
+        fit_kw = {**FITPARAMS, **fitparams}
         # record if it is plotting for parent process
         main_p = ax is None
         # create the plot:
@@ -451,22 +456,22 @@ class Chow:
             tt = conf_int_to_trend(model.conf_int(alpha = self.alpha))
             if fill is True:
                 # set color depending on time trend
-                FILLPARAMS['color'] = fillparams.get('color',CI_COLORS[tt])   
-                ax.fill_between(x = X, y1=ci_l, y2 = ci_u, **FILLPARAMS)
-            FITPARAMS['color'] = fitparams.get('color',TREND_COLORS[tt])
+                fill_kw['color'] = fillparams.get('color',CI_COLORS[tt])
+                ax.fill_between(x = X, y1=ci_l, y2 = ci_u, **fill_kw)
+            fit_kw['color'] = fitparams.get('color',TREND_COLORS[tt])
             if linestyles is not None:
                 if isinstance(linestyles, list) and len(linestyles)==3:
-                    FITPARAMS['linestyle'] = linestyles[tt]
+                    fit_kw['linestyle'] = linestyles[tt]
                 elif isinstance(linestyles, str):
-                    FITPARAMS['linestyle'] = linestyles
+                    fit_kw['linestyle'] = linestyles
                 else:
                     raise ValueError("linestyles should be either a string or a list of 3 linestyles for each trend category (neutral, increasing, decreasing).")
             else:
-                FITPARAMS['linestyle'] = FITPARAMS.get('linestyle','solid')
+                fit_kw['linestyle'] = fit_kw.get('linestyle','solid')
             intercept, slope = model.params
             y0 = intercept + slope * min(X)
             y1 = intercept + slope * max(X)
-            ax.plot((min(X),max(X)),(y0,y1), marker = None, **FITPARAMS)
+            ax.plot((min(X),max(X)),(y0,y1), marker = None, **fit_kw)
         if ax is None:
             plt.clf()
             f, (ax) = plt.subplots(nrows=1, ncols=1, figsize=figsize)
@@ -478,9 +483,9 @@ class Chow:
         else:
             add_reg_plot(self.df,self.model0)
         if scatter is True:
-            SCATTERPARAMS['color'] = scatterparams.get('color',self.color)
+            scatter_kw['color'] = scatterparams.get('color',self.color)
             ax.scatter(self.df['X'],self.df['y'],
-                        **SCATTERPARAMS)
+                        **scatter_kw)
         # Tweak the visual presentation
         ax.xaxis.grid(True)
         ax.yaxis.grid(True)
@@ -493,7 +498,7 @@ class Chow:
             ax.set_ylim(*params.get('ylim',(self.df['y'].min(), self.df['y'].max())))
         if ylog is True:
             ax.set_yscale('log')
-        if show_legend is False:
+        if show_legend is False and ax.get_legend() is not None:
             ax.get_legend().remove()
         #sns.despine(trim=True, left=True)
         #f.suptitle("")
@@ -550,6 +555,11 @@ class Chow:
             groups_order = []
         params['title'] = self.name
         groups_order = groups_order + [x for x in set(self.df['g']) if x not in groups_order]
+        # Colours chosen by the caller, if any; otherwise one colour per group.
+        # (Reading them back from the dicts inside the loop gave every group
+        # the first group's colour.)
+        user_colors = {k: d.get('color') for k, d in
+                       (('scatter', scatterparams), ('fit', fitparams), ('fill', fillparams))}
         self.df['go'] = [groups_order.index(x) for x in self.df['g']]
         for i,(n,dfg) in enumerate(self.df.groupby(['go','g'],sort=True)):
             n = n[1]
@@ -560,15 +570,18 @@ class Chow:
                             timecol = 'X',
                             ycol = 'y',
                             groupcol = 'g',
-                            alpha = self.alpha,
+                            # alpha0, not the Bonferroni-corrected self.alpha:
+                            # each sub-analysis applies its own correction.
+                            alpha = self.alpha0,
                             margin = self.margin)
             success = self.gCs[n].run()
             if success is None:
                 print(f"Analysis failed for {self.name} {n}")
             else:
-                scatterparams['color'] = scatterparams.get('color', cmap.get(n,cmap[i]))
-                fitparams['color'] = fitparams.get('color', cmap.get(n,cmap[i]))
-                fillparams['color'] = fillparams.get('color', cmap.get(n,cmap[i]))
+                group_color = cmap.get(n, cmap[i % len(cmap)])
+                scatterparams['color'] = user_colors['scatter'] or group_color
+                fitparams['color'] = user_colors['fit'] or group_color
+                fillparams['color'] = user_colors['fill'] or group_color
                 scatterparams['label'] = n
                 self.gCs[n].plot(ax = ax,
                     fill = plot_individual_fill,

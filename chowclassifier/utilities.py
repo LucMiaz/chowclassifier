@@ -47,7 +47,7 @@ def conf_int_to_trend(ci:Union[pd.DataFrame,list], param:str='X'):
     :param param: Column name to use if a DataFrame was given as ci
     :return: Integer trend code (0, 1, or 2)
     """
-    if isinstance(ci, list) and len(ci)==2:
+    if isinstance(ci, (list, tuple)) and len(ci)==2:
         l,u = ci
     else:
         l,u=ci.loc[param,:]
@@ -83,40 +83,30 @@ def infer_date_format(s_date:str):
 def guess_timelapse_type(series:Union[list,pd.DataFrame,pd.Series], date_format:str = "%Y-%m-%d"):
     """
     Guess the time lapse unit in a time series and re-index it.
-    
-    Analyzes datetime differences to determine whether data is indexed by
-    seconds, minutes, hours, days, or years.
+
+    Finds the coarsest unit in which every date is a whole number of units
+    after the first one: years (same day of the year), days, hours, minutes
+    or seconds.
 
     :param series: Time series data (list, DataFrame, or Series)
     :param date_format: Format string for parsing datetime values
-    :return: Tuple of (indexed series, datetype string)
+    :return: Tuple of (list of integer offsets from the first date, datetype string)
     """
     try:
         series = pd.to_datetime(series, format = date_format)
     except (ValueError, TypeError):
         pass
-    start = min(series)
-    series = series-start # reindex timecol from lowest one
-    if all(i.seconds==0 for i in series):
-        #check if indexed by minutes
-        if all(i.seconds%60 == 0 for i in series):
-            #check if indexed by hour
-            if all(i.seconds%3600 == 0 for i in series):
-                #check if indexed by year
-                if all(i.days%365==0 or i.days%366==0 for i in series):
-                    #index by year
-                    series = [int(i.days/365) for i in series]
-                    datetype = 'year'
-                else:#index by day
-                    series = [i.days for i in series]
-                    datetype = 'day'
-            else:#index by hour
-                series = [i.days * 24 + i.hours for i in series]
-                datetype = 'hour'
-        else:#index by minute
-            series = [i.days * 60 * 24 + i.minutes for i in series]
-            datetype = 'minute'
-    else:# index on the seconds:
-        series = [i.days * 3600 * 24 + i.seconds for i in series]
-        datetype = 'second'
-    return series,datetype
+    dates = pd.Series(pd.to_datetime(series))
+    start = dates.min()
+    # Years are checked on the calendar, not with days % 365, which failed
+    # as soon as the span included more than one leap year.
+    if (dates.dt.month == start.month).all() and (dates.dt.day == start.day).all() \
+            and (dates.dt.time == start.time()).all():
+        return [int(d.year - start.year) for d in dates], 'year'
+    seconds = (dates - start).dt.total_seconds()
+    # Largest unit first. (The previous nesting could never return 'hour' or
+    # 'minute', and used Timedelta.hours/.minutes, which do not exist.)
+    for unit, length in (('day', 86400), ('hour', 3600), ('minute', 60)):
+        if (seconds % length == 0).all():
+            return [int(x // length) for x in seconds], unit
+    return [int(x) for x in seconds], 'second'
