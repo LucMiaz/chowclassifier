@@ -25,7 +25,7 @@ ChowClassifier aims to solve this. It is a script that performs a series of Chow
 where set1 and set2 indicate respectively the data before the breakpoint and after. The decision process for this classification is shown in the following schema:
 
 
-![Image unavailable, see schema on readthedocs.](docs/img/Categorisation_TT.png)
+![Image unavailable, see schema on readthedocs.](imgs/Categorisation_TT.svg)
 
 
 ## Chow test
@@ -109,9 +109,7 @@ the Chow test with `continuous=False`), so that the sampler can move between "br
 * the slopes before and after the break with 95 % credible intervals.
 
 A trend is "N" when its slope lies within a region of practical equivalence `[-rope, rope]`, so
-the absence of a trend can be supported by the data, and the probabilities do not grow
-overconfident just because a series has many points (as happens when a fitted trend is
-bootstrapped into pseudo-observations and tested). With `log_y=True` the model is fitted to
+the absence of a trend can be supported by the data.. With `log_y=True` the model is fitted to
 log(y) and `rope` is a relative change per time unit (e.g. 0.01 = 1 % per year).
 
 ```python
@@ -136,13 +134,9 @@ C.results_df()
 Each series is sampled separately (tens of seconds for a few hundred points, minutes for
 tens of thousands of censored points).
 
-## References
+Here is the equivalent schema for the Bayes version:
+![Image unavailable, see schema on readthedocs.](imgs/Categorisation_TT_Bayes.svg)
 
-[^1]: Chow, Gregory C. ‘Test of Equality Between Sets of Coefficients in Two Linear Regressions’. Econometrica 28, no. 3 (1960): 591–605. [jstor.org/stable/1910133](https://www.jstor.org/stable/1910133).
-
-[^2]: Fisher, Franklin M. ‘Tests of Equality Between Sets of Coefficients in Two Linear Regressions: An Expository Note’. Econometrica2 38, no. 2 (1970): 361–66. [jstor.org/stable/1913018](https://www.jstor.org/stable/1913018).
-
-[^3]: *Chow test* entry on Wikipedia: https://en.wikipedia.org/wiki/Chow_test
 
 ## Version changes
 
@@ -159,3 +153,11 @@ tens of thousands of censored points).
 1.0.3 Bug correction
 1.0.2 Added support to parse full csv/excel automatically
 1.0.1 First implementation of algorithm
+
+## References
+
+[^1]: Chow, Gregory C. ‘Test of Equality Between Sets of Coefficients in Two Linear Regressions’. Econometrica 28, no. 3 (1960): 591–605. [jstor.org/stable/1910133](https://www.jstor.org/stable/1910133).
+
+[^2]: Fisher, Franklin M. ‘Tests of Equality Between Sets of Coefficients in Two Linear Regressions: An Expository Note’. Econometrica2 38, no. 2 (1970): 361–66. [jstor.org/stable/1913018](https://www.jstor.org/stable/1913018).
+
+[^3]: *Chow test* entry on Wikipedia: https://en.wikipedia.org/wiki/Chow_test
