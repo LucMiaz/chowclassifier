@@ -21,6 +21,7 @@ sys.path.insert(0, os.path.abspath('..'))
 project = 'chowclassifier'
 copyright = '2023-2026, Luc T Miaz'
 author = 'Luc T Miaz'
+
 # Read the version from the installed package metadata (RTD installs the
 # package), so the docs cannot drift from pyproject.toml again.
 try:
@@ -29,6 +30,7 @@ try:
 except Exception:  # building from a checkout that was never installed
     release = 'unknown'
 version = release
+
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -41,6 +43,9 @@ extensions = [
     'sphinx.builders.linkcheck',
     'sphinx.ext.autosummary',
     'myst_parser']   # Markdown pages (the changelog)
+
+# optional dependencies of chowclassifier.bayes, not needed to build the documentation
+autodoc_mock_imports = ['pymc', 'pytensor', 'arviz', 'nutpie', 'jax', 'numpyro']
 
 templates_path = ['_templates']
 exclude_patterns = ['build', 'Thumbs.db', '.DS_Store']

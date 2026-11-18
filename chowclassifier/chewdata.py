@@ -26,6 +26,12 @@ class ChewData():
                    see Chow.get_breakpoint_indices
     :param alpha: Significance level at which to test the trends
                   (Bonferroni correction will be applied later)
+    :param method: 'chow' (F-test, default) or 'bayes' (:class:`~chowclassifier.bayes.BayesChow`,
+                   needs ``pip install chowclassifier[bayes]``)
+    :param censcol: with method='bayes', boolean column marking censored values (value = limit,
+                    true value below it), e.g. non-detects
+    :param bayes_kwargs: further arguments of :class:`~chowclassifier.bayes.BayesChow`
+                         (e.g. log_y, rope, p_break, continuous, draws, chains, sampler)
     """
     def __init__(self, 
                 df:pd.DataFrame = None, 
@@ -37,7 +43,10 @@ class ChewData():
                 timecol:str = 'year',
                 ycol:str = 'value',
                 margin:int = 2,
-                alpha:float = 0.01):
+                alpha:float = 0.01,
+                method:str = 'chow',
+                censcol:Union[None,str] = None,
+                bayes_kwargs:Union[None,dict] = None):
         """
         Initialize a ChewData object for analyzing multiple time series.
         
@@ -56,6 +65,13 @@ class ChewData():
             self.ycol = ycol
         self.margin = margin
         self.alpha = alpha
+        if method not in ('chow', 'bayes'):
+            raise ValueError("method must be 'chow' or 'bayes'")
+        if censcol is not None and method != 'bayes':
+            raise ValueError("censored data (censcol) need method='bayes'")
+        self.method = method
+        self.censcol = censcol
+        self.bayes_kwargs = bayes_kwargs or {}
         self.initial_breakpoint = initial_breakpoint
         self.chows = []
         self.failed = []
@@ -138,6 +154,16 @@ class ChewData():
         :return: Tuple of (dictionary of parameters from the analysis,
                  Chow object from the analysis)
         """
+        if self.method == 'bayes':
+            from .bayes import BayesChow
+            chow = BayesChow(df = sub_df, name = name, initial_breakpoint = initial_breakpoint,
+                             timecol = self.timecol, ycol = self.ycol, censcol = self.censcol,
+                             margin = self.margin, **self.bayes_kwargs)
+            try:
+                chow.run()
+            except (ValueError, RuntimeError):
+                return None, None
+            return chow.params(), chow
         chow = Chow(df = sub_df,
                 name = name,
                 initial_breakpoint = initial_breakpoint,
@@ -361,6 +387,8 @@ class ChewData():
         :return: DataFrame with multi-level columns containing results
                  for all analyzed series
         """
+        if self.method == 'bayes':
+            return pd.DataFrame([c.params() for c in self.chows])
         d = {'name': [],
              'breakpoint': [],
              'score': [],

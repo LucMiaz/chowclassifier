@@ -68,11 +68,62 @@ Chow test was first derived by Gregory Chow [#f1]_ in 1960 and later by Franklin
 .. [#f2] Fisher, Franklin M. "Tests of Equality Between Sets of Coefficients in Two Linear Regressions: An Expository Note". *Econometrica2* 38, no. 2 (1970): 361-66. https://www.jstor.org/stable/1913018.
 .. [#f3] https://en.wikipedia.org/wiki/Chow_test
 
+Bayesian classification and censored data (optional)
+-----------------------------------------------------
+
+:class:`chowclassifier.bayes.BayesChow` classifies a series into the same 14 categories with a
+Bayesian model instead of F-tests. It is optional; its dependencies are installed on request::
+
+   pip install chowclassifier[bayes]     # PyMC
+   pip install chowclassifier[nutpie]    # PyMC + nutpie sampler (faster)
+   pip install chowclassifier[jax]       # PyMC + NumPyro/JAX sampler (CPU or GPU)
+
+**Censored data.** Values below a detection or quantification limit are marked by a boolean column
+(``censcol``; the value is then the limit). They enter the likelihood through the normal cumulative
+distribution function (Tobit model) instead of being dropped, set to half the limit or treated as
+measured.
+
+**Model.** With :math:`t` the time and :math:`\tau_k` the candidate breakpoints (searched as in
+``Chow``, see ``margin``),
+
+.. math::
+
+   y_i \sim \mathcal{N}(a + b\,t_i,\ \sigma) \quad\text{(no break, prior probability } 1-p\text{)}
+
+   y_i \sim \mathcal{N}\big(a + b\,t_i + \delta\,(t_i-\tau_k)\,\mathbb{1}[t_i\ge\tau_k] \;[+\ \gamma\,\mathbb{1}[t_i\ge\tau_k]],\ \sigma\big)
+   \quad\text{(break at } \tau_k\text{, prior } p/K\text{)}
+
+where the bracketed jump :math:`\gamma` is only used with ``continuous=False`` (Chow-type break).
+The breakpoint is marginalised; for a censored row the density is replaced by
+:math:`\Phi((y_i-\mu_i)/\sigma)`. Each posterior draw is classified: a slope is N when it lies within
+:math:`[-\text{rope}, \text{rope}]`, I above, D below. A break is retained when its posterior
+probability exceeds ``break_threshold`` (default 0.95), and ``treeclass`` is the most probable
+category among the draws of the retained model; ``class_probabilities_all`` gives the probabilities
+over all draws. With ``log_y=True`` the slopes and ``rope`` are relative changes per time unit.
+
+Example::
+
+   from chowclassifier.bayes import BayesChow
+   bc = BayesChow(df, timecol="year", ycol="conc", censcol="below_limit",
+                  log_y=True, rope=0.01, margin=None, sampler="nutpie")
+   bc.run()
+   print(bc.summary())
+   bc.plot(ylabel="ng/L")
+
+   # all groups
+   C = ChewData(df=df, namecol="site", timecol="year", ycol="conc", method="bayes",
+                censcol="below_limit", bayes_kwargs=dict(log_y=True, rope=0.01))
+   C.run()
+   C.results_df()
+
+
 Installation
 ------------
 Use the following command to install chowclassifier::
 
    pip install chowclassifier
+
+and ``pip install chowclassifier[bayes]`` for the optional Bayesian classification.
 
 
 Citation

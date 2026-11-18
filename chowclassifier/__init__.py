@@ -11,3 +11,5 @@ except _PNF:  # imported from a source tree that was never installed
 
 from chowclassifier.chow import Chow
 from chowclassifier.chewdata import ChewData
+# chowclassifier.bayes (BayesChow) is optional and imported on demand: it needs PyMC
+# (pip install chowclassifier[bayes])
