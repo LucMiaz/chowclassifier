@@ -49,7 +49,7 @@ about:
     using the Chow test. It provides tools for analyzing time series data
     and detecting structural breaks.
   doc_url: https://chowclassifier.readthedocs.io/en/latest/
-  dev_url: https://github.com/lucmiaz/chowclassifier
+  dev_url: https://github.com/LucMiaz/chowclassifier
 
 extra:
   recipe-maintainers:

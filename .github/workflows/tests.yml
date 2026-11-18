@@ -1,0 +1,43 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install package
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install ".[dev]"
+      # test_bayes.py skips itself when PyMC is absent; the Bayesian tests run in the job below
+      - name: Run tests
+        run: python -m pytest -v
+
+  test-bayes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install package with Bayesian extras
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install ".[dev,bayes]"
+      - name: Run Bayesian tests
+        run: python -m pytest -v tests/test_bayes.py
